@@ -1,4 +1,4 @@
-# Tuum Tracdrone
+# Tuum robot firmware
 
 ## Dependencies
 
