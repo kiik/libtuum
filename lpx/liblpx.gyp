@@ -25,10 +25,6 @@
         'src/tuum_ogl.cpp',
 
         'src/lpx_iformat.cpp',
-
-        'src/tuum_file.cpp',
-        'src/tuum_dbfile.cpp',
-        'src/tuum_fs.cpp',
       ],
 
 
