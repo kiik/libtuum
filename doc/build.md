@@ -3,23 +3,42 @@
 
 ## Directory guide
 
-- 'lib' : Compiled system libraries output
+- 'lib' : Miscellaneous libraries
 
 - 'hal' : The hardware abstraction layer - contains interfaces for camera, motor drivers, RF communication etc.
-  'modules' : Contained directories define linking of corresponding program module
-- 'user' : Application modules for different robot logic processes
+- 'ctrlmod' : Contains libraries for expressing logic which also link together the whole program.
 
-  'main' : compilation execution directory
+- 'rtxmath' : Generic mathemathical functionality.
+- 'geometry' : Generic geometry datastructure functionality.
+- 'entities' : Generic entity definitions.
+
+- 'user' : Application modules for controlling which subsystems are run. Mainly used for development purposes.
+- 'system' : Contains classes for spawning a running robot instance with motion, localization and visioning processes.
+
+- 'lpx' : External library interface proxy module. ( OpenGL, Gtk, GLIP-Lib, etc. )
+- 'env' : General environment related functions module. ( time, logging, fs, dynamic resources handling, etc. )
+- 'tdb' : Local Sqlite database interface.
+
+- 'loc' : Localization functionality module
+- 'vision' : Vision functionality module
+
+- 'htgui' : Web interface module.
+- 'qtgui' : Qt5 interface module. ( Currently deprecated. )
+
+- 'tv9' : Google V9 engine bindings ( Work in progress. )
 
 ## Build system guide
 
-  'tlm.mk' : Makefile for top level modules
-  - 'top-level-module.mk' : Makefile for building modules
-    - 'platform-id.mk' : Defines all available platforms
-    - 'checks.mk' : Pre-build checks
-    - 'module.mk' : Defines current module targets
-    - 'macros.mk' : Recursive search, assertion, modular macro definitions
-      - 'os.mk' : Define MAKE_OS for current operating system
-      - 'verbose.mk' : "-v" parameter verbosity control
-    - 'gcc-tools.mk'
-      - 'common-tools.mk'
+The 'gyp' can be used for generating the compilation environment.
+All of the modules' build settings are specified in their .gyp files.
+
+# Authors
+
+## Original Author
+ * Meelik Kiik (kiik.meelik@gmail.com)
+
+## Co-Author
+ * Ants-Oskar Mäesalu (aomaesalu@gmail.com)
+
+## Contributors
+ * Todo
