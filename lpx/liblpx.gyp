@@ -35,6 +35,7 @@
       'direct_dependent_settings': {
         'include_dirs': [
           'inc',
+          '/usr/local/include/glip-lib',
         ],
         'cflags': [
           '<!@(pkg-config --cflags gdkmm-3.0)',
