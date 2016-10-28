@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "tuum_logger.hpp"
-#include "tuum_file.hpp"
+#include "fs/tuum_file.hpp"
 
 namespace tuum {
 

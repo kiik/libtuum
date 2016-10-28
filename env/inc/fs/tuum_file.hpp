@@ -58,6 +58,7 @@ namespace tuum {
     virtual int write(const std::string&, const Mode& = Mode::M_Write);
     virtual int edit(const std::string&, const size_t&, const Mode& = Mode::M_Write);
 
+
   protected:
     file_t m_file;
     std::string m_data;

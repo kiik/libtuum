@@ -33,6 +33,10 @@
         'src/tuum_platform.cpp',
         'src/tuum_buff.cpp',
 
+        'src/tuum_fs.cpp',
+        'src/fs/tuum_file.cpp',
+        'src/fs/tuum_dbfile.cpp',
+
         'src/ProgramModule.cpp',
         'src/ModuleNet.cpp',
         'src/ResourceNetwork.cpp',
