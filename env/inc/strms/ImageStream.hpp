@@ -23,6 +23,7 @@ namespace tuum {
     ImageStream(const img_prop_t&);
 
     int init(const img_prop_t&);
+    int initBuf(image_t&);
 
     const img_prop_t& getFormat() { return m_iprop; }
 

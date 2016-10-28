@@ -32,6 +32,13 @@ namespace tuum {
     return res;
   }
 
+  int ImageStream::initBuf(image_t& in)
+  {
+    in->init(getSize());
+    in->setFormat(m_iprop);
+    return 0;
+  }
+
   const image_t& ImageStream::getFrame()
   {
     return m_fr;
