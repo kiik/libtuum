@@ -8,8 +8,11 @@
 #include <map>
 
 #include <libwebsockets.h>
+#include "json.hpp"
 
 #include "platform.hpp"
+
+using json = nlohmann::json;
 
 namespace tuum { namespace wsocs {
 
@@ -18,14 +21,27 @@ namespace tuum { namespace wsocs {
     typedef unsigned char* data_t;
     typedef uint16_t msg_id_t;
 
-    enum cmd_t {
-      ECMD_None,
-
-      ECMD_Drive, // Manual control
+    struct route_t {
+      size_t id = 0;
+      std::string uri = "";
+      WSProtocol* wsp = nullptr;
     };
 
-    typedef std::map<std::string, cmd_t> cmd_map_t;
+    typedef std::map<std::string, route_t> route_map_t;
 
+    struct Message {
+      json dat;
+      lws* res; // Response write handle
+
+      std::string getURI() {
+        return dat[WSProtocol::JS_URI];
+      }
+
+      //std::string getRaw()
+    };
+
+
+    // Binary interface structures
     struct Packet {
       void* ptr;
       size_t len;
@@ -51,13 +67,21 @@ namespace tuum { namespace wsocs {
         return out.str();
       }
     };
+    // ****
 
     WSProtocol();
 
     int recv(Packet);
 
     int validate(Packet*);
-    int route(Packet*);
+
+    //int route(Packet*);
+    virtual int route(const Message&);
+
+    virtual route_t getDescriptor();
+
+    size_t add(route_t);
+    void remove(size_t);
 
     template<typename T>
     static int send(lws *wsi, Request*& req, T dat) {
@@ -95,11 +119,12 @@ namespace tuum { namespace wsocs {
     }
 
   public:
-    static const char* JSON_CMD_TAG;
+    static const char* JS_URI;
+    static const char* JS_CMD;
 
-    static cmd_map_t gCmdMap;
-
-    static cmd_t parseCommand(const std::string&);
+  private:
+    size_t route_id_seq;
+    WSProtocol::route_map_t mRouteMap;
 
   };
 

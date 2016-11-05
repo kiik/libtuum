@@ -3,20 +3,13 @@
 
 namespace tuum { namespace wsocs {
 
-  const char* WSProtocol::JSON_CMD_TAG = "c";
+  const char* WSProtocol::JS_URI = "uri";
+  const char* WSProtocol::JS_CMD = "c";
 
-  WSProtocol::cmd_map_t WSProtocol::gCmdMap = {
-    {"drv", ECMD_Drive},
-  };
+  WSProtocol::WSProtocol():
+    route_id_seq(1)
+  {
 
-  WSProtocol::WSProtocol() {
-
-  }
-
-  WSProtocol::cmd_t WSProtocol::parseCommand(const std::string& in) {
-    auto it = WSProtocol::gCmdMap.find(in);
-    if(it == WSProtocol::gCmdMap.end()) return WSProtocol::ECMD_None;
-    return it->second;
   }
 
   int WSProtocol::recv(Packet _dat) {
@@ -24,11 +17,43 @@ namespace tuum { namespace wsocs {
   }
 
   int WSProtocol::validate(Packet* p) {
-
+    //TODO
   }
 
+  /*
   int WSProtocol::route(Packet* p) {
 
+  }*/
+
+  int WSProtocol::route(const Message& m) {
+    std::string uri = m.dat["uri"];
+
+    auto it = mRouteMap.find(uri);
+    if(it == mRouteMap.end()) return -1;
+
+    return it->second.wsp->route(m);
   }
+
+  size_t WSProtocol::add(route_t ro)
+  {
+    if(ro.uri == "") return 0;
+
+    ro.id = route_id_seq++;
+    mRouteMap[ro.uri] = ro;
+
+    RTXLOG(format("Registered '%s', id=%lu.", ro.uri, ro.id));
+    return ro.id;
+  }
+
+  void WSProtocol::remove(size_t id)
+  {
+    //TODO:
+  }
+
+  WSProtocol::route_t WSProtocol::getDescriptor() {
+    route_t ro;
+    return ro;
+  }
+
 
 }}
