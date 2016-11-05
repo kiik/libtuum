@@ -7,8 +7,6 @@
     'loc/libloc.gyp',
     'htgui/libhtgui.gyp',
 
-    'hal/libhal.gyp',
-    'ctrlmod/libctrlmod.gyp',
     'user/libuser.gyp',
 
     'system/libsystem.gyp',
