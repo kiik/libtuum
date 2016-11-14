@@ -15,6 +15,7 @@
         '<!@(pkg-config --cflags gdkmm-3.0)',
         '<!@(pkg-config --cflags gtkmm-3.0)',
         '<!@(pkg-config --cflags sigc++-2.0)',
+        '<!@(pkg-config --cflags libpng)',
       ],
       'include_dirs': [
         'inc',
@@ -37,6 +38,7 @@
           '<!@(pkg-config --cflags gdkmm-3.0)',
           '<!@(pkg-config --cflags gtkmm-3.0)',
           '<!@(pkg-config --cflags sigc++-2.0)',
+          '<!@(pkg-config --cflags libpng)',
         ],
       },
 
@@ -46,6 +48,7 @@
           '<!@(pkg-config --libs gdkmm-3.0)',
           '<!@(pkg-config --libs gtkmm-3.0)',
           '<!@(pkg-config --libs sigc++-2.0)',
+          '<!@(pkg-config --libs libpng)',
           '-lglip',
           '<!@(pkg-config --libs gl)',
           '<!@(pkg-config --libs glfw3)',

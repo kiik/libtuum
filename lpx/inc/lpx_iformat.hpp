@@ -12,6 +12,7 @@
 namespace tuum { namespace lpx {
 
   image_t rgb_to_jpg(image_t);
+  image_t rgb_to_png(image_t);
 
 }}
 
