@@ -81,6 +81,8 @@ namespace tuum {
       return nullptr;
     }
 
+    void setThresholding(bool s) { m_threshold_enable = s; }
+
   protected:
     ImageStream* m_inpStreams[TUUM_CAM_N];
     TxFormat* m_format[TUUM_CAM_N];
@@ -94,6 +96,9 @@ namespace tuum {
 
     PipeBase m_plRtexFootball; // Color space conversion & simplification
     PipeBase m_plImFormat;     // Get image in display color space
+
+  private:
+    bool m_threshold_enable;
   };
 
 }

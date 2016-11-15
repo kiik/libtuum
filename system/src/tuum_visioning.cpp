@@ -43,7 +43,8 @@ namespace tuum {
   Texture*  txDiscYUV = nullptr;
 
   Visioning::Visioning():
-    m_cam_N(1), m_lid(0)
+    m_cam_N(1), m_lid(0),
+    m_threshold_enable(true)
   {
     for(size_t i=0; i < m_cam_N; i++) {
       m_inpStreams[i] = nullptr;
@@ -159,7 +160,8 @@ namespace tuum {
       ppl->out(0).read(m_iFrame->data);
 
       // Thresholding
-      vision::classify_colors((uint8_t*)m_iFrame->data, m_iFrame->size);
+      if(m_threshold_enable)
+        vision::classify_colors((uint8_t*)m_iFrame->data, m_iFrame->size);
 
       while(!m_oFrameLock.try_lock()) {};
       m_oFrame->id = id;
