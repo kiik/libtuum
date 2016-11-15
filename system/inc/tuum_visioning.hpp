@@ -92,8 +92,8 @@ namespace tuum {
 
     Context m_ctx;
 
-    PipeBase m_plSimplify; // Color space conversion & simplification
-    PipeBase m_plImFormat; // Get image in display color space
+    PipeBase m_plRtexFootball; // Color space conversion & simplification
+    PipeBase m_plImFormat;     // Get image in display color space
   };
 
 }

@@ -15,6 +15,7 @@
 
 #include "Perspective.hpp"
 
+#include "tuum_threshold.hpp"
 #include "tuum_visioning.hpp"
 #include "tuum_localization.hpp"
 
@@ -25,7 +26,7 @@ namespace tuum {
 
   const char* DEF_PPL_NONE = "./assets/empty.ppl";
 
-  const char* DEF_PPL_SIMPL = "./assets/simplify.ppl";
+  const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football.ppl";
   const char* DEF_PPL_IMFORM = "./assets/imformat.ppl";
 
   const char* DEF_PPL_BLOBS  = "./assets/blobs.ppl";
@@ -66,11 +67,11 @@ namespace tuum {
 
     gLdr->addRequiredElement("inputFormat", *m_format[0]);
 
-    m_plSimplify.use(gLdr);
+    m_plRtexFootball.use(gLdr);
     //m_plImFormat.use(gLdr);
     //m_plGeom.use(gLdr);
 
-    m_plSimplify.load(DEF_PPL_SIMPL, "SimplifyPipe");
+    m_plRtexFootball.load(DEF_PPL_RTEX_FOOTBALL, "RobotexFootballPipe");
     //m_plImFormat.load(DEF_PPL_NONE, "ImFormatPipe");
     //m_plGeom.load(DEF_PPL_GEOM);
 
@@ -105,7 +106,7 @@ namespace tuum {
   }
 
   bool Visioning::pplIsReady() {
-    if(!m_plSimplify.isReady()) return false;
+    if(!m_plRtexFootball.isReady()) return false;
     if(!m_plImFormat.isReady()) return false;
     //if(!m_plGeom.isReady()) return false;
     return true;
@@ -146,43 +147,26 @@ namespace tuum {
       size_t id;
       while(!m_iFrameLock.try_lock()) {};
       m_tex->write(m_iFrame->data, GL_RGB, GL_UNSIGNED_BYTE);
-      txDiscYUV->write(discrete_yuv->data, GL_RGB, GL_UNSIGNED_BYTE);
       id = m_iFrame->id;
+
       m_iFrameLock.unlock();
 
-      ppl = m_plSimplify.get();
-
-      uint8_t* d;
-      if(!dbg) {
-        //d = (uint8_t*)discrete_yuv->data;
-        //printf("pre: %d, %d, %d\n", d[0], d[1], d[2]);
-
-        d = (uint8_t*)discrete_yuv->data;
-        printf("pre: %d, %d, %d\n", d[0], d[1], d[2]);
-      }
+      ppl = m_plRtexFootball.get();
 
       (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
 
-      /*
-      nppl = m_plImFormat.get();
-      (*nppl) << ppl->out(0) << Pipeline::Process;
-      ppl = nppl;
-      */
+      while(!m_iFrameLock.try_lock()) {};
+      ppl->out(0).read(m_iFrame->data);
 
-      //nppl = m_plGeom.get();
-      //(*nppl) << ppl->out(0) << ppl->out(1) << Pipeline::Process;
-      //ppl = nppl;
+      // Thresholding
+      vision::classify_colors((uint8_t*)m_iFrame->data, m_iFrame->size);
 
       while(!m_oFrameLock.try_lock()) {};
-      ppl->out(0).read(m_oFrame->data);
       m_oFrame->id = id;
-      m_oFrameLock.unlock();
+      m_iFrame->paste(*m_oFrame);
 
-      if(!dbg) {
-        d = (uint8_t*)m_oFrame->data;
-        printf("res: %d, %d, %d\n", d[0], d[1], d[2]);
-        dbg = true;
-      }
+      m_iFrameLock.unlock();
+      m_oFrameLock.unlock();
 
       return 1;
     } catch(Glip::Exception& e) {
