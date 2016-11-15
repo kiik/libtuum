@@ -26,6 +26,8 @@
         'src/tuum_ogl.cpp',
 
         'src/lpx_iformat.cpp',
+
+        'src/base64.cpp',
       ],
 
 
