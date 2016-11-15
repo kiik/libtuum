@@ -9,7 +9,7 @@ namespace tuum { namespace vision {
     uint8_t mn[3], mx[3];
   };
 
-  CMVClass BALL = {51, 106, 148, 67, 114, 162};
+  CMVClass BALL = {51, 100, 148, 140, 123, 165};
 
   CMVClass RGB_BALL = {130, 44, 30, 198, 112, 98};
 
