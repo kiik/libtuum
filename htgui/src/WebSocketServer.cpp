@@ -22,6 +22,7 @@ namespace tuum { namespace wsocs {
   typedef uint8_t* data_t;
 
   WebSocketServer::WebSocketServer():
+    mCtx(nullptr),
     m_port(8080), m_opts(0),
     m_iface(nullptr), m_ctx(nullptr),
     m_cert_path(nullptr), m_key_path(nullptr),
@@ -29,6 +30,8 @@ namespace tuum { namespace wsocs {
   {
     int v = 0;
     char** argv = nullptr;
+
+    mProtocol.setWS(this);
   }
 
   WebSocketServer::~WebSocketServer() {
@@ -116,6 +119,11 @@ namespace tuum { namespace wsocs {
   int WebSocketServer::cb_wsjs(lws *wsi, lws_callback_reasons reason, void *user, void *in, size_t len)
   {
     uint8_t *raw = (uint8_t*)in;
+
+    mCtx = new ctx_t();
+    mCtx->wsi = wsi;
+    mCtx->mId = 0;
+
     switch(reason) {
       case LWS_CALLBACK_ESTABLISHED:
         printf("[WSS:cb_wsjs]Connection established.\n");
@@ -147,6 +155,9 @@ namespace tuum { namespace wsocs {
         lws_callback_on_writable(wsi);
         break;
     }
+
+    delete(mCtx);
+    mCtx = nullptr;
 
     return 0;
   }
@@ -184,5 +195,25 @@ namespace tuum { namespace wsocs {
   }
 
   WSProtocol* WebSocketServer::proto() { return &mProtocol; }
+
+  int WebSocketServer::send(json& dat) {
+    if(mCtx == nullptr) return -1;
+
+    WSProtocol::Response res;
+
+    std::string s = dat.dump();
+
+    size_t len = s.size();
+    data_t buf = (data_t)malloc(LWS_SEND_BUFFER_PRE_PADDING + len + LWS_SEND_BUFFER_POST_PADDING);
+
+    data_t dst = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+    memcpy(dst, s.c_str(), len);
+
+    lws_write(mCtx->wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], len, LWS_WRITE_TEXT);
+
+    free(buf);
+
+    return 0;
+  }
 
 }}

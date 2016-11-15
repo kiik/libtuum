@@ -67,7 +67,7 @@ namespace tuum { namespace http {
     std::stringstream head;
     head << "X-Timestamp: " << millis() << std::endl;
     head << "Content-Length: " << len << std::endl;
-    head << "Content-Type: " << "image/jpeg" << std::endl;
+    head << "Content-Type: " << "image/png" << std::endl;
     head << std::endl; // End of header
     std::string _head = head.str();
 
@@ -88,7 +88,7 @@ namespace tuum { namespace http {
     lframe = fid;
     //fps();
 
-    image_t out_jpg = lpx::rgb_to_jpg(img);
+    image_t out_jpg = lpx::rgb_to_png(img);
 
     lws_write(wsi, (unsigned char*)mjpeg_boundary, strlen(mjpeg_boundary), LWS_WRITE_HTTP);
 

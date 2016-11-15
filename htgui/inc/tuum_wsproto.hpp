@@ -16,6 +16,8 @@ using json = nlohmann::json;
 
 namespace tuum { namespace wsocs {
 
+  class WebSocketServer;
+
   class WSProtocol {
   public:
     typedef unsigned char* data_t;
@@ -80,8 +82,12 @@ namespace tuum { namespace wsocs {
 
     virtual route_t getDescriptor();
 
+    void setWS(WebSocketServer* ptr);
+
     size_t add(route_t);
     void remove(size_t);
+
+    int send(json&);
 
     template<typename T>
     static int send(lws *wsi, Request*& req, T dat) {
@@ -103,6 +109,19 @@ namespace tuum { namespace wsocs {
       return 0;
     }
 
+    template<typename T>
+    static int send(lws *wsi, T dat, size_t len) {
+      data_t buf = (data_t)malloc(LWS_SEND_BUFFER_PRE_PADDING + len + LWS_SEND_BUFFER_POST_PADDING);
+
+      data_t dst = &buf[LWS_SEND_BUFFER_PRE_PADDING];
+      memcpy(dst, (data_t)&dat, len);
+
+      lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], len, LWS_WRITE_TEXT);
+      free(buf);
+
+      return 0;
+    }
+
     static int emit(lws *wsi, Event ev) {
       std::string data = ev.getData();
       size_t len = data.size();
@@ -119,8 +138,10 @@ namespace tuum { namespace wsocs {
     }
 
   public:
-    static const char* JS_URI;
-    static const char* JS_CMD;
+    static const char *JS_URI, *JS_CMD, *JS_M_ID;
+
+  protected:
+    WebSocketServer* mWS;
 
   private:
     size_t route_id_seq;

@@ -1,15 +1,28 @@
 
 #include "tuum_wsproto.hpp"
+#include "WebSocketServer.hpp"
 
 namespace tuum { namespace wsocs {
 
   const char* WSProtocol::JS_URI = "uri";
   const char* WSProtocol::JS_CMD = "c";
+  const char* WSProtocol::JS_M_ID = "_";
 
   WSProtocol::WSProtocol():
+    mWS(nullptr),
     route_id_seq(1)
   {
 
+  }
+
+  void WSProtocol::setWS(WebSocketServer* ws) {
+    mWS = ws;
+  }
+
+  int WSProtocol::send(json& dat) {
+    if(mWS == nullptr) return -1;
+    mWS->send(dat);
+    return 0;
   }
 
   int WSProtocol::recv(Packet _dat) {

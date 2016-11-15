@@ -32,6 +32,14 @@ namespace tuum { namespace wsocs {
 
     WSProtocol* proto();
 
+    struct ctx_t {
+      lws* wsi = nullptr;
+      size_t mId = 0;
+    };
+
+  protected:
+    ctx_t* mCtx;
+
   private:
     int m_port, m_opts;
 
@@ -53,6 +61,8 @@ namespace tuum { namespace wsocs {
     virtual void onConnect() {};
     virtual void onMessage(lws*, void*, size_t) {};
     virtual void onMessage(WSProtocol::Message) {};
+
+    virtual int send(json&);
 
   private:
       WSProtocol mProtocol;
