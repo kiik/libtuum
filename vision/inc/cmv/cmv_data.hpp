@@ -14,20 +14,27 @@ namespace tuum { namespace CMV {
   };
 
   // Runline type
-  struct rl_t {
+  class rl_t {
+  public:
     size_t x0 = 0, x1 = 0, y = 0;
     uint32_t cls = 0;
 
-    bool isTouching(rl_t o) {
-      if(abs(o.y - y) > 1) return false;
-      if((o.x1 < x0) || (o.x0 > x1)) return false;
-      return true;
-    }
+    bool isTouching(rl_t);
   };
 
   // TODO: Refactor into platform or math library
   struct rect_t {
     size_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+
+    rect_t()
+    {
+      x0 = 0; y0 = 0; x1 = 0; y1 = 0;
+    }
+
+    rect_t(size_t X0, size_t Y0, size_t X1, size_t Y1)
+    {
+      x0 = X0; y0 = Y0; x1 = X1; y1 = Y1;
+    }
 
     size_t getArea() {
       return (y1 - y0) * (x1 - x0);
@@ -54,6 +61,7 @@ namespace tuum { namespace CMV {
       else
       {
         if(rl.y > rect.y1) rect.y1 = rl.y;
+        else if(rl.y < rect.y0) rect.y0 = rl.y;
       }
 
       rls.push_back(rl);

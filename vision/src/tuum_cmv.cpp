@@ -3,7 +3,16 @@
 
 namespace tuum { namespace CMV {
 
-  const size_t BLOB_MIN_AREA = 1;
+  const size_t BLOB_MIN_AREA = 50;
+  const size_t CMV_RUNLINE_MIN_LENGTH = 40;
+
+  bool rl_t::isTouching(rl_t o) {
+    if(abs(o.y - y) > 3) return false;
+
+    if((o.x1 < x0) || (o.x0 > x1)) return false;
+
+    return true;
+  }
 
   int rle(uint8_t* data, size_t length, const Filter& flt, BlobSet& out) {
     RunlineSet rlines;
@@ -12,6 +21,13 @@ namespace tuum { namespace CMV {
 
     if(rlines.size() > 0)
       region_merge(rlines, out);
+
+    if(out.size() > 0) {
+      for(auto it = out.begin(); it != out.end(); it++) {
+        //if(it->rect.getArea() < BLOB_MIN_AREA)
+        //it = out.erase(it);
+      }
+    }
 
     return 0;
   }
@@ -32,7 +48,7 @@ namespace tuum { namespace CMV {
         X = 0;
 
         if(blob_line.cls != 0) {
-          if(blob_line.x1 - blob_line.x0 > 10)
+          if(blob_line.x1 - blob_line.x0 > CMV_RUNLINE_MIN_LENGTH)
             out.push_back(blob_line);
           blob_line.cls = 0;
         }
@@ -62,19 +78,83 @@ namespace tuum { namespace CMV {
         dat[i] = 0;
         dat[i + 1] = 0;
         dat[i + 2] = 0;
+      } else {
+        if(clss == 0b1) {
+          dat[i] = 255;
+          dat[i + 1] = 128;
+          dat[i + 2] = 0;
+        } else
+        if(clss == 0b10) {
+          dat[i] = 255;
+          dat[i + 1] = 255;
+          dat[i + 2] = 0;
+        } else {
+          dat[i] = 255;
+          dat[i + 1] = 0;
+          dat[i + 2] = 0;
+        }
       }
 
     }
   }
 
+  void blob_union(BlobSet::iterator& master, BlobSet::iterator& slave, BlobSet& set)
+  {
+    for(auto it = slave->rls.begin(); it < slave->rls.end(); it++) {
+      master->addRunline(*it);
+    }
+    slave = set.erase(slave);
+  }
 
-  void region_merge(std::vector<rl_t> rows, BlobSet& closed_blobs) {
-    BlobSet active_blobs;
+  bool blob_rle_match(blob_t& blob, rl_t& rl)
+  {
+    for(auto it = blob.rls.rbegin(); it != blob.rls.rend(); it++ ) {
+      if(it->isTouching(rl)) return true;
+    }
 
+    return false;
+  }
+
+  bool blob_match(rl_t rl, BlobSet& found_blobs, BlobSet::iterator& matched_blob)
+  {
+    bool blobbed = false;
+
+    // Iterate over active blobs
+    for(auto blob_it = found_blobs.begin(); blob_it < found_blobs.end();) {
+
+      // Math runline to blob
+      if(blob_rle_match(*blob_it, rl)) {
+
+        // Runline touching blob, add it if classes fit
+        if(blob_it->rls.back().cls == rl.cls) {
+          if(!blobbed) {
+            matched_blob = blob_it;
+            matched_blob->addRunline(rl);
+            blobbed = true;
+          } else {
+            // Runline matches another blob, unify both blobs
+            blob_union(blob_it, matched_blob, found_blobs);
+            continue;
+          }
+        }
+
+      }
+
+      blob_it++;
+    }
+
+    return blobbed;
+  }
+
+  void region_merge(std::vector<rl_t> rows, BlobSet& found_blobs) {
     size_t Y = 0;
     bool blobbed;
+
+    auto matched_blob = found_blobs.end();
+
     for(auto bline = rows.begin(); bline < rows.end(); bline++) {
       blobbed = false;
+      matched_blob = found_blobs.end();
 
       // If new image row
       if(bline->y != Y) {
@@ -82,59 +162,16 @@ namespace tuum { namespace CMV {
       }
 
       // Find active blobs into which insert runlines
-      for(auto blob_it = active_blobs.begin(); blob_it < active_blobs.end();) {
-        if(blob_it->rls.back().isTouching(*bline)) {
-          // Runline touching blob, add it if classes fit
-          if(blob_it->rls.back().cls == bline->cls) {
-            blob_it->addRunline(*bline);
-            blobbed = true;
-          }
-        } else {
-          // If row changed and blob wasn't updated it is closed
-          if(blob_it->rls.back().y != Y) {
-            if(blob_it->getArea() > BLOB_MIN_AREA)
-              closed_blobs.push_back(*blob_it);
-            blob_it = active_blobs.erase(blob_it);
-            continue;
-          }
-        }
+      blobbed = blob_match(*bline, found_blobs, matched_blob);
 
-        blob_it++;
-      }
-
+      // If no blob was matched create new blob
       if(!blobbed) {
         blob_t blob;
         blob.addRunline(*bline);
-        active_blobs.push_back(blob);
+        found_blobs.push_back(blob);
       }
 
-    }
-
-    // Close rest of active blobs
-    if(active_blobs.size() > 0) {
-      for(auto blob_it = active_blobs.begin(); blob_it < active_blobs.end(); blob_it++)
-        if(blob_it->getArea() > BLOB_MIN_AREA) closed_blobs.push_back(*blob_it);
     }
   }
 
 }}
-
-
-/*
-if(debugTimer.isTime()) {
-  double avg = 0.0;
-  if(closed_blobs.size() > 0) {
-    size_t n = 0, S;
-    for(auto blob_it = closed_blobs.begin(); blob_it < closed_blobs.end(); blob_it++) {
-      S = blob_it->getArea();
-      avg += S;
-      n++;
-      printf("<Blob S=%lu, R=(%lu, %lu, %lu, %lu)>\n", S, blob_it->rect.x0, blob_it->rect.y0, blob_it->rect.x1, blob_it->rect.y1);
-    }
-
-    avg = avg / n;
-  }
-
-  printf("rows=%lu, blobs=%lu; S.avg=%.2f\n", rows.size(), closed_blobs.size(), avg);
-  debugTimer.start(1000);
-}*/
