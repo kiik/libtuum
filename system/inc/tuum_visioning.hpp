@@ -25,6 +25,8 @@
 #include "tuum_entities.hpp"
 #include "tuum_detect.hpp"
 
+#include "tuum_VisionFilter.hpp"
+
 using namespace boost;
 using namespace tuum::vision;
 
@@ -66,6 +68,8 @@ namespace tuum {
     void init();
     void run();
 
+    int initYUVDiscreteLUT();
+
     bool pplIsReady();
 
     int nextFrame();
@@ -99,6 +103,8 @@ namespace tuum {
 
   private:
     bool m_threshold_enable;
+
+    VisionFilter mVisionFilter;
   };
 
 }

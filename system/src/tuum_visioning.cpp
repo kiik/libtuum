@@ -15,7 +15,6 @@
 
 #include "Perspective.hpp"
 
-#include "tuum_threshold.hpp"
 #include "tuum_visioning.hpp"
 #include "tuum_localization.hpp"
 
@@ -53,14 +52,17 @@ namespace tuum {
   }
 
   void Visioning::init() {
+    // Initialize image buffers
     Env::spawnBuffer(m_iFrame);
     Env::spawnBuffer(m_oFrame);
 
+    // Configure stream settings
     m_inpStreams[0] = hal::hw.getCamera()->getStream();
     m_inpStreams[0]->initBuf(m_iFrame);
     m_inpStreams[0]->initBuf(m_oFrame);
     auto iprop = hal::hw.getCamera()->getFormat();
 
+    // Configure GLiP (OpenGL) texture objects
     m_format[0] = new TxFormat(iprop.width, iprop.height, GL_RGB, GL_UNSIGNED_BYTE);
     m_tex = new Texture(*m_format[0]);
 
@@ -68,16 +70,17 @@ namespace tuum {
 
     gLdr->addRequiredElement("inputFormat", *m_format[0]);
 
+    // Load graphics pipeline
     m_plRtexFootball.use(gLdr);
-    //m_plImFormat.use(gLdr);
-    //m_plGeom.use(gLdr);
-
     m_plRtexFootball.load(DEF_PPL_RTEX_FOOTBALL, "RobotexFootballPipe");
-    //m_plImFormat.load(DEF_PPL_NONE, "ImFormatPipe");
-    //m_plGeom.load(DEF_PPL_GEOM);
 
-    char* data;
+    initYUVDiscreteLUT();
 
+    RTXLOG("Ready.");
+  }
+
+  int Visioning::initYUVDiscreteLUT()
+  {
     Env::spawnBuffer(discrete_yuv);
     char* d;
     size_t size;
@@ -86,17 +89,18 @@ namespace tuum {
       discrete_yuv->init(size);
       memcpy((uint8_t*)discrete_yuv->data, (uint8_t*)d, size);
 
-      printf("%d, %d, %d; len=%lu\n", d[3], d[4], d[5], discrete_yuv->size);
+      //printf("%d, %d, %d; len=%lu\n", d[3], d[4], d[5], discrete_yuv->size);
 
+      // Load discrete YUV LUT into GLip (OpenGL) texture.
       txDiscYUV = new Texture(*txDiscYUVFormat);
       txDiscYUV->write(discrete_yuv->data, GL_RGB, GL_UNSIGNED_BYTE);
 
     } else {
       RTXLOG(format("Discrete YUV space load failed ( '%s' )", DEF_DISC_YUV), LOG_ERR);
+      return -1;
     }
 
-
-    RTXLOG("Ready.");
+    return 0;
   }
 
   void Visioning::run() {
@@ -161,7 +165,7 @@ namespace tuum {
 
       // Thresholding
       if(m_threshold_enable)
-        vision::classify_colors((uint8_t*)m_iFrame->data, m_iFrame->size);
+        mVisionFilter.apply(m_iFrame);
 
       while(!m_oFrameLock.try_lock()) {};
       m_oFrame->id = id;
