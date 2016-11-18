@@ -21,7 +21,7 @@
       ],
       'sources': [
         'src/tuum_vision.cpp',
-        'src/tuum_threshold.cpp',
+        'src/tuum_cmv.cpp',
 
         'src/Perspective.cpp',
         'src/Feature.cpp',

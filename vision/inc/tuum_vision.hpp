@@ -11,12 +11,15 @@
 
 #include "tuum_buff.hpp"
 
+#include "tuum_cmv.hpp"
 #include "vision_data.hpp"
 
 namespace tuum { namespace vision {
 
-  int parseGeometry(const image_t, PixelGeometry&);
-  int parseFeatures(PixelGeometry&, PixelFeatures&);
+  int parse_blobs(image_t, const CMV::Filter&, CMV::BlobSet&);
+
+  int parse_geometry(const image_t, PixelGeometry&);
+  int parse_features(PixelGeometry&, PixelFeatures&);
 
 }}
 

@@ -10,11 +10,18 @@
 #include "vision_feat.hpp"
 #include "vision_data.hpp"
 
+#include "tuum_cmv.hpp"
 #include "tuum_vision.hpp"
 
 namespace tuum { namespace vision {
 
-  int parseGeometry(const image_t in, PixelGeometry& out)
+  int parse_blobs(image_t in, const CMV::Filter& flt, CMV::BlobSet& out)
+  {
+    CMV::rle((uint8_t*)in->data, in->size, flt, out);
+    return 0;
+  }
+
+  int parse_geometry(const image_t in, PixelGeometry& out)
   {
     int res;
     res = parse_blobs(in, out);
@@ -29,7 +36,7 @@ namespace tuum { namespace vision {
     return 0;
   }
 
-  int parseFeatures(const PixelGeometry& in, PixelFeatures& out)
+  int parse_features(const PixelGeometry& in, PixelFeatures& out)
   {
     int res;
     res = parse_balls(in, out);
