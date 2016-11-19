@@ -142,6 +142,22 @@ namespace tuum {
     return 0;
   }
 
+  float value = 0.5;
+  bool m_ppl_config_dirty = true;
+
+  void Visioning::pplConfig(const json& dat) {
+    auto ppl = m_plRtexFootball.get();
+
+    auto it = dat.find("FisheyePwr");
+    if(it != dat.end()) {
+      value = (it->get<int>() / 1000.0);
+      m_ppl_config_dirty = true;
+      //Glip::CorePipeline::Filter& filter = (*ppl)[ppl->getElementID("FisheyeFilter")];
+      //filter.program().setVar("uPower", GL_FLOAT, value);
+      RTXLOG(format("Fisheye power updated to %.2f", value));
+    }
+  }
+
 
   bool dbg = false;
   int Visioning::doFramePass()
@@ -149,6 +165,14 @@ namespace tuum {
     Pipeline *ppl, *nppl;
     try
     {
+      ppl = m_plRtexFootball.get();
+
+      if(m_ppl_config_dirty) {
+        Glip::CorePipeline::Filter& filter = (*ppl)[ppl->getElementID("FisheyeFilter")];
+        filter.program().setVar("uPower", GL_FLOAT, value);
+        m_ppl_config_dirty = false;
+      }
+
       size_t id;
       while(!m_iFrameLock.try_lock()) {};
       m_tex->write(m_iFrame->data, GL_RGB, GL_UNSIGNED_BYTE);
@@ -156,7 +180,6 @@ namespace tuum {
 
       m_iFrameLock.unlock();
 
-      ppl = m_plRtexFootball.get();
 
       (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
 
@@ -164,8 +187,10 @@ namespace tuum {
       ppl->out(0).read(m_iFrame->data);
 
       // Thresholding
-      if(m_threshold_enable)
+      if(m_threshold_enable) {
         mVisionFilter.apply(m_iFrame);
+        mVisionFilter.addBlobDebugLayer(m_iFrame);
+      }
 
       while(!m_oFrameLock.try_lock()) {};
       m_oFrame->id = id;

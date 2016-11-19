@@ -13,6 +13,7 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include "json.hpp"
 #include "hal.hpp"
 
 #include "rtxmath.hpp"
@@ -29,6 +30,8 @@
 
 using namespace boost;
 using namespace tuum::vision;
+
+using json = nlohmann::json;
 
 namespace tuum {
 
@@ -86,6 +89,8 @@ namespace tuum {
     }
 
     void setThresholding(bool s) { m_threshold_enable = s; }
+
+    void pplConfig(const json& dat);
 
   protected:
     ImageStream* m_inpStreams[TUUM_CAM_N];
