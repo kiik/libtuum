@@ -11,11 +11,15 @@ namespace tuum {
   public:
     VisionFilter();
 
+    void initClassifiers();
+
     int apply(image_t);
 
+    void addBlobDebugLayer(image_t);
+
   protected:
-    CMV::Filter  mFilter;
-    CMV::BlobSet mBlobs;
+    CMV::UVFilter mFilter;
+    CMV::BlobSet mBlobs, mBlobBuffer;
 
     Timer mDebugTmr;
   };

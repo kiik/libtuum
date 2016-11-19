@@ -15,7 +15,7 @@
 
 namespace tuum { namespace vision {
 
-  int parse_blobs(image_t in, const CMV::Filter& flt, CMV::BlobSet& out)
+  int parse_blobs(image_t in, CMV::FilterBase& flt, CMV::BlobSet& out)
   {
     CMV::rle((uint8_t*)in->data, in->size, flt, out);
     return 0;

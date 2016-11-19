@@ -3,18 +3,17 @@
 
 namespace tuum { namespace CMV {
 
-  const size_t BLOB_MIN_AREA = 50;
   const size_t CMV_RUNLINE_MIN_LENGTH = 40;
 
   bool rl_t::isTouching(rl_t o) {
-    if(abs(o.y - y) > 3) return false;
+    if(abs(o.y - y) > 1) return false;
 
     if((o.x1 < x0) || (o.x0 > x1)) return false;
 
     return true;
   }
 
-  int rle(uint8_t* data, size_t length, const Filter& flt, BlobSet& out) {
+  int rle(uint8_t* data, size_t length, FilterBase& flt, BlobSet& out) {
     RunlineSet rlines;
 
     region_segment(data, length, flt, rlines);
@@ -22,17 +21,10 @@ namespace tuum { namespace CMV {
     if(rlines.size() > 0)
       region_merge(rlines, out);
 
-    if(out.size() > 0) {
-      for(auto it = out.begin(); it != out.end(); it++) {
-        //if(it->rect.getArea() < BLOB_MIN_AREA)
-        //it = out.erase(it);
-      }
-    }
-
     return 0;
   }
 
-  void region_segment(uint8_t* dat, size_t length, const Filter& flt, RunlineSet& out) {
+  void region_segment(uint8_t* dat, size_t length, FilterBase& flt, RunlineSet& out) {
     size_t i, clss;
     uint8_t y, u, v;
 
@@ -42,14 +34,17 @@ namespace tuum { namespace CMV {
     blob_line.cls = 0;
 
     for(i = 0; i < length; i += 3) {
+      // Calculate image coordinates
       X++;
-      if(X >= 640) {
+      if(X >= 1280) {
         Y++;
         X = 0;
 
+        // End runline when entering new row
         if(blob_line.cls != 0) {
           if(blob_line.x1 - blob_line.x0 > CMV_RUNLINE_MIN_LENGTH)
             out.push_back(blob_line);
+
           blob_line.cls = 0;
         }
       }
@@ -58,8 +53,9 @@ namespace tuum { namespace CMV {
       u = dat[i + 1] * U8_32CLS_REDUCTION;
       v = dat[i + 2] * U8_32CLS_REDUCTION;
 
-      clss = flt.clss_Y[y] && flt.clss_U[u] && flt.clss_V[v];
+      clss = flt(y, u, v);
 
+      // If new runline began close last
       if((blob_line.cls != 0) && (blob_line.cls != clss)) {
         blob_line.x1 = X;
         out.push_back(blob_line);
@@ -68,6 +64,7 @@ namespace tuum { namespace CMV {
       }
 
       if(blob_line.cls == 0) {
+        // Start new runline
         blob_line.cls = clss;
         blob_line.x0  = X;
         blob_line.y  = Y;

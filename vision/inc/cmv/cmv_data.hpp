@@ -9,10 +9,6 @@ namespace tuum { namespace CMV {
   const float U8_16CLS_REDUCTION = 15.0 / 255.0;
   const float U8_32CLS_REDUCTION = 31.0 / 255.0;
 
-  struct ColorClass {
-    uint8_t mn[3], mx[3];
-  };
-
   // Runline type
   class rl_t {
   public:
@@ -48,6 +44,7 @@ namespace tuum { namespace CMV {
     RunlineSet rls; // Runlines
 
     rect_t rect;
+    size_t realArea = 0;
 
     void addRunline(rl_t rl) {
       if(rl.x0 < rect.x0) rect.x0 = rl.x0;
@@ -65,10 +62,15 @@ namespace tuum { namespace CMV {
       }
 
       rls.push_back(rl);
+      realArea += (rl.x1 - rl.x0);
     }
 
     size_t getArea() {
       return rect.getArea();
+    }
+
+    double getDensity() {
+      return (double)realArea / getArea();
     }
 
   };

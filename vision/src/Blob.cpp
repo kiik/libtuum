@@ -1,10 +1,9 @@
-/**
- *  @file Blob.cpp
- *  Blob seen in the camera frame.
+/** @file Blob.cpp
+ *  @brief Blob seen in the camera frame.
  *
  *  @authors Ants-Oskar Mäesalu
  *  @version 0.3
- *  @date 4 December 2015
+ *  @date 4. December 2015
  */
 
 #include <algorithm>
@@ -158,7 +157,7 @@ namespace tuum {
     return 1.0 * numberOfPoints / getBoxArea();
   }
 
-  std::pair<unsigned int, unsigned int> Blob::getExpectedVirtualSize() const {
+  std::pair<unsigned int, unsigned int> Blob::getRealSize() const {
     return getBlobExpectedVirtualSize(color, std::pair<unsigned int, unsigned int>(centroid->getX(), getMaxY()), cameraID);
   }
 
@@ -239,7 +238,7 @@ namespace tuum {
       return false;
     std::pair<unsigned int, unsigned int> expectedSize;
     if (isSameColor(other)) {
-      expectedSize = getExpectedVirtualSize();
+      expectedSize = getRealSize();
     } else {
       if ((isBlue() && other.isYellow()) || (isYellow() && other.isBlue()) || ((isYellowBlue() || isBlueYellow()) && (other.isYellow() || other.isBlue())) || ((isYellow() || isBlue()) && (other.isYellowBlue() || other.isBlueYellow()))) {
         // The expected sizes for both robot color combinations are the same
