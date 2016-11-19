@@ -22,7 +22,7 @@ struct Timer {
   unsigned long int period;
   unsigned long int _end = 0;
 
-  void start() {
+  void start(int = 0) {
     _start = millis();
     _end = _start + period;
   }
