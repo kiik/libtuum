@@ -39,7 +39,7 @@ namespace tuum { namespace CMV {
 
     YUVFilter();
 
-    int addClass(ColorClass);
+    int addClass(ColorClass&);
 
     uint32_t operator()(uint8_t, uint8_t, uint8_t);
 
@@ -52,8 +52,8 @@ namespace tuum { namespace CMV {
   {
   public:
     struct UVSpan {
-      uint16_t Y;
-      uint32_t U[2], V[2];
+      uint8_t Y;
+      uint8_t U[2], V[2];
 
       UVSpan(uint16_t y, uint32_t um, uint32_t ux, uint32_t vm, uint32_t vx)
       {
@@ -71,7 +71,7 @@ namespace tuum { namespace CMV {
 
     UVFilter();
 
-    int addClass(ColorClass);
+    int addClass(ColorClass&);
 
     uint32_t operator()(uint8_t, uint8_t, uint8_t);
 

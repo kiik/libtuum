@@ -56,6 +56,7 @@ namespace tuum {
 
     virtual int read(std::string&);
     virtual int bread(char*&, size_t&);
+    virtual int bwrite(char*, size_t);
 
     virtual int write(const std::string&, const Mode& = Mode::M_Write);
     virtual int edit(const std::string&, const size_t&, const Mode& = Mode::M_Write);

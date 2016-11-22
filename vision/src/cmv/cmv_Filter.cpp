@@ -27,22 +27,24 @@ namespace tuum { namespace CMV {
     }
   }
 
-  int YUVFilter::addClass(ColorClass cls) {
+  int YUVFilter::addClass(ColorClass& cls) {
     if(cls.id == 0)
       if(createId(cls.id) < 0) return -1;
 
-    // Convect colorspan to lower resolution, iterate & insert spans into classifiers
-    for(size_t i = cls.mn[0] * U8_16CLS_REDUCTION; i <= cls.mx[0] * U8_16CLS_REDUCTION; i++) clss_Y[i] |= cls.id;
-    for(size_t i = cls.mn[1] * U8_32CLS_REDUCTION; i <= cls.mx[1] * U8_32CLS_REDUCTION; i++) clss_U[i] |= cls.id;
-    for(size_t i = cls.mn[2] * U8_32CLS_REDUCTION; i <= cls.mx[2] * U8_32CLS_REDUCTION; i++) clss_V[i] |= cls.id;
+    uint32_t id = cls.id;
 
-    printf(":cmv::Filter: New class id=%lu\n", cls.id);
+    // Convect colorspan to lower resolution, iterate & insert spans into classifiers
+    for(size_t i = cls.mn[0] * U8_16CLS_REDUCTION; i <= cls.mx[0] * U8_16CLS_REDUCTION; i++) clss_Y[i] |= id;
+    for(size_t i = cls.mn[1] * U8_32CLS_REDUCTION; i <= cls.mx[1] * U8_32CLS_REDUCTION; i++) clss_U[i] |= id;
+    for(size_t i = cls.mn[2] * U8_32CLS_REDUCTION; i <= cls.mx[2] * U8_32CLS_REDUCTION; i++) clss_V[i] |= id;
+
+    printf(":cmv::Filter: New class id=%lu\n", id);
     return 0;
   }
 
   uint32_t YUVFilter::operator()(uint8_t y, uint8_t u, uint8_t v)
   {
-    return clss_Y[y] && clss_U[u] && clss_V[v];
+    return clss_Y[y] & clss_U[u] & clss_V[v];
   }
 
   UVFilter::UVFilter():
@@ -57,7 +59,7 @@ namespace tuum { namespace CMV {
     }
   }
 
-  int UVFilter::addClass(ColorClass cls) {
+  int UVFilter::addClass(ColorClass& cls) {
     if(cls.id == 0)
       if(createId(cls.id) < 0) return -1;
 
@@ -75,7 +77,7 @@ namespace tuum { namespace CMV {
 
   uint32_t UVFilter::operator()(uint8_t y, uint8_t u, uint8_t v)
   {
-    return clss_U[y][u] && clss_V[y][v];
+    return clss_U[y][u] & clss_V[y][v];
   }
 
 }}

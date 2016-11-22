@@ -25,8 +25,9 @@ namespace tuum { namespace CMV {
   }
 
   void region_segment(uint8_t* dat, size_t length, FilterBase& flt, RunlineSet& out) {
-    size_t i, clss;
+    size_t i;
     uint8_t y, u, v;
+    uint32_t clss = 0;
 
     size_t X = 0, Y = 0, r0 = 0, r1 = 0;
 
@@ -76,19 +77,18 @@ namespace tuum { namespace CMV {
         dat[i + 1] = 0;
         dat[i + 2] = 0;
       } else {
-        if(clss == 0b1) {
+        if(clss == 0b1) { // Ball
           dat[i] = 255;
           dat[i + 1] = 128;
           dat[i + 2] = 0;
-        } else
-        if(clss == 0b10) {
-          dat[i] = 255;
-          dat[i + 1] = 255;
-          dat[i + 2] = 0;
-        } else {
-          dat[i] = 255;
+        } else if(clss == 0b10) { // Blue battery
+          dat[i] = 0;
           dat[i + 1] = 0;
-          dat[i + 2] = 0;
+          dat[i + 2] = 255;
+        } else {
+          dat[i] = 102;
+          dat[i + 1] = 0;
+          dat[i + 2] = 102;
         }
       }
 

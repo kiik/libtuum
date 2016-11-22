@@ -63,6 +63,20 @@ namespace tuum {
     return -1;
   }
 
+  int File::bwrite(char* in, size_t len)
+  {
+    ofstream file (m_file.Path(), ios::out|ios::binary);
+
+    if (file.is_open())
+    {
+      file.write(in, len);
+      file.close();
+      return 0;
+    }
+
+    return -1;
+  }
+
   int File::write(const std::string& in, const Mode& mode)
   {
     if(!m_file.isValid()) return -1;
