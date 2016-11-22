@@ -27,6 +27,11 @@ struct Timer {
     _end = _start + period;
   }
 
+  void start(size_t T) {
+    _start = millis();
+    _end = _start + T;
+  }
+
   bool isTime() {
     return millis() >= _end;
   }
