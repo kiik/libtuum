@@ -10,13 +10,13 @@
 
 namespace tuum { namespace lpx {
 
-  Glib::RefPtr<Gtk::Application> gtkApp;
+  //Glib::RefPtr<Gtk::Application> gtkApp;
 
   void init() {
     ogl_init();
     db::init();
 
-    auto gtkApp = Gtk::Application::create();
+    //auto gtkApp = Gtk::Application::create();
     //run_file_tests();
   }
 
