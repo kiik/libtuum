@@ -16,6 +16,8 @@ namespace tuum { namespace CMV {
 
     int createId(uint32_t&);
 
+    virtual void clear() {}
+
     virtual uint32_t operator()(uint8_t, uint8_t, uint8_t) { return 0; }
 
   protected:
@@ -29,6 +31,12 @@ namespace tuum { namespace CMV {
       uint8_t mn[3], mx[3];
       uint32_t id = 0;
 
+      ColorClass():
+        ColorClass(0, 0, 0, 0, 0, 0)
+      {
+
+      }
+
       ColorClass(uint8_t ym, uint8_t um, uint8_t vm, uint8_t yx, uint8_t ux, uint8_t vx)
       {
         mn[0] = ym; mn[1] = um; mn[2] = vm;
@@ -40,6 +48,9 @@ namespace tuum { namespace CMV {
     YUVFilter();
 
     int addClass(ColorClass&);
+    int removeClass(ColorClass&);
+
+    void clear();
 
     uint32_t operator()(uint8_t, uint8_t, uint8_t);
 
@@ -72,6 +83,8 @@ namespace tuum { namespace CMV {
     UVFilter();
 
     int addClass(ColorClass&);
+
+    void clear();
 
     uint32_t operator()(uint8_t, uint8_t, uint8_t);
 

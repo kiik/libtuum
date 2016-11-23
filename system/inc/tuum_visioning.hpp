@@ -92,6 +92,8 @@ namespace tuum {
 
     void pplConfig(const json& dat);
 
+    VisionFilter* getFilter() { return &mVisionFilter; }
+
   protected:
     ImageStream* m_inpStreams[TUUM_CAM_N];
     TxFormat* m_format[TUUM_CAM_N];

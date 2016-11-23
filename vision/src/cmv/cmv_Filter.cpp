@@ -19,12 +19,7 @@ namespace tuum { namespace CMV {
   YUVFilter::YUVFilter():
     FilterBase()
   {
-    size_t i;
-    for(i = 0; i < 16; i++) clss_Y[i] = 0;
-    for(i = 0; i < 32; i++) {
-      clss_U[i] = 0;
-      clss_V[i] = 0;
-    }
+    clear();
   }
 
   int YUVFilter::addClass(ColorClass& cls) {
@@ -42,6 +37,25 @@ namespace tuum { namespace CMV {
     return 0;
   }
 
+  int YUVFilter::removeClass(ColorClass& cls) {
+    uint32_t mask = ~(cls.id);
+
+    for(size_t i = cls.mn[0] * U8_16CLS_REDUCTION; i <= cls.mx[0] * U8_16CLS_REDUCTION; i++) clss_Y[i] &= mask;
+    for(size_t i = cls.mn[1] * U8_32CLS_REDUCTION; i <= cls.mx[1] * U8_32CLS_REDUCTION; i++) clss_U[i] &= mask;
+    for(size_t i = cls.mn[2] * U8_32CLS_REDUCTION; i <= cls.mx[2] * U8_32CLS_REDUCTION; i++) clss_V[i] &= mask;
+
+    return 0;
+  }
+
+  void YUVFilter::clear() {
+    size_t i, j;
+    for(i = 0; i < 16; i++) clss_Y[i] = 0;
+    for(i = 0; i < 32; i++) {
+      clss_U[i] = 0;
+      clss_V[i] = 0;
+    }
+  }
+
   uint32_t YUVFilter::operator()(uint8_t y, uint8_t u, uint8_t v)
   {
     return clss_Y[y] & clss_U[u] & clss_V[v];
@@ -50,13 +64,7 @@ namespace tuum { namespace CMV {
   UVFilter::UVFilter():
     FilterBase()
   {
-    size_t i, j;
-    for(i = 0; i < 16; i++) {
-      for(j = 0; j < 32; j++) {
-        clss_U[i][j] = 0;
-        clss_V[i][j] = 0;
-      }
-    }
+    clear();
   }
 
   int UVFilter::addClass(ColorClass& cls) {
@@ -73,6 +81,16 @@ namespace tuum { namespace CMV {
 
     printf(":cmv::UVFilter: New class id=%u\n", cls.id);
     return 0;
+  }
+
+  void UVFilter::clear() {
+    size_t i, j;
+    for(i = 0; i < 16; i++) {
+      for(j = 0; j < 32; j++) {
+        clss_U[i][j] = 0;
+        clss_V[i][j] = 0;
+      }
+    }
   }
 
   uint32_t UVFilter::operator()(uint8_t y, uint8_t u, uint8_t v)

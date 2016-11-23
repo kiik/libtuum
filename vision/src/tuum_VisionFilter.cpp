@@ -1,4 +1,5 @@
 
+#include "tuum_draw.hpp"
 #include "tuum_vision.hpp"
 
 #include "tuum_VisionFilter.hpp"
@@ -128,21 +129,58 @@ namespace tuum {
     UV_BALL.clss.push_back({180,98,98,178,178});*/
   }
 
-  CMV::YUVFilter::ColorClass YUV_WALLET = {102,115,131,119,115,131};
+  void VisionFilter::initYUVClassifiers()
+  {
+    mClss.clear();
+    mFilter.clear();
+
+    ColorClass CLS_BALL = {148,97,141, 221,107,189};
+    CLS_BALL.name = "cBall";
+    mClss.push_back(CLS_BALL);
+
+    ColorClass CLS_GOAL_BLUE = {110,90,139, 140,90,150};
+    CLS_GOAL_BLUE.name = "cGoalBlue";
+    mClss.push_back(CLS_GOAL_BLUE);
+  }
+
+  int VisionFilter::updateYUVClassifier(ColorClass cls)
+  {
+    filter_t::ColorClass* ptr;
+    for(auto it = mClss.begin(); it != mClss.end(); it++) {
+      ptr = &(*it);
+      if(ptr->id != cls.id) continue;
+      mFilter.removeClass(*ptr);
+      mFilter.addClass(cls);
+      *ptr = cls;
+      return 0;
+    }
+
+    return -1;
+  }
+
+  void VisionFilter::insertClassifiers()
+  {
+    filter_t::ColorClass* ptr;
+    for(auto it = mClss.begin(); it != mClss.end(); it++) {
+      ptr = &(*it);
+      mFilter.addClass(*ptr);
+    }
+  }
 
   VisionFilter::VisionFilter()
   {
-    //initUVClassifiers();
+    initYUVClassifiers();
+    insertClassifiers();
 
-    //uint32_t id;
-    //mFilter.addClass(YUV_GOAL_YEL, ID_GOAL_YEL);
-    //mFilter.addClass(YUV_BALL, ID_BALL);
-    //mFilter.addClass(YUV_FIELD_GREEN, id);
-
-    mFilter.addClass(YUV_BALL);
-    mFilter.addClass(YUV_BATTERY_BLUE);
-    mFilter.addClass(YUV_WALLET);
-    //mFilter.addClass(YUV_GOAL_YEL);
+    {
+      json dat;
+      toJSON(dat);
+      fromJSON(dat);
+    }
+    {
+      json dat;
+      toJSON(dat);
+    }
 
     mDebugTmr.start(1000);
   }
@@ -163,77 +201,16 @@ namespace tuum {
     }
 
     if(mDebugTmr.isTime()) {
+      /*
       printf("%lu\n", mBlobs.size());
 
       for(auto it = mBlobs.begin(); it != mBlobs.end(); it++) {
         printf("d:%.2f\n", it->getDensity());
-      }
+      }*/
 
       mDebugTmr.start(1000);
     }
     return 0;
-  }
-
-  size_t to_img_offset(size_t x, size_t y, size_t stride) {
-    return ((y * stride) + x) * 3;
-  }
-
-  void draw_point(size_t x, size_t y, uint8_t* dat, size_t stride) {
-    size_t os = to_img_offset(x, y, stride);
-    dat[os] = 255;
-    dat[os + 1] = 0;
-    dat[os + 2] = 0;
-  }
-
-  enum Colors {
-    RED,
-    GREEN,
-    BLUE,
-  };
-
-  void draw_line(image_t out, CMV::rect_t r, Colors c = Colors::RED) {
-    uint8_t* dat = (uint8_t*)out->data;
-    size_t os, W = out->frm.width;
-
-    double y;
-    double dy = (r.y1 - r.y0), dx = (r.x1 - r.x0);
-
-    size_t len = (size_t)sqrt(dy*dy + dx*dx);
-
-    for(double z = 0; z < len; z++) {
-      double p = z / len;
-      os = to_img_offset(r.x0 + (size_t)(p * dx), r.y0 + (size_t)(p * dy), W);
-
-      switch(c) {
-        case RED:
-          dat[os] = 255;
-          dat[os + 1] = 0;
-          dat[os + 2] = 0;
-          break;
-        case GREEN:
-          dat[os] = 0;
-          dat[os + 1] = 255;
-          dat[os + 2] = 0;
-          break;
-      }
-
-    }
-  }
-
-  void draw_rect(image_t out, CMV::rect_t r) {
-    uint8_t* dat = (uint8_t*)out->data;
-
-    Colors c = Colors::RED;
-
-    if(r.getArea() > 100) {
-      c = Colors::GREEN;
-    }
-
-    draw_line(out, {r.x0, r.y0, r.x1, r.y0}, c);
-    draw_line(out, {r.x0, r.y1, r.x1, r.y1}, c);
-
-    draw_line(out, {r.x0, r.y0, r.x0, r.y1}, c);
-    draw_line(out, {r.x1, r.y0, r.x1, r.y1}, c);
   }
 
   void VisionFilter::addBlobDebugLayer(image_t out)
@@ -264,6 +241,37 @@ namespace tuum {
       }
 
       lim++;
+    }
+  }
+
+  void VisionFilter::toJSON(json& out) {
+    out["classes"] = json::array();
+
+    for(auto it = mClss.begin(); it != mClss.end(); it++) {
+      json cls;
+      cls["id"] = it->id;
+      cls["name"] = it->name;
+      cls["range"] = {it->mn[0], it->mn[1], it->mn[2], it->mx[0], it->mx[1], it->mx[2]};
+      out["classes"].push_back(cls);
+    }
+  }
+
+  void VisionFilter::fromJSON(json in) {
+    mClss.clear();
+    mFilter.clear();
+
+    ColorClass cls;
+    for (json::iterator it = in["classes"].begin(); it != in["classes"].end(); ++it) {
+      auto dat = *it;
+
+      cls.id = dat["id"];
+      cls.name = dat["name"];
+
+      for(uint8_t i = 0; i < 6; i++)
+        cls.mn[i] = dat["range"][i];
+
+      mClss.push_back(cls);
+      mFilter.addClass(cls);
     }
   }
 
