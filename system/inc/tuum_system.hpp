@@ -19,6 +19,7 @@ namespace tuum {
 
     Visioning* getVisioning() { return &mVision; }
     Physics* getPhysics() { return &mPhysics; }
+    EntityFilter* getEntityHandle() { return &mEntityFilter; }
 
     bool entityPassEnabled();
 

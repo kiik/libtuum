@@ -7,7 +7,7 @@
 namespace tuum {
 
   const size_t BLOB_MIN_AREA = 50;
-  const double BLOB_MIN_DENSITY = 0.2;
+  const double BLOB_MIN_DENSITY = 0.4;
   const double BLOB_MAX_DENSITY = 1.0;
 
   void VisionFilter::initYUVClassifiers()
@@ -15,7 +15,7 @@ namespace tuum {
     mClss.clear();
     mFilter.clear();
 
-    ColorClass CLS_BALL = {148,97,141, 221,107,189};
+    ColorClass CLS_BALL = {94,97,141, 221,115,189};
     CLS_BALL.name = "cBall";
     CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);

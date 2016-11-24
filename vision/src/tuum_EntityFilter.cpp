@@ -62,6 +62,8 @@ namespace tuum {
 
       out["entities"].push_back(o);
     }
+
+    out["balls"] = mBallDetect.objs.size();
   }
 
   void EntityFilter::fromJSON(json in) {

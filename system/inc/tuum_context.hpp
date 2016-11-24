@@ -2,13 +2,15 @@
 #ifndef TUUM_CONTEXT_H
 #define TUUM_CONTEXT_H
 
-#include "tuum_visioning.hpp"
-
 namespace tuum {
 
-  extern Visioning* gVision;
+  class Visioning;
+  class System;
 
-  void setGlobalVisioning(Visioning*);
+  extern Visioning* gVision;
+  extern System* gSystem;
+
+  void setGlobalSystem(System*);
 
 }
 
