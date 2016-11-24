@@ -1,4 +1,7 @@
 
+#ifndef TUUM_JSON_H
+#define TUUM_JSON_H
+
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -26,3 +29,5 @@ namespace tuum {
   };
 
 }
+
+#endif
