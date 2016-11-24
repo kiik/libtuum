@@ -5,7 +5,7 @@
       'type': 'static_library',
 
       'dependencies': [
-
+        'libgeometry'
       ],
 
       'cflags': [

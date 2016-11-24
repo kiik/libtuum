@@ -64,6 +64,14 @@ namespace tuum {
     return pos.y;
   }
 
+  void Transform::setX(int v) {
+    pos.x = v;
+  }
+
+  void Transform::setY(int v) {
+    pos.y = v;
+  }
+
   double Transform::distanceTo(Vec2i target) {
     return sqrt(pow(target.x - pos.x, 2) + pow(target.y - pos.y, 2));
   }

@@ -1,5 +1,5 @@
 /** @file Transform.cpp
- *  Object positional transform state class implementation.
+ *  Object positionsl Yransform state class implementation.
  *
  *  @authors Meelik Kiik
  *  @version 0.1
@@ -37,6 +37,8 @@ namespace tuum {
 
     int getX();
     int getY();
+    void setX(int);
+    void setY(int);
 
     double distanceTo(Vec2i);
 
