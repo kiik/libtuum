@@ -22,11 +22,15 @@
 	'inc'
       ],
       'sources': [
-        'src/tuum_physics.cpp',
         'src/tuum_localization.cpp',
         'src/tuum_navigation.cpp',
-        'src/tuum_visioning.cpp',
         'src/tuum_motion.cpp',
+        'src/tuum_context.cpp',
+
+        'src/tuum_physics.cpp',
+        'src/tuum_visioning.cpp',
+        'src/tuum_system.cpp',
+
         'src/syscore/MotionData.cpp',
       ],
 

@@ -14,6 +14,7 @@
 #include "tuum_visioning.hpp"
 #include "tuum_localization.hpp"
 #include "tuum_motion.hpp"
+#include "tuum_EntityFilter.hpp"
 
 #include "tuum_navigation.hpp"
 

@@ -26,9 +26,6 @@
 #include "tuum_entities.hpp"
 
 #include "tuum_VisionFilter.hpp"
-#include "tuum_EntityFilter.hpp"
-
-#include "tuum_physics.hpp"
 
 using namespace boost;
 using namespace tuum::vision;
@@ -38,10 +35,6 @@ using json = nlohmann::json;
 namespace tuum {
 
   const uint8_t TUUM_CAM_N = 1;
-
-  class Visioning;
-
-  extern Visioning* gVision;
 
   class Visioning
   {
@@ -63,7 +56,6 @@ namespace tuum {
     int doEntityPass();
 
     bool thresholdPassEnabled();
-    bool entityPassEnabled();
 
     static void setup();
     static void process();
@@ -95,12 +87,10 @@ namespace tuum {
     bool m_threshold_enable;
 
     VisionFilter mVisionFilter;
-    EntityFilter mEntityFilter;
-
-  public:
-    Physics gPhysics;
   };
 
 }
 
 #endif // TUUM_VISIONING_H
+
+#include "tuum_context.hpp"

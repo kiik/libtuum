@@ -1,4 +1,4 @@
-/** @file htgui.hpp
+/** @file tuum_htgui.hpp
  *  UI module interface.
  *
  *  @authors Meelik Kiik

@@ -1,4 +1,4 @@
-/** @file htgui.cpp
+/** @file tuum_htgui.cpp
  *  UI module interface.
  *
  *  @authors Meelik Kiik
@@ -6,7 +6,7 @@
  *  @date 10. September 2016
  */
 
-#include "htgui.hpp"
+#include "tuum_htgui.hpp"
 
 namespace tuum { namespace gui {
 

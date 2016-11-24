@@ -43,8 +43,7 @@ namespace tuum {
 
   Visioning::Visioning():
     m_cam_N(1), m_lid(0),
-    m_threshold_enable(true),
-    gPhysics(&mEntityFilter)
+    m_threshold_enable(true)
   {
     for(size_t i=0; i < m_cam_N; i++) {
       m_inpStreams[i] = nullptr;
@@ -113,15 +112,7 @@ namespace tuum {
         RTXLOG(format("'doFramePass' error %i", res), LOG_ERR);
         return;
       }
-
-      res = doEntityPass();
-      if(res < 0) {
-        RTXLOG(format("'doEntityPass' error %i", res), LOG_ERR);
-        return;
-      }
     }
-
-    mEntityFilter.process();
   }
 
   bool Visioning::pplIsReady() {
@@ -222,33 +213,8 @@ namespace tuum {
     return 0;
   }
 
-  int Visioning::doEntityPass()
-  {
-    if(entityPassEnabled())
-      mEntityFilter.digest(mVisionFilter.getBlobs());
-    return 0;
-  }
-
   bool Visioning::thresholdPassEnabled() {
     return m_threshold_enable;
   }
-
-  bool Visioning::entityPassEnabled() {
-    if(!thresholdPassEnabled()) return false;
-    return true;
-  }
-
-  void Visioning::setup() {
-    if(gVision == nullptr) {
-      gVision = new Visioning();
-      gVision->init();
-    }
-  }
-
-  void Visioning::process() {
-    if(gVision != nullptr) gVision->run();
-  }
-
-  Visioning* gVision = nullptr;
 
 }

@@ -27,8 +27,7 @@
 	'inc',
       ],
      'sources': [
-        'src/htgui.cpp',
-
+        'src/tuum_htgui.cpp',
         'src/tuum_scripting.cpp',
         'src/tuum_wsocs.cpp',
         'src/tuum_http.cpp',
