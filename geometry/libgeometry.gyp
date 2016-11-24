@@ -12,12 +12,11 @@
         '--std=c++11'
       ],
       'include_dirs': [
-	'inc'
+        'inc'
       ],
       'sources': [
         'src/Circle.cpp',
         'src/Line2D.cpp',
-        'src/Point2D.cpp',
         'src/Rectangle.cpp',
       ],
 

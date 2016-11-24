@@ -12,52 +12,52 @@
 namespace tuum {
 
   Line2D::Line2D(const Line2D &other):
-    pointA{new Point2D(other.getPointA()->getX(), other.getPointB()->getY())},
-    pointB{new Point2D(other.getPointB()->getX(), other.getPointB()->getY())}
+    pointA{new vec2(other.getPointA()->getX(), other.getPointB()->getY())},
+    pointB{new vec2(other.getPointB()->getX(), other.getPointB()->getY())}
   {
 
   }
 
-  Line2D::Line2D(const Point2D *pointA, const Point2D *pointB):
-    pointA{new Point2D(pointA->getX(), pointA->getY())},
-    pointB{new Point2D(pointB->getX(), pointB->getY())}
+  Line2D::Line2D(const vec2 *pointA, const vec2 *pointB):
+    pointA{new vec2(pointA->getX(), pointA->getY())},
+    pointB{new vec2(pointB->getX(), pointB->getY())}
   {
 
   }
 
   Line2D::Line2D(const double &pointAx, const double &pointAy,
              const double &pointBx, const double &pointBy):
-    pointA{new Point2D(pointAx, pointAy)},
-    pointB{new Point2D(pointBx, pointBy)}
+    pointA{new vec2(pointAx, pointAy)},
+    pointB{new vec2(pointBx, pointBy)}
   {
 
   }
 
-  void Line2D::setPointA(const Point2D *pointA) {
-    this->pointA = new Point2D(pointA->getX(), pointA->getY());
+  void Line2D::setPointA(const vec2 *pointA) {
+    this->pointA = new vec2(pointA->getX(), pointA->getY());
   }
 
   void Line2D::setPointA(const double &x, const double &y) {
-    pointA = new Point2D(x, y);
+    pointA = new vec2(x, y);
   }
 
-  void Line2D::setPointB(const Point2D *pointB) {
-    this->pointB = new Point2D(pointB->getX(), pointB->getY());
+  void Line2D::setPointB(const vec2 *pointB) {
+    this->pointB = new vec2(pointB->getX(), pointB->getY());
   }
 
   void Line2D::setPointB(const double &x, const double &y) {
-    pointB = new Point2D(x, y);
+    pointB = new vec2(x, y);
   }
 
   double Line2D::getLength() const {
     return pointA->distanceFrom(pointB);
   }
 
-  Point2D* Line2D::getPointA() const {
+  vec2* Line2D::getPointA() const {
     return pointA;
   }
 
-  Point2D* Line2D::getPointB() const {
+  vec2* Line2D::getPointB() const {
     return pointB;
   }
 

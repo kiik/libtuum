@@ -1,39 +1,38 @@
-/**
- * @file Line.hpp
- * Line class.
+/** @file Line.hpp
+ *  @brief 2D line representation.
  *
- * @authors Ants-Oskar Mäesalu
- * @version 0.1
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.2
  */
 
-#ifndef RTX_GEOMETRY_LINE2D_H
-#define RTX_GEOMETRY_LINE2D_H
+#ifndef TUUM_LINE2D_H
+#define TUUM_LINE2D_H
 
-#include "Point2D.hpp"
-
+#include "tuum_vector.hpp"
 
 namespace tuum {
 
-  class Line2D {
-    public:
-      Line2D(const Line2D&);
-      Line2D(const Point2D*, const Point2D*);
-      Line2D(const double&, const double&, const double&, const double&);
+  class Line2D
+  {
+  public:
+    Line2D(const Line2D&);
+    Line2D(const vec2*, const vec2*);
+    Line2D(const double&, const double&, const double&, const double&);
 
-      void setPointA(const Point2D*);
-      void setPointA(const double&, const double&);
-      void setPointB(const Point2D*);
-      void setPointB(const double&, const double&);
+    void setPointA(const vec2*);
+    void setPointA(const double&, const double&);
+    void setPointB(const vec2*);
+    void setPointB(const double&, const double&);
 
-      double getLength() const;
-      Point2D* getPointA() const;
-      Point2D* getPointB() const;
+    double getLength() const;
+    vec2* getPointA() const;
+    vec2* getPointB() const;
 
-    private:
-      Point2D *pointA;
-      Point2D *pointB;
+  private:
+    vec2 *pointA;
+    vec2 *pointB;
   };
 
 };
 
-#endif // RTX_GEOMETRY_LINE2D_H
+#endif

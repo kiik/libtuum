@@ -1,34 +1,55 @@
-/**
- * @file Point2D.hpp
- * 2-dimensional point class.
+/** @file Point2D.hpp
+ *  @brief 2-dimensional point class.
  *
- * @authors Ants-Oskar Mäesalu
- * @version 0.1
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.2
  */
 
-#ifndef RTX_GEOMETRY_POINT2D_H
-#define RTX_GEOMETRY_POINT2D_H
+#ifndef TUUM_POINT2D_H
+#define TUUM_POINT2D_H
 
+#include <cmath>
 
 namespace tuum {
 
-  class Point2D {
-    public:
-      Point2D(const Point2D&);
-      Point2D(const double&, const double&);
+  template<typename T = double>
+  struct Point2D
+  {
+    T x;
+    T y;
 
-      void setX(const double&);
-      void setY(const double&);
 
-      double distanceFrom(const Point2D*);
-      double getX() const;
-      double getY() const;
+    Point2D(const Point2D<T>& o):
+      x(o.getX()),
+      y(o.getY())
+    {
 
-    private:
-      double x;
-      double y;
+    }
+
+    Point2D(const T& X, const T& Y):
+      x(X),
+      y(Y)
+    {
+
+    }
+
+    void setX(const T& X) { x = X; }
+    void setY(const T& Y) { y = Y; }
+
+    template<typename T2 = double>
+    T2 distanceFrom(const Point2D<T>* o) {
+      return sqrt(x * o->getX() + y * o->getY());
+    }
+
+    template<typename T2 = double>
+    T2 distanceFrom(const Point2D<T>& o) {
+      return sqrt(x * o.getX() + y * o.getY());
+    }
+
+    T getX() const { return x; };
+    T getY() const { return y; };
   };
 
 };
 
-#endif // RTX_GEOMETRY_POINT2D_H_
+#endif
