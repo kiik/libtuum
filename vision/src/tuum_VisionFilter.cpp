@@ -136,10 +136,12 @@ namespace tuum {
 
     ColorClass CLS_BALL = {148,97,141, 221,107,189};
     CLS_BALL.name = "cBall";
+    CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);
 
     ColorClass CLS_GOAL_BLUE = {110,90,139, 140,90,150};
     CLS_GOAL_BLUE.name = "cGoalBlue";
+    CLS_BALL.type = Blob::TypeId::Goal_Blue;
     mClss.push_back(CLS_GOAL_BLUE);
   }
 
@@ -197,21 +199,34 @@ namespace tuum {
       if(it->getDensity() > BLOB_MAX_DENSITY) continue;
 
       blob_t blob = (blob_t)(*it);
+
+      uint32_t cls = it->rls.back().cls;
+      Blob::TypeId t = parseType(cls);
+      if(t == Blob::TypeId::None) continue;
+
+      mBlobs.push_back(Blob(blob, t));
       //TODO: set blob type
-      mBlobs.push_back(blob);
     }
 
     if(mDebugTmr.isTime()) {
-      /*
       printf("%lu\n", mBlobs.size());
 
       for(auto it = mBlobs.begin(); it != mBlobs.end(); it++) {
         printf("d:%.2f\n", it->getDensity());
-      }*/
+      }
 
       mDebugTmr.start(1000);
     }
     return 0;
+  }
+
+  Blob::TypeId VisionFilter::parseType(uint32_t cls) {
+    for(auto cls_it = mClss.begin(); cls_it != mClss.end(); cls_it++) {
+      if(cls_it->id != cls) continue;
+      return cls_it->type;
+    }
+
+    return Blob::TypeId::None;
   }
 
   BlobSet* VisionFilter::getBlobs() { return &mBlobs; }

@@ -18,7 +18,15 @@ namespace tuum {
   class Blob
   {
   public:
+    enum TypeId {
+      None,
+      Ball,
+      Goal_Blue,
+      Goal_Yellow,
+    };
+
     Blob();
+    Blob(blob_t, Blob::TypeId);
     Blob(blob_t);
 
     rect_t getRect() const;
@@ -32,13 +40,20 @@ namespace tuum {
     //double getWorldDistance()
     //double getWorldAngle()
 
+    double getDensity();
+
     double getDistance();
     double getAngle();
 
     void merge(Blob&);
 
+    Blob::TypeId getType() { return mEntType; }
+
   protected:
     rect_t mRect;
+    size_t m_real_area;
+
+    Blob::TypeId mEntType;
   };
 
   typedef std::vector<Blob> BlobSet;

@@ -37,13 +37,6 @@ namespace tuum {
   class Entity
   {
   public:
-    enum TypeId {
-      None,
-      Ball,
-      Goal_Blue,
-      Goal_Yellow,
-    };
-
     static size_t newId();
 
     Entity();

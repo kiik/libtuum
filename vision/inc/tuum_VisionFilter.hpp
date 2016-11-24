@@ -20,7 +20,7 @@ namespace tuum {
       using filter_t::ColorClass::ColorClass;
 
       std::string name;
-      Entity::TypeId type;
+      Blob::TypeId type;
     };
 
     typedef std::vector<ColorClass> ColorClsSet;
@@ -40,6 +40,8 @@ namespace tuum {
     BlobSet* getBlobs();
 
     void addBlobDebugLayer(image_t);
+
+    Blob::TypeId parseType(uint32_t);
 
     void toJSON(json&);
     void fromJSON(json);

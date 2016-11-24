@@ -19,10 +19,17 @@ namespace tuum {
 
   }
 
-  Blob::Blob(blob_t primitive):
-    mRect(primitive.rect)
+  Blob::Blob(blob_t blob):
+    mRect(blob.rect)
   {
     // Nothing to do here
+  }
+
+  Blob::Blob(blob_t blob, Blob::TypeId type):
+    Blob(blob)
+  {
+    m_real_area = blob.realArea;
+    mEntType = type;
   }
 
   rect_t Blob::getRect() const { return mRect; }
@@ -39,6 +46,10 @@ namespace tuum {
   vec2i Blob::getWorldPosition() {
     vec2i p = getPosition();
     return vec2i(0, 0); //Vision::Perspective::virtualToReal(position, cameraID);
+  }
+
+  double Blob::getDensity() {
+    return (double)m_real_area / mRect.getArea();
   }
 
   double Blob::getDistance() {
