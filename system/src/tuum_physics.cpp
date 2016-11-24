@@ -1,10 +1,9 @@
-/**
- *  @file tuum_physics.hpp
- *  Physics system interface
+/** @file tuum_physics.hpp
+ *  @brief Physics system interface. Manages geometrical calculations over many entities.
  *
- *  @authors Ants-Oskar Mäesalu
- *  @version 0.1
- *  @date 4 December 2015
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.2
+ *  @date 3. December 2015
 */
 
 #include "tuum_physics.hpp"
@@ -12,13 +11,18 @@
 #include <cmath>
 #include <vector>
 
-
 namespace tuum {
+
+  Physics::Physics(EntityFilter* gEntityFilter):
+    entityFilter(gEntityFilter)
+  {
+
+  }
 
   // Returns a pointer to the closest entity that is in the way of the ray. If
   // there seems to be no entity in the way of the ray, a null pointer is
   // returned.
-  Entity* Physics::rayCast(Visioning::Context ctx, const double &angle, const double &width) { // TODO: Refactor
+  Entity* Physics::rayCast(const double &angle, const double &width) { // TODO: Refactor
 
     // Initialise the result to nothing being in the way of the ray
     Entity *closestEntity = nullptr;

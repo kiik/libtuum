@@ -24,9 +24,11 @@
 #include "tuum_ppl.hpp"
 
 #include "tuum_entities.hpp"
-#include "tuum_detect.hpp"
 
 #include "tuum_VisionFilter.hpp"
+#include "tuum_EntityFilter.hpp"
+
+#include "tuum_physics.hpp"
 
 using namespace boost;
 using namespace tuum::vision;
@@ -34,22 +36,6 @@ using namespace tuum::vision;
 using json = nlohmann::json;
 
 namespace tuum {
-
-  //TODO: replace this function's usage with an analoguous Entity method
-  static double stateProbability(Transform* t1, Transform* t2) {
-    const double A = 125.0;
-    double px = A*gauss_prob2(t1->getX(), 120, t2->getX());
-    double py = A*gauss_prob2(t1->getY(), 120, t2->getY());
-    return 2*px*py / (px+py);
-  }
-
-  typedef std::vector<Feature*> FeatureSet;
-  typedef std::vector<Ball*> BallSet;
-  typedef std::vector<Robot*> RobotSet;
-
-  typedef EDS<Ball>  BallDetect;
-  typedef EDS<Goal>  GoalDetect;
-  typedef EDS<Robot> RobotDetect;
 
   const uint8_t TUUM_CAM_N = 1;
 
@@ -60,11 +46,6 @@ namespace tuum {
   class Visioning
   {
   public:
-    struct Context {
-      BallDetect  ballDetect;
-      GoalDetect  goalDetect;
-      //TODO: feature detect
-    };
 
     Visioning();
 
@@ -79,6 +60,10 @@ namespace tuum {
     int readFrame(image_t&);
 
     int doFramePass();
+    int doEntityPass();
+
+    bool thresholdPassEnabled();
+    bool entityPassEnabled();
 
     static void setup();
     static void process();
@@ -103,8 +88,6 @@ namespace tuum {
     mutex m_iFrameLock, m_oFrameLock;
     Texture* m_tex;
 
-    Context m_ctx;
-
     PipeBase m_plRtexFootball; // Color space conversion & simplification
     PipeBase m_plImFormat;     // Get image in display color space
 
@@ -112,6 +95,10 @@ namespace tuum {
     bool m_threshold_enable;
 
     VisionFilter mVisionFilter;
+    EntityFilter mEntityFilter;
+
+  public:
+    Physics gPhysics;
   };
 
 }
