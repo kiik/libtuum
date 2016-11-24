@@ -35,14 +35,16 @@ namespace tuum {
     EntityFilter();
 
     void process();
-    void digest(const BlobSet*);
+    void digest(BlobSet*);
+
+    int digestBall(Blob&);
 
     void toJSON(json&);
     void fromJSON(json);
 
   protected:
     BallDetect mBallDetect;
-
+    Timer mDebugTmr;
   };
 
 }

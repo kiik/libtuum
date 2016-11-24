@@ -14,9 +14,9 @@ namespace tuum {
   // Entity Detection State
   template<class T>
   struct EDS {
-    int mn_h = -5; // Entity removal health condition
-    int lo_h = 2;  // Entity detection health condition
-    int med_h = 5;
+    int mn_h = -4; // Entity removal health condition
+    int lo_h = 1;  // Entity detection health condition
+    int med_h = 3;
 
     std::vector<T*> objs;
     std::vector<T*> tmp_objs;
@@ -45,11 +45,10 @@ namespace tuum {
     }
 
     void processProbableEntity(T* obj) {
-      // Calculate entity similarity probabilities
       T* probable_entity = nullptr;
       double p = 0.0, _p;
 
-      // Calculate balls similarity probabilities
+      // Calculate entity similarity probabilities
       for(auto& o : this->getAllEntities()) {
         // TODO: entity object should implement this probability method
         _p = stateProbability(o->getTransform(), obj->getTransform());
@@ -66,10 +65,12 @@ namespace tuum {
           //std::cout << probable_entity->toString() << std::endl;
           //std::cout << "Create new entity, ^p=" << p << std::endl;
         }
-        tmp_objs.push_back(new T(*obj));
+        tmp_objs.push_back(obj);
+
       } else if (probable_entity != nullptr) {
-        probable_entity->update(*obj->getTransform());
-        probable_entity->update(*obj->getBlob());
+        probable_entity->beliefUpdate(*obj->getTransform());
+        probable_entity->setBlob(*obj->getBlob());
+        delete(obj);
       }
     }
 
@@ -79,11 +80,11 @@ namespace tuum {
     void update() {
       {
         for(auto& b : objs) {
-          b->update();
+          b->decayTick();
         }
 
         for(auto& b : tmp_objs) {
-          b->update();
+          b->decayTick();
         }
       }
 

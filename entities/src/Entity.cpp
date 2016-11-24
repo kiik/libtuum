@@ -42,6 +42,7 @@ namespace tuum {
   size_t Entity::getID() { return mId; }
 
   Blob* Entity::getBlob() { return &mBlob; }
+  void Entity::setBlob(const Blob& o) { mBlob = o; }
 
   int Entity::getHealth() { return m_health; }
 
@@ -56,7 +57,7 @@ namespace tuum {
     if(m_health < 35) m_health += 2;
   }
 
-  void Entity::beliefUpdate() {
+  void Entity::decayTick() {
     m_health--;
   }
 

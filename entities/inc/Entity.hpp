@@ -45,13 +45,14 @@ namespace tuum {
 
     size_t getID();
     int getHealth();
+
     Blob* getBlob();
+    void setBlob(const Blob&);
 
     Transform* getTransform();
 
     void beliefUpdate(Transform);
-    void beliefUpdate();
-
+    void decayTick();
 
     std::string toString();
 

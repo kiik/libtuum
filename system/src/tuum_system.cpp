@@ -30,6 +30,8 @@ namespace tuum {
 
     if(entityPassEnabled())
       mEntityFilter.digest(mVision.getFilter()->getBlobs());
+
+    mEntityFilter.process();
   }
 
 

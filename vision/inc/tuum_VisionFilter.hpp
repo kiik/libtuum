@@ -41,7 +41,7 @@ namespace tuum {
 
     void addBlobDebugLayer(image_t);
 
-    Blob::TypeId parseType(uint32_t);
+    Blob::TypeId getType(uint32_t);
 
     void toJSON(json&);
     void fromJSON(json);
