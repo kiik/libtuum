@@ -1,37 +1,28 @@
-/**
- *  @file Goal.hpp
- *  Goal class.
+/** @file Goal.hpp
+ *  @brief Goal representation.
  *
  *  @authors Ants-Oskar Mäesalu
- *  @version 0.2
- *  @date 2 December 2015
+ *  @version 0.3
+ *  @date 2. December 2015
  */
 
-#ifndef RTX_ENTITIES_GOAL_H
-#define RTX_ENTITIES_GOAL_H
+#ifndef TUUM_RTX_GOAL_H
+#define TUUM_RTX_GOAL_H
 
-#include "entityConstants.hpp"
-
-#include "Rectangle.hpp"
-#include "Point2D.hpp"
-
-#include "entityConstants.hpp"
 #include "Entity.hpp"
-
-#include "Blob.hpp"
-
 
 namespace tuum {
 
-  class Goal: public Entity, public Rectangle {
-    public:
-      Goal(Goal&);
-      Goal(const Transform, Blob*, const double& = GOAL_WIDTH, const double& = GOAL_LENGTH);
+  class Goal: public Entity
+  {
+  public:
+    Goal();
+    Goal(const Transform&, const Blob&);
 
-      bool isAlly() const;
-      bool isOpponent() const;
+    bool isAlly() const;
+    bool isOpponent() const;
   };
 
 }
 
-#endif // RTX_ENTITIES_GOAL_H
+#endif

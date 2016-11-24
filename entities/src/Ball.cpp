@@ -1,79 +1,31 @@
-/**
- *  @file Ball.cpp
- *  Ball class.
+/** @file Ball.hpp
+ *  @brief Ball representation.
  *
- *  @authors Ants-Oskar Mäesalu
- *  @version 0.2
- *  @date 2 December 2015
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.3
+ *  @date 2. December 2015
  */
 
 #include "Ball.hpp"
 
-
 namespace tuum {
 
-  Ball::Ball(Ball &other):
-    Entity(*other.getTransform(), *other.getBlob()),
-    Circle(other.getRadius())
+  Ball::Ball(Ball &o):
+    Entity(*o.getTransform(), *o.getBlob()),
+    m_kicked(false), m_in_goal(false), m_in_bounds(true)
   {
-    initialiseAttributes();
+
   }
 
-  Ball::Ball(const Transform transform, Blob *blob, const double &radius):
+  Ball::Ball(const Transform& transform, const Blob& blob):
     Entity(transform, blob),
-    Circle(radius)
+    m_kicked(false), m_in_goal(false), m_in_bounds(true)
   {
-    initialiseAttributes();
-  }
 
-  void Ball::initialiseAttributes() {
-    kicked = false;
-    inGoal = false;
-    inBounds = true;
-  }
-
-  bool Ball::isInGoal() const {
-    return inGoal;
-  }
-
-  bool Ball::isOutOfGoal() const {
-    return !isInGoal();
-  }
-
-  bool Ball::isInBounds() const {
-    return inBounds;
-  }
-
-  bool Ball::isOutOfBounds() const {
-    return !isInBounds();
-  }
-
-  bool Ball::isKicked() const {
-    return kicked;
-  }
-
-  bool Ball::isNotKicked() const {
-    return !isKicked();
   }
 
   bool Ball::isValid() const {
-    return isInBounds() && isOutOfGoal() && isNotKicked();
-  }
-
-  bool Ball::isNotValid() const {
-    return !isValid();
-  }
-
-  void Ball::setKicked(const bool &value) {
-    kicked = value;
-  }
-
-  void Ball::setInGoal(const bool &value) {
-    inGoal = value;
-  }
-
-  void Ball::setInBounds(const bool &value) {
-    inBounds = value;
+    return isInBounds() && !isInGoal() && !isKicked();
   }
 
 }

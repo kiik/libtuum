@@ -1,21 +1,19 @@
 /** @file Entity.hpp
- *  Entity class.
+ *  @brief Field entity class.
  *
- *  @authors Ants-Oskar Mäesalu
- *  @authors Meelik Kiik
- *  @version 0.3
- *  @date 3 December 2015
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.4
+ *  @date 3. December 2015
  */
 
-#ifndef RTX_ENTITY_H
-#define RTX_ENTITY_H
+#ifndef TUUM_ENTITY_H
+#define TUUM_ENTITY_H
 
 #include <string>
 
-#include "rtxmath.hpp"
+#include "tuum_math.hpp"
 
 #include "Blob.hpp"
-#include "Color.hpp"
 
 namespace tuum {
 
@@ -36,56 +34,44 @@ namespace tuum {
    *
    */
 
-  class Entity {
+  class Entity
+  {
+  public:
+    enum TypeId {
+      None,
+      Ball,
+      Goal_Blue,
+      Goal_Yellow,
+    };
 
-    public:
-      static unsigned int newID();
+    static size_t newId();
 
-      Entity();
-      Entity(const Entity&);
+    Entity();
+    Entity(const Blob&);
+    Entity(const Transform&, const Blob&);
 
-      // By position
-      Entity(const Vec2i, Blob*);
-      Entity(const int, const int, Blob*);
+    size_t getID();
+    int getHealth();
+    Blob* getBlob();
 
-      // By position & orientation
-      Entity(Transform, Blob*);
-      Entity(Transform, Blob&);
-      Entity(Transform, bool, Blob*);
-      Entity(const int, const int, const double, Blob*);
+    Transform* getTransform();
 
-      unsigned int getID();
-      int getHealth();
+    void beliefUpdate(Transform);
+    void beliefUpdate();
 
-      Transform* getTransform();
 
-      void update(Transform); // Heal
-      void update(Blob*);
-      void update(Blob&);
-      void update(); // Decay
+    std::string toString();
 
-      Blob* getBlob() const;
-      Color getColor() const;
+  protected:
+    static size_t id_seq;
 
-      bool isBall() const;
-      bool isGoal() const;
-      bool isRobot() const;
+    size_t mId;
+    int m_health = 0;
 
-      std::string toString();
-
-    protected:
-      Blob *blob;
-
-    private:
-      static unsigned int id_seq;
-
-      Transform m_transform;
-
-      unsigned int id;
-      int m_health = 0;
-
+    Blob mBlob;
+    Transform mTransform;
   };
 
 }
 
-#endif // RTX_ENTITY_H
+#endif

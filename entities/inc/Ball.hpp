@@ -1,51 +1,38 @@
-/**
- *  @file Ball.hpp
- *  Ball class.
+/** @file Ball.hpp
+ *  @brief Ball representation.
  *
- *  @authors Ants-Oskar Mäesalu
- *  @version 0.2
- *  @date 2 December 2015
+ *  @authors Ants-Oskar Mäesalu, Meelik Kiik
+ *  @version 0.3
+ *  @date 2. December 2015
  */
 
-#ifndef RTX_ENTITIES_BALL_H
-#define RTX_ENTITIES_BALL_H
+#ifndef TUUM_RTX_BALL_H
+#define TUUM_RTX_BALL_H
 
-#include "Circle.hpp"
-#include "Point2D.hpp"
-
-#include "entityConstants.hpp"
 #include "Entity.hpp"
-
 
 namespace tuum {
 
-  class Ball: public Entity, public Circle {
-    public:
-      Ball(Ball&);
-      Ball(const Transform, Blob*, const double& = BALL_DIAMETER / 2.0);
+  class Ball: public Entity
+  {
+  public:
+    Ball(Ball&);
+    Ball(const Transform&, const Blob&);
 
-      void initialiseAttributes();
+    bool isValid() const;
 
-      bool isInGoal() const;
-      bool isOutOfGoal() const;
-      bool isInBounds() const;
-      bool isOutOfBounds() const;
-      bool isKicked() const;
-      bool isNotKicked() const;
-      bool isValid() const;
-      bool isNotValid() const;
+    bool isKicked() const { return m_kicked; };
+    bool isInGoal() const { return m_in_goal; };
+    bool isInBounds() const { return m_in_bounds; };
 
-      void setKicked(const bool& = true);
-      void setInGoal(const bool& = true);
-      void setInBounds(const bool& = true);
+    void setKicked(const bool& v = true) { m_kicked = v; }
+    void setInGoal(const bool& v = true) { m_in_goal = v; }
+    void setInBounds(const bool& v = true) { m_in_bounds = v; }
 
-    private:
-      bool kicked;
-      bool inGoal;
-      bool inBounds;
-
+  protected:
+    bool m_kicked, m_in_goal, m_in_bounds;
   };
 
 }
 
-#endif // RTX_ENTITIES_BALL_H
+#endif

@@ -7,10 +7,9 @@
  *  @date 3 December 2015
  */
 
-#include "Robot.hpp"
-
 #include "tuum_platform.hpp"
 
+#include "Robot.hpp"
 
 namespace tuum {
 
@@ -18,13 +17,8 @@ namespace tuum {
 
   }
 
-  Robot::Robot(const Robot& robot) {
-    (*this) = robot;
-  }
-
-  Robot::Robot(const Transform transform, Blob* blob, const double &radius):
-    Entity(transform, blob),
-    Circle(radius)
+  Robot::Robot(const Transform& transform, const Blob& blob):
+    Entity(transform, blob)
   {
     // Nothing to do here
   }
@@ -32,18 +26,18 @@ namespace tuum {
   bool Robot::isAlly() const {
     std::string pattern = tuum::gC.getStr("Pattern.Ally");
     if (pattern == std::string("YB")) {
-      return blob->isYellowBlue();
+      return false; //blob->isYellowBlue();
     } else {
-      return blob->isBlueYellow();
+      return false; //blob->isBlueYellow();
     }
   }
 
   bool Robot::isOpponent() const {
     std::string pattern = tuum::gC.getStr("Pattern.Opponent");
     if (pattern == std::string("YB")) {
-      return blob->isYellowBlue();
+      return false; //blob->isYellowBlue();
     } else {
-      return blob->isBlueYellow();
+      return false; //blob->isBlueYellow();
     }
   }
 
