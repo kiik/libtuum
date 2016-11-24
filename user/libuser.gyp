@@ -1,13 +1,10 @@
 {
-  'variables': {
-    'app': 'dev/helen',
-  },
   'targets': [
     {
       'target_name': 'libuser',
       'type': 'static_library',
       'includes': [
-        'applications/dev/helen/usr.gyp'
+        'applications/dev/melx/usr.gyp'
       ],
 
       'dependencies': [
