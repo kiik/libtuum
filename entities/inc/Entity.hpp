@@ -43,7 +43,7 @@ namespace tuum {
     Entity(const Blob&);
     Entity(const Transform&, const Blob&);
 
-    size_t getID();
+    size_t getId();
     int getHealth();
 
     Blob* getBlob();

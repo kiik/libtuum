@@ -39,7 +39,7 @@ namespace tuum {
     mBlob = blob;
   }
 
-  size_t Entity::getID() { return mId; }
+  size_t Entity::getId() { return mId; }
 
   Blob* Entity::getBlob() { return &mBlob; }
   void Entity::setBlob(const Blob& o) { mBlob = o; }
@@ -50,11 +50,8 @@ namespace tuum {
 
 
   void Entity::beliefUpdate(Transform transform) {
-    int x = mTransform.getX()*0.2 + transform.getX()*0.8;
-    int y = mTransform.getY()*0.2 + transform.getY()*0.8;
-    mTransform.setPosition(x, y);
-
-    if(m_health < 35) m_health += 2;
+    mTransform.setPosition(transform.getX(), transform.getY());
+    if(m_health < 8) m_health += 2;
   }
 
   void Entity::decayTick() {

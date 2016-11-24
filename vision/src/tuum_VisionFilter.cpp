@@ -44,13 +44,10 @@ namespace tuum {
   void VisionFilter::insertClassifiers()
   {
     filter_t::ColorClass* ptr;
-
-    getType(1);
     for(auto it = mClss.begin(); it != mClss.end(); it++) {
       ptr = &(*it);
       mFilter.addClass(*ptr);
     }
-    getType(1);
   }
 
   VisionFilter::VisionFilter()

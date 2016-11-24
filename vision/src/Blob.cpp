@@ -45,7 +45,7 @@ namespace tuum {
 
   vec2i Blob::getWorldPosition() {
     vec2i p = getPosition();
-    return vec2i(0, 0); //Vision::Perspective::virtualToReal(position, cameraID);
+    return Vision::Perspective::imageToWorld(p);
   }
 
   double Blob::getDensity() {

@@ -14,7 +14,9 @@
 
 #include "tuum_vector.hpp"
 
-namespace tuum { namespace Vision { namespace Perspective {
+namespace tuum { namespace Vision {
+
+  namespace Perspective {
 
   extern std::vector<double> A;
   extern std::vector<double> B;
@@ -33,6 +35,10 @@ namespace tuum { namespace Vision { namespace Perspective {
   vec2u realToVirtual(const double&, const double&, const unsigned int&);
   vec2u realToVirtual(const vec2&, const unsigned int&);
 
-}}}
+  vec2i imageToWorld(vec2i);
+
+  }
+
+}}
 
 #endif // RTX_VISION_PERSPECTIVE_H

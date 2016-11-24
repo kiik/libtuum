@@ -18,6 +18,11 @@ namespace tuum {
     T x;
     T y;
 
+    Point2D()
+    {
+      x = 0;
+      y = 0;
+    }
 
     Point2D(const Point2D<T>& o):
       x(o.getX()),

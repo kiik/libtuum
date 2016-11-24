@@ -16,12 +16,14 @@ namespace tuum {
   {
     mBallDetect.update();
 
+    /*
     if(mDebugTmr.isTime()) {
-
-      printf("Balls: %i\n", mBallDetect.objs.size());
-
+      json dat;
+      toJSON(dat);
+      printf("dbg: %s\n", dat.dump().c_str());
       mDebugTmr.start(4000);
     }
+    */
   }
 
   void EntityFilter::digest(BlobSet* blobs)
@@ -43,7 +45,23 @@ namespace tuum {
   }
 
   void EntityFilter::toJSON(json& out) {
-    //TODO
+    out["entities"] = json::array();
+
+    Ball* ptr;
+    Transform* tr;
+    for(auto it = mBallDetect.objs.begin(); it != mBallDetect.objs.end(); it++) {
+      ptr = (*it);
+      tr = ptr->getTransform();
+
+
+      json o = {
+        {"id", ptr->getId()},
+        {"health", ptr->getHealth()},
+        {"pos", {tr->getX(), tr->getY()}}
+      };
+
+      out["entities"].push_back(o);
+    }
   }
 
   void EntityFilter::fromJSON(json in) {

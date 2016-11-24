@@ -56,4 +56,8 @@ namespace tuum { namespace Vision { namespace Perspective {
     return realToVirtual(point.x, point.y, cameraID);
   }
 
+  vec2i imageToWorld(vec2i p) {
+    return vec2i(CAMERA_HEIGHT - p.y - 300, CAMERA_WIDTH / 2.0 - p.x);
+  }
+
 }}}
