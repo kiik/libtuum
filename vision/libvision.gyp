@@ -24,6 +24,7 @@
         'src/tuum_cmv.cpp',
 
         'src/tuum_VisionFilter.cpp',
+        'src/tuum_EntityFilter.cpp',
         'src/cmv/cmv_Filter.cpp',
 
         'src/Perspective.cpp',

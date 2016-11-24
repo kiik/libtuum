@@ -28,32 +28,32 @@ namespace tuum { namespace Vision { namespace Perspective {
     C.push_back((double) tuum::gC.getInt("Perspective.SecondC"));
   }
 
-  std::pair<double, double> virtualToReal(const unsigned int &x, const unsigned int &y, const unsigned int &cameraID) {
+  vec2 virtualToReal(const unsigned int &x, const unsigned int &y, const unsigned int &cameraID) {
     // ActualDistance = A + B / PixelVerticalCoord
     double verticalCoordinate = A[cameraID] + B[cameraID] / y;
     // ActualRight = C * PixelRight / PixelVerticalCoord
     double horisontalCoordinate = C[cameraID] * ((double) x - CAMERA_WIDTH / 2.0) / y;
-    return std::pair<double, double>(horisontalCoordinate, verticalCoordinate);
+    return vec2(horisontalCoordinate, verticalCoordinate);
   }
 
-  std::pair<double, double> virtualToReal(const std::pair<unsigned int, unsigned int> &point, const unsigned int &cameraID) {
-    return virtualToReal(point.first, point.second, cameraID);
+  vec2 virtualToReal(const vec2u &point, const unsigned int &cameraID) {
+    return virtualToReal(point.x, point.y, cameraID);
   }
 
-  std::pair<double, double> virtualToReal(const Point2D *point, const unsigned int &cameraID) {
+  vec2 virtualToReal(const vec2 *point, const unsigned int &cameraID) {
     return virtualToReal(point->getX(), point->getY(), cameraID);
   }
 
-  std::pair<unsigned int, unsigned int> realToVirtual(const double &x, const double &y, const unsigned int &cameraID) {
+  vec2u realToVirtual(const double &x, const double &y, const unsigned int &cameraID) {
     // PixelVerticalCoord = B / (ActualDistance - A)
     unsigned int verticalCoordinate = B[cameraID] / (y - A[cameraID]);
     // PixelRight = ActualRight * PixelVerticalCoord / C
     unsigned int horisontalCoordinate = x * verticalCoordinate / C[cameraID] + CAMERA_WIDTH / 2.0;
-    return std::pair<unsigned int, unsigned int>(horisontalCoordinate, verticalCoordinate);
+    return vec2u(horisontalCoordinate, verticalCoordinate);
   }
 
-  std::pair<unsigned int, unsigned int> realToVirtual(const std::pair<double, double> &point, const unsigned int &cameraID) {
-    return realToVirtual(point.first, point.second, cameraID);
+  vec2u realToVirtual(const vec2 &point, const unsigned int &cameraID) {
+    return realToVirtual(point.x, point.y, cameraID);
   }
 
 }}}

@@ -1,9 +1,12 @@
 
-#ifndef TUUM_VFM_H
-#define TUUM_VFM_H
+#ifndef TUUM_VF_H
+#define TUUM_VF_H
 
 #include "tuum_json.hpp"
+#include "tuum_math.hpp"
 #include "tuum_cmv.hpp"
+
+#include "Entity.hpp"
 
 namespace tuum {
 
@@ -17,9 +20,11 @@ namespace tuum {
       using filter_t::ColorClass::ColorClass;
 
       std::string name;
+      Entity::TypeId type;
     };
 
     typedef std::vector<ColorClass> ColorClsSet;
+
 
     VisionFilter();
 
@@ -32,6 +37,8 @@ namespace tuum {
 
     int apply(image_t);
 
+    BlobSet* getBlobs();
+
     void addBlobDebugLayer(image_t);
 
     void toJSON(json&);
@@ -39,8 +46,10 @@ namespace tuum {
 
   protected:
     ColorClsSet mClss;   // Color classes
+    BlobSet mBlobs;
+
     CMV::YUVFilter mFilter;           // Color filtering machine
-    CMV::BlobSet mBlobs, mBlobBuffer;
+    CMV::BlobSet mBlobBuffer;
 
     Timer mDebugTmr;
   };

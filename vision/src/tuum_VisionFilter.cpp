@@ -196,8 +196,9 @@ namespace tuum {
       if(it->getDensity() < BLOB_MIN_DENSITY) continue;
       if(it->getDensity() > BLOB_MAX_DENSITY) continue;
 
-
-      mBlobs.push_back(*it);
+      blob_t blob = (blob_t)(*it);
+      //TODO: set blob type
+      mBlobs.push_back(blob);
     }
 
     if(mDebugTmr.isTime()) {
@@ -213,10 +214,12 @@ namespace tuum {
     return 0;
   }
 
+  BlobSet* VisionFilter::getBlobs() { return &mBlobs; }
+
   void VisionFilter::addBlobDebugLayer(image_t out)
   {
 
-    CMV::rect_t r;
+    rect_t r;
     r.x0 = 100;
     r.x1 = 200;
 
@@ -227,7 +230,7 @@ namespace tuum {
     //draw_rect(out, r);
 
     for(auto it = mBlobs.begin(); it < mBlobs.end(); it++) {
-      draw_rect(out, it->rect);
+      draw_rect(out, it->getRect());
 
       /*
       if(it->rect.getArea() > 200) {

@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "Point2D.hpp"
+#include "tuum_vector.hpp"
 
 namespace tuum { namespace Vision { namespace Perspective {
 
@@ -26,12 +26,12 @@ namespace tuum { namespace Vision { namespace Perspective {
 
   void setup();
 
-  std::pair<double, double> virtualToReal(const unsigned int&, const unsigned int&, const unsigned int&);
-  std::pair<double, double> virtualToReal(const std::pair<unsigned int, unsigned int>&, const unsigned int&);
-  std::pair<double, double> virtualToReal(const Point2D*, const unsigned int&);
+  vec2 virtualToReal(const unsigned int&, const unsigned int&, const unsigned int&);
+  vec2 virtualToReal(const vec2u&, const unsigned int&);
+  vec2 virtualToReal(const vec2*, const unsigned int&);
 
-  std::pair<unsigned int, unsigned int> realToVirtual(const double&, const double&, const unsigned int&);
-  std::pair<unsigned int, unsigned int> realToVirtual(const std::pair<double, double>&, const unsigned int&);
+  vec2u realToVirtual(const double&, const double&, const unsigned int&);
+  vec2u realToVirtual(const vec2&, const unsigned int&);
 
 }}}
 

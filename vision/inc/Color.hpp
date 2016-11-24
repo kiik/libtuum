@@ -1,20 +1,18 @@
-/**
- * @file Color.hpp
- * Entity color definition.
+/** @file Color.hpp
+ *  @brief Entity color definition.
  *
- * @authors Ants-Oskar Mäesalu
- * @version 0.1
- * @date 29 November 2015
+ *  @authors Ants-Oskar Mäesalu
+ *  @version 0.1
+ *  @date 29. November 2015
  */
 
-#ifndef RTX_VISION_COLOR_H
-#define RTX_VISION_COLOR_H
+#ifndef TUUM_RTX_COLOR_H
+#define TUUM_RTX_COLOR_H
 
 #include <utility>
 
 #include "Perspective.hpp"
-#include "Point2D.hpp"
-
+#include "tuum_vector.hpp"
 
 namespace tuum {
 
@@ -35,10 +33,12 @@ namespace tuum {
 
   void getRGB(const Color&, unsigned int&, unsigned int&, unsigned int&);
 
+  /*
   std::pair<double, double> getBlobExpectedRealSize(const Color&);
   std::pair<unsigned int, unsigned int> getBlobExpectedVirtualSize(const Color&, const std::pair<unsigned int, unsigned int>&, const unsigned int&);
-  std::pair<unsigned int, unsigned int> getBlobExpectedVirtualSize(const Color&, const Point2D*, const unsigned int&);
+  std::pair<unsigned int, unsigned int> getBlobExpectedVirtualSize(const Color&, const vec2*, const unsigned int&);
+  */
 
 };
 
-#endif // RTX_VISION_COLOR_H
+#endif

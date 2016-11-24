@@ -3,16 +3,17 @@
 #define TUUM_DRAW_H
 
 #include "tuum_buff.hpp"
+#include "tuum_math.hpp"
 #include "tuum_cmv.hpp"
 
 namespace tuum {
 
-  static size_t to_img_offset(size_t x, size_t y, size_t stride) {
+  static int to_img_offset(int x, int y, int stride) {
     return ((y * stride) + x) * 3;
   }
 
-  static void draw_point(size_t x, size_t y, uint8_t* dat, size_t stride) {
-    size_t os = to_img_offset(x, y, stride);
+  static void draw_point(int x, int y, uint8_t* dat, int stride) {
+    int os = to_img_offset(x, y, stride);
     dat[os] = 255;
     dat[os + 1] = 0;
     dat[os + 2] = 0;
@@ -24,18 +25,18 @@ namespace tuum {
     BLUE,
   };
 
-  static void draw_line(image_t out, CMV::rect_t r, Colors c = Colors::RED) {
+  static void draw_line(image_t out, rect_t r, Colors c = Colors::RED) {
     uint8_t* dat = (uint8_t*)out->data;
-    size_t os, W = out->frm.width;
+    int os, W = out->frm.width;
 
     double y;
     double dy = (r.y1 - r.y0), dx = (r.x1 - r.x0);
 
-    size_t len = (size_t)sqrt(dy*dy + dx*dx);
+    int len = (int)sqrt(dy*dy + dx*dx);
 
     for(double z = 0; z < len; z++) {
       double p = z / len;
-      os = to_img_offset(r.x0 + (size_t)(p * dx), r.y0 + (size_t)(p * dy), W);
+      os = to_img_offset(r.x0 + (int)(p * dx), r.y0 + (int)(p * dy), W);
 
       switch(c) {
         case RED:
@@ -53,7 +54,7 @@ namespace tuum {
     }
   }
 
-  static void draw_rect(image_t out, CMV::rect_t r) {
+  static void draw_rect(image_t out, rect_t r) {
     uint8_t* dat = (uint8_t*)out->data;
 
     Colors c = Colors::RED;

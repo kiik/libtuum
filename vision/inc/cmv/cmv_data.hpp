@@ -3,6 +3,7 @@
 #define TUUM_CMV_DATA_H
 
 #include "platform.hpp"
+#include "tuum_math.hpp"
 
 namespace tuum { namespace CMV {
 
@@ -12,39 +13,17 @@ namespace tuum { namespace CMV {
   // Runline type
   class rl_t {
   public:
-    size_t x0 = 0, x1 = 0, y = 0;
+    int x0 = 0, x1 = 0, y = 0;
     uint32_t cls = 0;
 
     bool isTouching(rl_t);
   };
 
-  // TODO: Refactor into platform or math library
-  struct rect_t {
-    size_t x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-
-    rect_t()
-    {
-      x0 = 0; y0 = 0; x1 = 0; y1 = 0;
-    }
-
-    rect_t(size_t X0, size_t Y0, size_t X1, size_t Y1)
-    {
-      x0 = X0; y0 = Y0; x1 = X1; y1 = Y1;
-    }
-
-    size_t getArea() {
-      return (y1 - y0) * (x1 - x0);
-    }
-
-  };
-
   typedef std::vector<rl_t> RunlineSet;
 
-  struct blob_t {
+  struct blob_t : public tuum::blob_t
+  {
     RunlineSet rls; // Runlines
-
-    rect_t rect;
-    size_t realArea = 0;
 
     void addRunline(rl_t rl) {
       if(rl.x0 < rect.x0) rect.x0 = rl.x0;
@@ -63,14 +42,6 @@ namespace tuum { namespace CMV {
 
       rls.push_back(rl);
       realArea += (rl.x1 - rl.x0);
-    }
-
-    size_t getArea() {
-      return rect.getArea();
-    }
-
-    double getDensity() {
-      return (double)realArea / getArea();
     }
 
   };
