@@ -106,14 +106,14 @@ namespace tuum {
   //TODO: position to relative position
   Transform Navigation::calcBallPickupPos(Transform* bt) {
     Vec2f avf = (bt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
-    Transform t((*bt) - (avf*Motion::VLS_DIST.mn).toInt());
+    Transform t((*bt) - (avf*Motion::DribblerPlane).toInt());
     return t;
   }
 
   //////////////////
   Transform Navigation::calcAllyGoalPos(Transform* gt) {
     Vec2f avf = (gt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
-    Transform t((*gt) - (avf*Motion::VLS_DIST.mn).toInt());
+    Transform t((*gt) - (avf*Motion::DribblerPlane).toInt());
     return t;
   }
   ///////////////////

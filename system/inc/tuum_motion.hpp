@@ -1,5 +1,5 @@
-/** @file tuum_motion.cpp
- *  @brief Motion managment system implementation.
+/** @file tuum_motion.hpp
+ *  @brief Motion managment system.
  *
  *  @authors Meelik Kiik
  *  @version 0.2
@@ -49,13 +49,16 @@ namespace tuum {
   protected:
     bool m_running, m_target_achieved;
 
+    MotionData mMotionData;
     Timer mMotorTmr;
+
     hal::MotorControl* gMotorControl;
   public:
     static double MinDist;
     static double MinOrient;
+    static double DribblerPlaneOffset;
   };
 
-}}
+}
 
 #endif

@@ -13,8 +13,11 @@
 
 namespace tuum {
 
-  Motion::MinDist = GRS_MOV.low.step;
-  Motion::MinOrient = GRS_ROT.low.step;
+  //TODO: Test & reconfigure these constants
+  double Motion::MinDist = 10;
+  double Motion::MinOrient = 0.08;
+
+  double Motion::DribblerPlaneOffset = 20;
 
   Motion::Motion():
     m_running(true), m_target_achieved(true)
@@ -31,18 +34,16 @@ namespace tuum {
     if(!m_running) return;
 
     // Step 1: Calculate target vectors
-    //motionData.calc();
-    //motionData.applyFactors();
-    //motionData.clamp();
+    mMotionData.calc();
 
     // Step 2: Send motor command
     if(!isTargetAchieved()) {
       if(mMotorTmr.isTime()) {
-        //mot.sp = motionData.getSpeed();
-        //mot.tr = motionData.getHeading();
-        //mot.jo = motionData.getRotationSpeed();
-        //mco->move(mot);
-        motorCmdTimer.start();
+        float sp = mMotionData.getSpeed();
+        float he = mMotionData.getHeading();
+        float rsp = mMotionData.getRotationSpeed();
+        //gMotorControl->omniDrive(sp, he, rsp);
+        mMotorTmr.start();
       }
     }
   }
@@ -96,4 +97,4 @@ namespace tuum {
     return getOrientError() <= Motion::MinOrient;
   }
 
-}}
+}

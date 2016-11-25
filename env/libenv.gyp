@@ -24,7 +24,6 @@
         'inc',
       ],
       'sources': [
-        'src/motion.cpp',
         'src/platform.cpp',
 
         'src/tuum_communication.cpp',

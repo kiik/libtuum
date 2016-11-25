@@ -14,8 +14,6 @@
 
 #include "ProgramModule.hpp"
 
-#include "motion.hpp"
-
 namespace tuum {
 
   // Global configuration object

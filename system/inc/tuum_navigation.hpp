@@ -7,8 +7,8 @@
  *  @date 2 December 2015
  */
 
-#ifndef RTX_NAVIGATION_H
-#define RTX_NAVIGATION_h
+#ifndef TUUM_NAVIGATION_H
+#define TUUM_NAVIGATION_H
 
 #include "rtxmath.hpp"
 
@@ -56,4 +56,4 @@ namespace tuum {
 
 }
 
-#endif // RTX_NAVIGATION_H
+#endif

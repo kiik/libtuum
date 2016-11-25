@@ -1,68 +1,58 @@
+/** @file MotionData.hpp
+ *  @brief Motion calculations class.
+ *
+ *  @authors Meelik Kiik
+ *  @version 0.2
+ *  @date 1. November 2015
+ */
 
-#ifndef RTX_MOTION_DATA_H
-#define RTX_MOTION_DATA_H
+#ifndef TUUM_MOTION_DATA_H
+#define TUUM_MOTION_DATA_H
 
-#include "rtxmath.hpp"
+#include <stdint.h>
 
-#include "motion.hpp"
+#include "tuum_vector.hpp"
 
-namespace tuum { namespace Motion {
+namespace tuum {
 
-  struct MotionData {
-    Vec2i positionTarget;
-    Vec2i aimTarget;
-    Vec2i _pt;
-    Vec2i _at;
+  class MotionData
+  {
+  public:
+    MotionData();
 
-    bool posTargetSet = false;
-    bool aimTargetSet = false;
+    void setTargetPosition(vec2i);
+    void setTargetOrientation(double);
 
-    void clear();
+    double getDistanceDelta();
+    double getOrientationDelta();
 
-    void setPosTarget(Vec2i vec);
-    int setAimTarget(Vec2i vec);
-    void setTransformTarget(Transform t);
+  protected:
+    vec2i tPos;
+    double tOrient;
 
-    Vec2i getTargetPos();
-    double getTargetOrient();
+    vec2i _pt;
+    vec2i _at;
 
-    Transform getTargetTransform();
-    Vec2i getAimVector();
-
-    double getDeltaDist();
-    double getDeltaOrient();
-
-    int getTargetRange();
-
+    bool m_pos_set;
+    bool m_aim_set;
 
     /**
      *  Omni drive parameter calculation members
      */
-    int baseVelocity = 25;
+    double vP, vI, vD; // Speed PID control constants (TODO: Implement PID controller usage)
 
-    double _speed;
-    double _r_speed;
-    double _heading;
+    uint16_t m_speed;
+    double   m_heading;
+    uint16_t m_r_speed;
 
-    const Gear* m_movGear = &(GRS_MOV.low);
-    const Gear* m_rotGear = &(GRS_ROT.low);
-    Gear manualRotGear = {0, 0};
-
-    double getHeading() { return _heading; }
-    int getSpeed() { return _speed; }
-    int getRotationSpeed() { return _r_speed; }
+  public:
+    uint16_t getSpeed() { return m_speed; }
+    double getHeading() { return m_heading; }
+    uint16_t getRotationSpeed() { return m_r_speed; }
 
     void calc();
-
-    void updateGear();
-    void applyFactors();
-    void clamp();
-
-    double getVF();
-    double getOVF();
-
   };
 
-}}
+}
 
-#endif // RTX_MOTION_DATA_H
+#endif
