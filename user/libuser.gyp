@@ -4,7 +4,8 @@
       'target_name': 'libuser',
       'type': 'static_library',
       'includes': [
-        'applications/dev/melx/usr.gyp'
+
+        'applications/dev/rasmus/usr.gyp'
       ],
 
       'dependencies': [
