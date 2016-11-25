@@ -15,6 +15,7 @@ namespace tuum {
   {
     gSystem = ptr;
     gVision = ptr->getVisioning();
+    gMotion = ptr->getMotioning();
   }
 
 }

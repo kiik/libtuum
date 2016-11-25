@@ -25,8 +25,8 @@ namespace tuum {
   public:
     Motion();
 
-    void setup();
-    void process();
+    void init();
+    void run();
 
     void setPositionTarget(vec2i&);
 

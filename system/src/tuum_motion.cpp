@@ -27,11 +27,11 @@ namespace tuum {
     mMotorTmr.start();
   }
 
-  void Motion::setup() {
+  void Motion::init() {
     gMotorControl = hal::hw.getMotorControl();
   }
 
-  void Motion::process() {
+  void Motion::run() {
     if(!m_running) return;
 
     // Step 1: Calculate target vectors
