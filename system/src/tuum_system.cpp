@@ -20,13 +20,16 @@ namespace tuum {
     tuum::lpx::setup();
 
     mVision.init();
+    mMotion.init();
   }
 
   void System::process()
   {
     hal::process();
     lpx::process();
+
     mVision.run();
+    mMotion.run();
 
     if(entityPassEnabled())
       mEntityFilter.digest(mVision.getFilter()->getBlobs());

@@ -105,23 +105,23 @@ namespace tuum {
 
   //TODO: position to relative position
   Transform Navigation::calcBallPickupPos(Transform* bt) {
-    Vec2f avf = (bt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
-    Transform t((*bt) - (avf*Motion::DribblerPlane).toInt());
+    vec2 avf = (bt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
+    Transform t((*bt) - (vec2i)(avf*Motion::DribblerPlaneOffset));
     return t;
   }
 
   //////////////////
   Transform Navigation::calcAllyGoalPos(Transform* gt) {
-    Vec2f avf = (gt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
-    Transform t((*gt) - (avf*Motion::DribblerPlane).toInt());
+    vec2 avf = (gt->getPosition() - Localization::getTransform()->getPosition()).getNormalized();
+    Transform t((*gt) - (vec2i)(avf*Motion::DribblerPlaneOffset));
     return t;
   }
   ///////////////////
 
-  Vec2i Navigation::calcGoalShootPos(Transform* t) {
+  vec2i Navigation::calcGoalShootPos(Transform* t) {
     /*Transform me = Localization::getTransform();
-    Vec2i me_p = me.getPosition();
-    Vec2i g_p = t->getPosition();
+    vec2i me_p = me.getPosition();
+    vec2i g_p = t->getPosition();
 
     Transform target;
     // 400, 0 (n => )

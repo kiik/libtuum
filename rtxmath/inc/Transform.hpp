@@ -12,27 +12,27 @@
 #include <string>
 #include <math.h>
 
-#include "Vec.hpp"
+#include "tuum_vector.hpp"
 
 namespace tuum {
 
   struct Transform {
-    Vec2i pos;
+    vec2i pos;
     double o;
 
     Transform();
 
     Transform(const int, const int);
-    Transform(const Vec2i);
+    Transform(const vec2i);
 
     Transform(const int, const int, const double);
-    Transform(const Vec2i, const double);
+    Transform(const vec2i, const double);
 
     void setPosition(const int, const int);
-    void setPosition(const Vec2i);
+    void setPosition(const vec2i);
     void setOrientation(const double);
 
-    Vec2i getPosition();
+    vec2i getPosition();
     double getOrientation();
 
     int getX();
@@ -40,9 +40,9 @@ namespace tuum {
     void setX(int);
     void setY(int);
 
-    double distanceTo(Vec2i);
+    double distanceTo(vec2i);
 
-    Vec2i operator-(int);
+    vec2i operator-(int);
     Transform operator-(Transform);
 
     std::string toString();

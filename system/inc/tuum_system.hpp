@@ -4,6 +4,7 @@
 
 #include "tuum_EntityFilter.hpp"
 
+#include "tuum_motion.hpp"
 #include "tuum_physics.hpp"
 #include "tuum_visioning.hpp"
 
@@ -18,6 +19,7 @@ namespace tuum {
     void process();
 
     Visioning* getVisioning() { return &mVision; }
+    Motion* getMotioning() { return &mMotion; }
     Physics* getPhysics() { return &mPhysics; }
     EntityFilter* getEntityHandle() { return &mEntityFilter; }
 
@@ -27,6 +29,7 @@ namespace tuum {
     Visioning mVision;
     EntityFilter mEntityFilter;
     Physics mPhysics;
+    Motion mMotion;
   };
 
 }

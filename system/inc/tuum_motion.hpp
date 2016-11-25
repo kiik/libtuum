@@ -9,11 +9,14 @@
 #ifndef TUUM_MOTIONING_H
 #define TUUM_MOTIONING_H
 
-#include "rtxmath.hpp"
+
+#include "platform.hpp"
+#include "tuum_platform.hpp"
+#include "tuum_math.hpp"
+
+#include "hal.hpp"
 
 #include "syscore/MotionData.hpp"
-
-#include "tuum_platform.hpp"
 
 namespace tuum {
 
@@ -22,8 +25,8 @@ namespace tuum {
   public:
     Motion();
 
-    void setup();
-    void process();
+    void init();
+    void run();
 
     void setPositionTarget(vec2i&);
 
@@ -31,6 +34,8 @@ namespace tuum {
     void setTarget(double);
     void setTarget(vec2i, double);
     void setTarget(vec2i, vec2i);
+
+    void setAimTarget(vec2i);
 
     void start();
     void stop();
@@ -54,9 +59,10 @@ namespace tuum {
 
     hal::MotorControl* gMotorControl;
   public:
-    static double MinDist;
-    static double MinOrient;
-    static double DribblerPlaneOffset;
+    static int MinDist;
+    static int MinOrient;
+    static int DribblerPlaneOffset;
+    static int DribblerPlanePadding;
   };
 
 }
