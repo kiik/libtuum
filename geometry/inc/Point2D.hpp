@@ -12,6 +12,7 @@
 
 namespace tuum {
 
+  //TODO: Refactor into generic vector structure
   template<typename T = double>
   struct Point2D
   {
@@ -40,6 +41,10 @@ namespace tuum {
 
     void setX(const T& X) { x = X; }
     void setY(const T& Y) { y = Y; }
+
+    double getOrientation() {
+      return atan2(y, x);
+    }
 
     template<typename T2 = double>
     T2 distanceFrom(const Point2D<T>* o) {
