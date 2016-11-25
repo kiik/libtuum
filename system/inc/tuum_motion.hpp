@@ -1,6 +1,13 @@
+/** @file tuum_motion.cpp
+ *  @brief Motion managment system implementation.
+ *
+ *  @authors Meelik Kiik
+ *  @version 0.2
+ *  @date 1. November 2015
+ */
 
-#ifndef RTX_MOTIONING_H
-#define RTX_MOTIONING_H
+#ifndef TUUM_MOTIONING_H
+#define TUUM_MOTIONING_H
 
 #include "rtxmath.hpp"
 
@@ -8,75 +15,47 @@
 
 #include "tuum_platform.hpp"
 
-namespace tuum { namespace Motion {
+namespace tuum {
 
-  enum MotionType {
-    MOT_SCAN,   // In-place rotation
-    MOT_NAIVE,  // Turn and move
-    MOT_CURVED, // Drive to target in 1 motion
-    MOT_COMPLEX,
+  class Motion
+  {
+  public:
+    Motion();
 
-    // Variables curve to achieve given end orientation
-    MOT_COMPLEX_CURVED,
+    void setup();
+    void process();
 
-    MOT_BLIND,
-    MOT_SCAN2,
-    MOT_AIM,
+    void setPositionTarget(vec2i&);
+
+    void setTarget(vec2i);
+    void setTarget(double);
+    void setTarget(vec2i, double);
+    void setTarget(vec2i, vec2i);
+
+    void start();
+    void stop();
+
+    bool isRunning();
+
+    double getDistanceError(); // Returns distance error from target
+    double getOrientError();   // Returns angle error from target
+
+    // Returns motion completion state.
+    bool isTargetAchieved();
+
+    bool isLocationAchieved();
+    bool isOrientAchieved();
+
+  protected:
+    bool m_running, m_target_achieved;
+
+    Timer mMotorTmr;
+    hal::MotorControl* gMotorControl;
+  public:
+    static double MinDist;
+    static double MinOrient;
   };
-
-  enum MotionPhase {
-    MOP_STANDBY,
-    MOP_INIT,
-    MOP_RUN,
-    MOP_DONE
-  };
-
-  struct MotionContext {
-    MotionPhase phase;
-  };
-
-  extern MotionData motionData;
-
-  const double targetDistanceCondition = GRS_MOV.low.step;
-  const double targetOrientationCondition = GRS_ROT.low.step;
-
-  void setup();
-  void process();
-
-  // Motion target API
-  void setPositionTarget(Vec2i);
-  void setAimTarget(Vec2i);
-  void setTarget(Transform);
-
-
-  // State control API
-  void start();
-  void stop();
-
-  void setSpeed(int v);
-  void setBehaviour(MotionType mt);
-
-
-  // State response API
-  bool isRunning();
-
-  Vec2i getTargetPosition();
-  double getTargetOrientation();
-  Transform getTargetTransform();
-
-  bool isTargetAchieved();
-  bool isOrientationAchieved();
-
-
-  // State offset getters
-  double getDeltaDistance();
-  double getDeltaOrientation();
-
-  Transform getDeltaTransform();
-  double getOrientError();
-
-  int getTargetRange();
 
 }}
 
-#endif // RTX_MOTIONING_H
+#endif
