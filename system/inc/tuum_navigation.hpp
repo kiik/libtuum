@@ -35,7 +35,7 @@ namespace tuum {
     Transform calcBallPickupPos(Transform*);
     Transform calcAllyGoalPos(Transform*);
 
-    Vec2i calcGoalShootPos(Transform*);
+    vec2i calcGoalShootPos(Transform*);
 
     Ball* getNearestBall();
 

@@ -14,16 +14,17 @@
 namespace tuum {
 
   //TODO: Test & reconfigure these constants
-  double Motion::MinDist = 10;
-  double Motion::MinOrient = 0.08;
+  int Motion::MinDist = 10;
+  int Motion::MinOrient = 0.08;
 
-  double Motion::DribblerPlaneOffset = 20;
+  int Motion::DribblerPlaneOffset = 20;
+  int Motion::DribblerPlanePadding = 20;
 
   Motion::Motion():
     m_running(true), m_target_achieved(true)
   {
-    motorCmdTimer.setPeriod(100);
-    motorCmdTimer.start();
+    mMotorTmr.setPeriod(100);
+    mMotorTmr.start();
   }
 
   void Motion::setup() {
@@ -64,6 +65,10 @@ namespace tuum {
     //TODO
   }
 
+  void Motion::setAimTarget(vec2i trg) {
+    //TODO: Calculate target orientation from input vector
+  }
+
   void Motion::start() {
     m_running = true;
   }
@@ -85,15 +90,15 @@ namespace tuum {
     return 0.0;
   }
 
-  bool isTargetAchieved() {
+  bool Motion::isTargetAchieved() {
     return isLocationAchieved() && isOrientAchieved();
   }
 
-  bool isLocationAchieved() {
+  bool Motion::isLocationAchieved() {
     return getDistanceError() <= Motion::MinDist;
   }
 
-  bool isOrientAchieved() {
+  bool Motion::isOrientAchieved() {
     return getOrientError() <= Motion::MinOrient;
   }
 

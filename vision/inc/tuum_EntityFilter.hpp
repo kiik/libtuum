@@ -42,6 +42,8 @@ namespace tuum {
     void toJSON(json&);
     void fromJSON(json);
 
+    BallSet* getBalls() { return &(mBallDetect.objs); }
+
   protected:
     BallDetect mBallDetect;
     Timer mDebugTmr;
