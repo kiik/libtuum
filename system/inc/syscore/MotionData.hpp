@@ -32,20 +32,24 @@ namespace tuum {
     vec2i tPos;
     double tOrient;
 
+    size_t t;
+    double avg_dt;
 
     /**
      *  Omni drive parameter cmalculation members
      */
     double Pv, Pr; // Speed PID control constants (TODO: Implement PID controller usage)
 
-    uint16_t m_speed;
+    int16_t m_speed;
     double   m_heading;
-    uint16_t m_r_speed;
+    int16_t m_r_speed;
 
   public:
-    uint16_t getSpeed() { return m_speed; }
+    int16_t getSpeed() { return m_speed; }
     double getHeading() { return m_heading; }
-    uint16_t getRotationSpeed() { return m_r_speed; }
+    int16_t getRotationSpeed() { return m_r_speed; }
+
+    double getAvgDeltaTime() { return avg_dt; }
 
     void calc();
     void clear();

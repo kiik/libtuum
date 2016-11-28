@@ -12,7 +12,7 @@ namespace tuum {
 
   float gP = 0.6;
   float gI = 0.4;
-  float gD = 0.001;
+  float gD = 0.04;
 
   PID::PID():
     P(gP), I(gI), D(gD),

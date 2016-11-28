@@ -57,6 +57,8 @@ namespace tuum {
 
     void toJSON(json&);
 
+    void debug();
+
   protected:
     bool m_running, m_target_achieved;
 

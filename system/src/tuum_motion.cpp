@@ -127,4 +127,14 @@ namespace tuum {
     out["motion"] = dat;
   }
 
+  void Motion::debug() {
+    printf("[Motion]: s=%.2f, dO=%.2f\n", getDistanceError(), getOrientError());
+    vec2 t = mMotionData.getTarget();
+    float sp = mMotionData.getSpeed();
+    float he = mMotionData.getHeading();
+    float rsp = mMotionData.getRotationSpeed();
+
+    printf("[Motion]: sp=%.2f, h2=%.2f, rsp=%.2f. (dt=%.2f)\n", sp, he, rsp, mMotionData.getAvgDeltaTime());
+  }
+
 }
