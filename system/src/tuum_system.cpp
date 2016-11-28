@@ -27,14 +27,16 @@ namespace tuum {
     mVision.init();
     mMotion.init();
 
-    if(gMotionThr == nullptr)
-      gMotionThr = new boost::thread(boost::bind(&Motion::loop, &mMotion));
+    //if(gMotionThr == nullptr)
+      //gMotionThr = new boost::thread(boost::bind(&Motion::loop, &mMotion));
   }
 
   void System::process()
   {
     hal::process();
     lpx::process();
+
+    mMotion.run();
 
     mVision.run();
 
