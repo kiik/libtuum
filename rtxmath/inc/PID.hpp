@@ -29,6 +29,8 @@ namespace tuum {
     void setD(pid_size_t);
     void setPID(pid_size_t, pid_size_t, pid_size_t);
 
+    void setILimit(float);
+
     pid_size_t _p();
     pid_size_t _i();
     pid_size_t _d();
@@ -37,6 +39,7 @@ namespace tuum {
     pid_size_t P, I, D, m_val;
     pid_size_t m_p, m_i, m_d;
     pid_size_t m_lerr;
+    float m_i_lim;
   };
 
 }
