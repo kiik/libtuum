@@ -167,6 +167,7 @@ namespace tuum {
   bool dbg = false;
   int Visioning::doFramePass()
   {
+    size_t t0, t1, t2, t3, t4, t5;
     Pipeline *ppl, *nppl;
     try
     {
@@ -179,24 +180,29 @@ namespace tuum {
         m_ppl_config_dirty = false;
       }*/
 
+      t0 = millis();
+
       size_t id;
       while(!m_iFrameLock.try_lock()) {};
       m_tex->write(m_iFrame->data, GL_RGB, GL_UNSIGNED_BYTE);
       id = m_iFrame->id;
 
       m_iFrameLock.unlock();
-
+      t1 = millis();
 
       (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
+      t2 = millis();
 
       while(!m_iFrameLock.try_lock()) {};
       ppl->out(0).read(m_iFrame->data);
 
       // Thresholding
+      t3 = millis();
       if(thresholdPassEnabled()) {
         mVisionFilter.apply(m_iFrame);
         mVisionFilter.addBlobDebugLayer(m_iFrame);
       }
+      t4 = millis();
 
       while(!m_oFrameLock.try_lock()) {};
       m_oFrame->id = id;
@@ -204,7 +210,9 @@ namespace tuum {
 
       m_iFrameLock.unlock();
       m_oFrameLock.unlock();
+      t5 = millis();
 
+      printf("input-copy: %lums, ppl-run: %lums, read+clsfy: %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t2 - t3), (t3 - t4), (t4 - t5));
       return 1;
     } catch(Glip::Exception& e) {
       std::cerr << e.what() << std::endl;
