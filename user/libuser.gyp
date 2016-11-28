@@ -5,7 +5,7 @@
       'type': 'static_library',
       'includes': [
 
-        'applications/dev/rasmus/usr.gyp'
+        'applications/dev/melx/usr.gyp'
       ],
 
       'dependencies': [
