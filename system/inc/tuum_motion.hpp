@@ -12,6 +12,8 @@
 
 #include "platform.hpp"
 #include "tuum_platform.hpp"
+
+#include "tuum_json.hpp"
 #include "tuum_math.hpp"
 
 #include "hal.hpp"
@@ -20,7 +22,7 @@
 
 namespace tuum {
 
-  class Motion
+  class Motion : public JSONSerializable<Motion>
   {
   public:
     Motion();
@@ -50,6 +52,8 @@ namespace tuum {
 
     bool isLocationAchieved();
     bool isOrientAchieved();
+
+    void toJSON(json&);
 
   protected:
     bool m_running, m_target_achieved;

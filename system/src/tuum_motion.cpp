@@ -48,6 +48,7 @@ namespace tuum {
       }
     } else {
       stop();
+      m_running = false;
     }
   }
 
@@ -106,6 +107,18 @@ namespace tuum {
 
   bool Motion::isOrientAchieved() {
     return getOrientError() <= Motion::MinOrient;
+  }
+
+  void Motion::toJSON(json& out) {
+    json dat = json::object();
+
+    dat["distanceError"] = getDistanceError();
+    dat["orientError"] = getOrientError();
+
+    vec2i t = mMotionData.getTarget();
+    dat["target"] = {t.x, t.y};
+
+    out["motion"] = dat;
   }
 
 }

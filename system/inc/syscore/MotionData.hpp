@@ -26,6 +26,8 @@ namespace tuum {
     double getDistanceDelta();
     double getOrientationDelta();
 
+    vec2i getTarget() { return tPos; }
+
   protected:
     vec2i tPos;
     double tOrient;
