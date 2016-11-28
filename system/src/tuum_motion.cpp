@@ -52,6 +52,12 @@ namespace tuum {
     }
   }
 
+  void Motion::loop() {
+    while(1) {
+      run();
+    }
+  }
+
   void Motion::setTarget(vec2i pos) {
     setTarget(pos, 0.0);
   }

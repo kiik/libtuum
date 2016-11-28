@@ -30,6 +30,8 @@ namespace tuum {
     void init();
     void run();
 
+    void loop();
+
     void setPositionTarget(vec2i&);
 
     void setTarget(vec2i);

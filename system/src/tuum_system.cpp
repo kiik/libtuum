@@ -28,7 +28,7 @@ namespace tuum {
     mMotion.init();
 
     if(gMotionThr == nullptr)
-      gMotionThr = new boost::thread(boost::bind(&Motion::run, &mMotion));
+      gMotionThr = new boost::thread(boost::bind(&Motion::loop, &mMotion));
   }
 
   void System::process()
