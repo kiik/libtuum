@@ -6,11 +6,16 @@
 #include <vector>
 #include <map>
 
+#include "json.hpp"
+
+using json = nlohmann::json;
+
 namespace tuum { namespace db {
 
   typedef std::string value_t;
   typedef std::vector<value_t> value_set;
-  typedef std::map<value_t, value_t> value_map;
+
+  typedef json value_map;
 
   namespace sql {
     typedef std::string Text;

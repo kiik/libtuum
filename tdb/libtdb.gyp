@@ -20,6 +20,8 @@
 
         'src/tdb_query.cpp',
 
+        'src/models/tuum_Cache.cpp',
+
         'src/torm_tests.cpp',
       ],
 

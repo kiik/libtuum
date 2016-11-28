@@ -30,7 +30,10 @@ namespace tuum { namespace db {
   }
 
   query_t* query_t::filter(value_map in) {
-    m_filters.insert(in.begin(), in.end());
+    for(auto it = in.begin(); it != in.end(); it++) {
+      m_filters[it.key()] = it.value();
+    }
+
     return this;
   }
 
@@ -45,14 +48,27 @@ namespace tuum { namespace db {
     if(_d.size() == 0) return 0;
 
     for(auto col = _d[0].begin(); col != _d[0].end(); col++) {
-      out[col->first] = col->second;
+      out[col.key()] = col.value();
     }
 
     return 0;
   }
 
   int query_t::compile() {
-    _q = "SELECT * FROM files WHERE path = 'assets/test2.ppl';";
+    std::stringstream sql;
+
+    sql << "SELECT * FROM " << m_table;
+
+    sql << " WHERE ";
+    bool delim = false;
+    for(auto it = m_filters.begin(); it != m_filters.end(); it++) {
+      if(!delim) delim = true;
+      else sql << " AND ";
+
+      sql << format("%s = %s", it.key(), it.value());
+    }
+
+    _q = sql.str();
     return 0;
   }
 

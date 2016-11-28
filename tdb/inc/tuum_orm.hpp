@@ -8,6 +8,11 @@
 
 namespace tuum { namespace db {
 
+  class Model;
+
+  int orm(Model*);
+  int add(Model*);
+
   class Model
   {
   public:
@@ -21,24 +26,27 @@ namespace tuum { namespace db {
 
   public:
     virtual const std::string __table__() const { return ""; };
+    virtual const std::string __table_sql__() const { return ""; };
+
     virtual value_map __row__() { return value_map(); }
+    virtual value_map __cols__() { return value_map(); }
 
   protected:
     query_t _query;
   };
 
 
-  class SQLColumn
+  class ColumnBase
   {
   public:
     value_t name;
     bool assigned = false;
 
-    SQLColumn() {};
+    ColumnBase() {};
   };
 
   template<typename T>
-  class Column : public SQLColumn
+  class Column : public ColumnBase
   {
   public:
     T value;
@@ -60,8 +68,6 @@ namespace tuum { namespace db {
     }
 
   };
-
-  int add();
 
 }}
 
