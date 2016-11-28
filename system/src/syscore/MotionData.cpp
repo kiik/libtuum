@@ -20,8 +20,8 @@ namespace tuum {
   MotionData::MotionData():
     tPos({0, 0}), tOrient(0.0)
   {
-    Pv = 0.1;
-    Pr = 0.1;
+    Pv = 1.0;
+    Pr = 180.0 / 3.14;
   }
 
   void MotionData::setTargetPosition(vec2i in) {
@@ -50,11 +50,7 @@ namespace tuum {
     m_r_speed = Pr * tOrient;
 
     m_speed = MIN(m_speed, 40);
-    m_r_speed = MIN(m_r_speed, 40);
-
-    printf("m_speed = %d\n", m_speed );
-    printf("m_r_speed = %d\n", m_r_speed);
-
+    m_r_speed = MIN(m_r_speed, 170);
   }
 
   void MotionData::clear(){
