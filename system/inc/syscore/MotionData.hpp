@@ -30,16 +30,11 @@ namespace tuum {
     vec2i tPos;
     double tOrient;
 
-    vec2i _pt;
-    vec2i _at;
-
-    bool m_pos_set;
-    bool m_aim_set;
 
     /**
-     *  Omni drive parameter calculation members
+     *  Omni drive parameter cmalculation members
      */
-    double vP, vI, vD; // Speed PID control constants (TODO: Implement PID controller usage)
+    double Pv, Pr; // Speed PID control constants (TODO: Implement PID controller usage)
 
     uint16_t m_speed;
     double   m_heading;
@@ -51,6 +46,7 @@ namespace tuum {
     uint16_t getRotationSpeed() { return m_r_speed; }
 
     void calc();
+    void clear();
   };
 
 }

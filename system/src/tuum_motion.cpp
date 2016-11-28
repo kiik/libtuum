@@ -43,30 +43,38 @@ namespace tuum {
         float sp = mMotionData.getSpeed();
         float he = mMotionData.getHeading();
         float rsp = mMotionData.getRotationSpeed();
-        //gMotorControl->omniDrive(sp, he, rsp);
+        gMotorControl->omniDrive(sp, he, rsp);
         mMotorTmr.start();
       }
+    } else {
+      stop();
     }
   }
 
   void Motion::setTarget(vec2i pos) {
-
+    setTarget(pos, 0.0);
   }
 
   void Motion::setTarget(double angle) {
-    //TODO
+    setTarget({0, 0}, angle);
   }
 
   void Motion::setTarget(vec2i pos, double angle) {
-    //TODO
+    mMotionData.clear();
+    mMotionData.setTargetPosition(pos);
+    mMotionData.setTargetOrientation(angle);
+    start();
   }
 
   void Motion::setTarget(vec2i pos, vec2i view_target) {
-    //TODO
+    mMotionData.clear();
+    mMotionData.setTargetPosition(pos);
+    mMotionData.setTargetOrientation(view_target.getOrientation());
+    start();
   }
 
   void Motion::setAimTarget(vec2i trg) {
-    //TODO: Calculate target orientation from input vector
+    setTarget(trg.getOrientation());
   }
 
   void Motion::start() {
@@ -75,19 +83,17 @@ namespace tuum {
 
   void Motion::stop() {
     m_running = false;
-    //TODO: Send stop motor command
+    gMotorControl->omniDrive(0, 0, 0);
   }
 
   bool Motion::isRunning() { return m_running; }
 
   double Motion::getDistanceError() {
-    //TODO
-    return 0.0;
+    return mMotionData.getDistanceDelta();
   }
 
   double Motion::getOrientError() {
-    //TODO
-    return 0.0;
+    return mMotionData.getOrientationDelta();
   }
 
   bool Motion::isTargetAchieved() {
