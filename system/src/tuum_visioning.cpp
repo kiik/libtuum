@@ -25,7 +25,7 @@ namespace tuum {
 
   const char* DEF_PPL_NONE = "./assets/empty.ppl";
 
-  const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football.ppl";
+  const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football_deploy.ppl";
   const char* DEF_PPL_IMFORM = "./assets/imformat.ppl";
 
   const char* DEF_PPL_BLOBS  = "./assets/blobs.ppl";
