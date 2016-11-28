@@ -7,6 +7,7 @@
 namespace tuum {
 
   Visioning* gVision = nullptr;
+  Navigation* gNavi = nullptr;
   Motion* gMotion = nullptr;
 
   System* gSystem = nullptr;
@@ -14,7 +15,9 @@ namespace tuum {
   void setGlobalSystem(System* ptr)
   {
     gSystem = ptr;
+
     gVision = ptr->getVisioning();
+    gNavi   = ptr->getNavi();
     gMotion = ptr->getMotioning();
   }
 

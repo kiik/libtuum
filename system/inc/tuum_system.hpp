@@ -7,6 +7,7 @@
 #include "tuum_motion.hpp"
 #include "tuum_physics.hpp"
 #include "tuum_visioning.hpp"
+#include "tuum_navigation.hpp"
 
 namespace tuum {
 
@@ -20,15 +21,21 @@ namespace tuum {
 
     Visioning* getVisioning() { return &mVision; }
     Motion* getMotioning() { return &mMotion; }
-    Physics* getPhysics() { return &mPhysics; }
+
     EntityFilter* getEntityHandle() { return &mEntityFilter; }
+
+    Physics* getPhysics() { return &mPhysics; }
+    Navigation* getNavi() { return &mNavi; }
 
     bool entityPassEnabled();
 
   protected:
     Visioning mVision;
     EntityFilter mEntityFilter;
+
     Physics mPhysics;
+    Navigation mNavi;
+
     Motion mMotion;
   };
 

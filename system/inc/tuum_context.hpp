@@ -7,9 +7,12 @@ namespace tuum {
   class Visioning;
   class System;
   class Motion;
+  class Navigation;
 
   extern Visioning* gVision;
   extern Motion* gMotion;
+
+  extern Navigation* gNavi;
 
   extern System* gSystem;
 

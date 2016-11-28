@@ -18,12 +18,12 @@
 
 namespace tuum {
 
-  class Visioning;
+  class EntityFilter;
 
   class Navigation
   {
   public:
-    Navigation(Visioning*);
+    Navigation(EntityFilter*);
 
     void init();
     void run();
@@ -44,12 +44,12 @@ namespace tuum {
 
     Robot* getAlly();
 
-    static void setup(Visioning*);
+    static void setup(EntityFilter*);
     static void preProcess();
     static void process();
 
   private:
-    Visioning* mVision;
+    EntityFilter* gEntityFilter;
   };
 
   extern Navigation* gNavigation;

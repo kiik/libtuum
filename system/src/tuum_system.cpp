@@ -7,7 +7,8 @@
 namespace tuum {
 
   System::System():
-    mPhysics(&mEntityFilter)
+    mPhysics(&mEntityFilter),
+    mNavi(&mEntityFilter)
   {
 
   }

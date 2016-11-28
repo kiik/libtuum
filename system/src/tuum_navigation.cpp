@@ -23,8 +23,8 @@
 // TODO: No out of bounds transform target
 namespace tuum {
 
-  Navigation::Navigation(Visioning* vision):
-    mVision(vision)
+  Navigation::Navigation(EntityFilter* ef):
+    gEntityFilter(ef)
   {
 
   }
@@ -94,13 +94,7 @@ namespace tuum {
   }
 
   int Navigation::countValidBalls() {
-    /*
-    int i = 0;
-    for(auto& b : *Visioning::ballDetect.getEntities()) {
-      if(b->isValid()) i++;
-    }
-    */
-    return 0;
+    return gEntityFilter->getBalls()->size();
   }
 
   //TODO: position to relative position
@@ -135,7 +129,7 @@ namespace tuum {
   }
 
   Ball* Navigation::getNearestBall() {
-    BallDetect* balls = mVision->get<BallDetect>();
+    BallSet* balls = gEntityFilter->getBalls();
     if(balls == nullptr) return nullptr;
 
     Ball* ball = nullptr;
@@ -143,8 +137,12 @@ namespace tuum {
     Transform* t = Localization::getTransform();
     double d = 1000000.0, _d;
 
-    for(auto b : *balls->getEntities()) {
+    Ball* b;
+    for(auto it = balls->begin(); it != balls->end(); it++) {
+      b = *it;
+
       if(!b->isValid()) continue;
+
       _d = t->distanceTo(b->getTransform()->getPosition());
 
       if(_d < d) {
@@ -152,6 +150,7 @@ namespace tuum {
         ball = b;
       }
     }
+
     return ball;
   }
 
@@ -168,43 +167,26 @@ namespace tuum {
 
   ///////////////////////////////////////
   Goal* Navigation::getAllyGoal() {
-    auto goals = mVision->get<GoalDetect>();
+    //auto goals = mVision->get<GoalDetect>();
 
+    /*
     for(auto& g : *goals->getEntities()) {
       if(g->isAlly()) return g;
-    }
+    }*/
 
     return nullptr;
   }
   ////////////////////////////////////////
 
   Robot* Navigation::getAlly() {
-    RobotDetect* robots = mVision->get<RobotDetect>();
+    /*RobotDetect* robots = mVision->get<RobotDetect>();
     if(robots == nullptr) return nullptr;
 
     for(auto& r : *robots->getEntities())
       if(r->isAlly()) return r;
+      */
 
     return nullptr;
   }
-
-  void Navigation::setup(Visioning* vision) {
-    if(gNavigation == nullptr) return;
-
-    gNavigation = new Navigation(vision);
-    gNavigation->init();
-  }
-
-  void Navigation::preProcess() {
-    if(gNavigation == nullptr) return;
-    gNavigation->updateEntities();
-  }
-
-  void Navigation::process() {
-    if(gNavigation == nullptr) return;
-    gNavigation->run();
-  }
-
-  Navigation* gNavigation = nullptr;
 
 }
