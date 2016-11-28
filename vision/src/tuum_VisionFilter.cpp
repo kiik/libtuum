@@ -15,7 +15,7 @@ namespace tuum {
     mClss.clear();
     mFilter.clear();
 
-    ColorClass CLS_BALL = {102,98,156, 187,106,195}; // {94,97,141, 221,115,189};
+    ColorClass CLS_BALL = {67,98,156, 187,106,195}; // {94,97,141, 221,115,189};
     CLS_BALL.name = "cBall";
     CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);
