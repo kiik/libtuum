@@ -25,7 +25,9 @@ namespace tuum {
 
   const char* DEF_PPL_NONE = "./assets/empty.ppl";
 
-  const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football_deploy.ppl";
+  const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football.ppl";
+  const char* DEF_PPL_RTEX_FOOTBALL_IM = "./assets/rtex_football_image.ppl";
+
   const char* DEF_PPL_IMFORM = "./assets/imformat.ppl";
 
   const char* DEF_PPL_BLOBS  = "./assets/blobs.ppl";
@@ -73,6 +75,8 @@ namespace tuum {
     // Load graphics pipeline
     m_plRtexFootball.use(gLdr);
     m_plRtexFootball.load(DEF_PPL_RTEX_FOOTBALL, "RobotexFootballPipe");
+    m_plRtexFootball_im.use(gLdr);
+    m_plRtexFootball_im.load(DEF_PPL_RTEX_FOOTBALL_IM, "RobotexFootballPipe");
 
     initYUVDiscreteLUT();
 
@@ -117,7 +121,7 @@ namespace tuum {
 
   bool Visioning::pplIsReady() {
     if(!m_plRtexFootball.isReady()) return false;
-    if(!m_plImFormat.isReady()) return false;
+    if(!m_plRtexFootball_im.isReady()) return false;
     //if(!m_plGeom.isReady()) return false;
     return true;
   }
@@ -167,11 +171,17 @@ namespace tuum {
   bool dbg = false;
   int Visioning::doFramePass()
   {
+#ifdef PASS_BENCHMARK
     size_t t0, t1, t2, t3, t4, t5;
+#endif
+
     Pipeline *ppl, *nppl;
     try
     {
-      ppl = m_plRtexFootball.get();
+      if(thresholdPassEnabled())
+        ppl = m_plRtexFootball.get();
+      else
+        ppl = m_plRtexFootball_im.get();
 
       /*
       if(m_ppl_config_dirty) {
@@ -180,29 +190,44 @@ namespace tuum {
         m_ppl_config_dirty = false;
       }*/
 
+#ifdef PASS_BENCHMARK
       t0 = millis();
+#endif
 
       size_t id;
       while(!m_iFrameLock.try_lock()) {};
       m_tex->write(m_iFrame->data, GL_RGB, GL_UNSIGNED_BYTE);
       id = m_iFrame->id;
-
       m_iFrameLock.unlock();
-      t1 = millis();
 
-      (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
+#ifdef PASS_BENCHMARK
+      t1 = millis();
+#endif
+
+      if(thresholdPassEnabled())
+        (*ppl) << (*m_tex) << Pipeline::Process;
+      else
+        (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
+
+#ifdef PASS_BENCHMARK
       t2 = millis();
+#endif
 
       while(!m_iFrameLock.try_lock()) {};
       ppl->out(0).read(m_iFrame->data);
 
-      // Thresholding
+#ifdef PASS_BENCHMARK
       t3 = millis();
+#endif
+
       if(thresholdPassEnabled()) {
-        mVisionFilter.apply(m_iFrame);
+        mVisionFilter.parse(m_iFrame);
         mVisionFilter.addBlobDebugLayer(m_iFrame);
       }
+
+#ifdef PASS_BENCHMARK
       t4 = millis();
+#endif
 
       while(!m_oFrameLock.try_lock()) {};
       m_oFrame->id = id;
@@ -210,9 +235,14 @@ namespace tuum {
 
       m_iFrameLock.unlock();
       m_oFrameLock.unlock();
-      t5 = millis();
 
+#ifdef PASS_BENCHMARK
+      t5 = millis();
+#endif
+
+#ifdef PASS_BENCHMARK
       printf("input-copy: %lums, ppl-run: %lums, gl-read: %lums, clsfy: %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t3 - t2), (t4 - t3), (t5 - t4));
+#endif
       return 1;
     } catch(Glip::Exception& e) {
       std::cerr << e.what() << std::endl;

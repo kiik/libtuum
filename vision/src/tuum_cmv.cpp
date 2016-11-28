@@ -150,6 +150,7 @@ namespace tuum { namespace CMV {
       }
 
       // Threshold
+      /*
       if(clss == 0) {
         dat[i] = 0;
         dat[i + 1] = 0;
@@ -168,7 +169,7 @@ namespace tuum { namespace CMV {
           dat[i + 1] = 0;
           dat[i + 2] = 102;
         }
-      }
+      }*/
     }
   }
 

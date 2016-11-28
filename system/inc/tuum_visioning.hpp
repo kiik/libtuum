@@ -80,8 +80,8 @@ namespace tuum {
     mutex m_iFrameLock, m_oFrameLock;
     Texture* m_tex;
 
-    PipeBase m_plRtexFootball; // Color space conversion & simplification
-    PipeBase m_plImFormat;     // Get image in display color space
+    PipeBase m_plRtexFootball;    // Corrects image, subsamples colors, classifies pixels
+    PipeBase m_plRtexFootball_im; // Preserves image
 
   private:
     bool m_threshold_enable;
