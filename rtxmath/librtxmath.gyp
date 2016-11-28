@@ -5,7 +5,8 @@
       'type': 'static_library',
 
       'dependencies': [
-        'libgeometry'
+        'libenv',
+        'libgeometry',
       ],
 
       'cflags': [
@@ -17,6 +18,7 @@
       'sources': [
         'src/__future__.cpp',
         'src/Transform.cpp',
+        'src/PID.cpp',
       ],
 
       'all_dependent_settings': {
