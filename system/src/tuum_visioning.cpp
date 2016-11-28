@@ -172,11 +172,12 @@ namespace tuum {
     {
       ppl = m_plRtexFootball.get();
 
+      /*
       if(m_ppl_config_dirty) {
         Glip::CorePipeline::Filter& filter = (*ppl)[ppl->getElementID("FisheyeFilter")];
         filter.program().setVar("uPower", GL_FLOAT, value);
         m_ppl_config_dirty = false;
-      }
+      }*/
 
       size_t id;
       while(!m_iFrameLock.try_lock()) {};
