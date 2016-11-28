@@ -36,6 +36,7 @@ namespace tuum {
     void insertClassifiers();
 
     int apply(image_t);
+    int parse(image_t);
 
     BlobSet* getBlobs();
 

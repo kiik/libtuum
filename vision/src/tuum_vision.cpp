@@ -21,6 +21,12 @@ namespace tuum { namespace vision {
     return 0;
   }
 
+  int parse_blobs(image_t in, CMV::BlobSet& out)
+  {
+    CMV::rle((uint8_t*)in->data, in->size, out);
+    return 0;
+  }
+
   int parse_geometry(const image_t in, PixelGeometry& out)
   {
     int res;

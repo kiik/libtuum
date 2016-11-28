@@ -24,6 +24,17 @@ namespace tuum { namespace CMV {
     return 0;
   }
 
+  int rle(uint8_t* data, size_t length, BlobSet& out) {
+    RunlineSet rlines;
+
+    region_segment(data, length, rlines);
+
+    if(rlines.size() > 0)
+      region_merge(rlines, out);
+
+    return 0;
+  }
+
   void region_segment(uint8_t* dat, size_t length, FilterBase& flt, RunlineSet& out) {
     size_t i;
     uint8_t y, u, v;
@@ -92,6 +103,72 @@ namespace tuum { namespace CMV {
         }
       }
 
+    }
+  }
+
+
+  void region_segment(uint8_t* dat, size_t length, RunlineSet& out) {
+    size_t i;
+    uint32_t clss = 0;
+
+    size_t X = 0, Y = 0, r0 = 0, r1 = 0;
+
+    rl_t blob_line;
+    blob_line.cls = 0;
+
+    for(i = 0; i < length; i += 3) {
+      // Calculate image coordinates
+      X++;
+      if(X >= 1280) {
+        Y++;
+        X = 0;
+
+        // End runline when entering new row
+        if(blob_line.cls != 0) {
+          if(blob_line.x1 - blob_line.x0 > CMV_RUNLINE_MIN_LENGTH)
+            out.push_back(blob_line);
+
+          blob_line.cls = 0;
+        }
+      }
+
+      clss = dat[i];
+
+      // If new runline began close last
+      if((blob_line.cls != 0) && (blob_line.cls != clss)) {
+        blob_line.x1 = X;
+        out.push_back(blob_line);
+
+        blob_line.cls = 0;
+      }
+
+      if(blob_line.cls == 0) {
+        // Start new runline
+        blob_line.cls = clss;
+        blob_line.x0  = X;
+        blob_line.y  = Y;
+      }
+
+      // Threshold
+      if(clss == 0) {
+        dat[i] = 0;
+        dat[i + 1] = 0;
+        dat[i + 2] = 0;
+      } else {
+        if(clss == 0b1) { // Ball
+          dat[i] = 255;
+          dat[i + 1] = 128;
+          dat[i + 2] = 0;
+        } else if(clss == 0b10) { // Blue battery
+          dat[i] = 0;
+          dat[i + 1] = 0;
+          dat[i + 2] = 255;
+        } else {
+          dat[i] = 102;
+          dat[i + 1] = 0;
+          dat[i + 2] = 102;
+        }
+      }
     }
   }
 

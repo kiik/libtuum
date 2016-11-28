@@ -54,6 +54,7 @@ namespace tuum {
   {
     initYUVClassifiers();
     insertClassifiers();
+    mFilter.dump();
 
     /*
     {
@@ -75,7 +76,6 @@ namespace tuum {
     vision::parse_blobs(in, mFilter, mBlobBuffer);
 
     mBlobs.clear();
-    getType(1);
     for(auto it = mBlobBuffer.begin(); it != mBlobBuffer.end(); it++) {
       if(it->rect.getArea() < BLOB_MIN_AREA) continue;
       if(it->getDensity() < BLOB_MIN_DENSITY) continue;
@@ -101,6 +101,29 @@ namespace tuum {
       mDebugTmr.start(1000);
     }
     */
+    return 0;
+  }
+
+  int VisionFilter::parse(image_t in)
+  {
+    mBlobBuffer.clear();
+    vision::parse_blobs(in, mBlobBuffer);
+
+    mBlobs.clear();
+    for(auto it = mBlobBuffer.begin(); it != mBlobBuffer.end(); it++) {
+      if(it->rect.getArea() < BLOB_MIN_AREA) continue;
+      if(it->getDensity() < BLOB_MIN_DENSITY) continue;
+      if(it->getDensity() > BLOB_MAX_DENSITY) continue;
+
+      blob_t blob = (blob_t)(*it);
+
+      uint32_t cls = it->rls.back().cls;
+
+      Blob::TypeId t = getType(cls);
+      if(t == Blob::TypeId::None) continue;
+      mBlobs.push_back(Blob(blob, t));
+    }
+
     return 0;
   }
 
