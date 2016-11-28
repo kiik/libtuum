@@ -212,7 +212,7 @@ namespace tuum {
       m_oFrameLock.unlock();
       t5 = millis();
 
-      printf("input-copy: %lums, ppl-run: %lums, read+clsfy: %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t2 - t3), (t3 - t4), (t4 - t5));
+      printf("input-copy: %lums, ppl-run: %lums, gl-read: %lums, clsfy: %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t3 - t2), (t4 - t3), (t5 - t4));
       return 1;
     } catch(Glip::Exception& e) {
       std::cerr << e.what() << std::endl;
