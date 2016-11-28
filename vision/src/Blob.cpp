@@ -59,7 +59,7 @@ namespace tuum {
 
   double Blob::getAngle() {
     vec2i p = getWorldPosition(); //TODO: Take into account our position
-    return -atan2(p.x, p.y);
+    return atan2(p.y, p.x);
   }
 
   void Blob::merge(Blob &o) {
