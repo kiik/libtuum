@@ -11,6 +11,8 @@
 
 #include <stdint.h>
 
+#include "PID.hpp"
+
 #include "tuum_vector.hpp"
 
 namespace tuum {
@@ -43,6 +45,8 @@ namespace tuum {
     int16_t m_speed;
     double   m_heading;
     int16_t m_r_speed;
+
+    PID mRotCtl;
 
   public:
     int16_t getSpeed() { return m_speed; }

@@ -19,13 +19,14 @@
 
 namespace tuum {
 
-  PID mRotCtl;
-
   MotionData::MotionData():
     tPos({0, 0}), tOrient(0.0)
   {
     Pv = 1.0;
     Pr = 180.0 / 3.14;
+
+    mRotCtl.setPID(0.5, 0.15, 0.1);
+    mRotCtl.setILimit(100);
   }
 
   void MotionData::setTargetPosition(vec2i in) {
