@@ -61,6 +61,35 @@ namespace tuum { namespace CMV {
     return clss_Y[y] & clss_U[u] & clss_V[v];
   }
 
+  void YUVFilter::dump() {
+    std::stringstream out;
+
+    out << "const int clss_Y[16] = int[](";
+    for(size_t i = 0; i < 16; i++) {
+      out << clss_Y[i];
+      if(i < 15) out << ", ";
+    }
+    out << ");\n";
+
+
+    out << "const int clss_U[32] = int[](";
+    for(size_t i = 0; i < 32; i++) {
+      out << clss_U[i];
+      if(i < 31) out << ", ";
+    }
+    out << ");\n";
+
+
+    out << "const int clss_V[32] = int[](";
+    for(size_t i = 0; i < 32; i++) {
+      out << clss_V[i];
+      if(i < 31) out << ", ";
+    }
+    out << ");\n";
+
+    printf("YUVf: %s\n", out.str().c_str());
+  }
+
   UVFilter::UVFilter():
     FilterBase()
   {

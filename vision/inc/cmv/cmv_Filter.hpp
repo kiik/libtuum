@@ -54,6 +54,8 @@ namespace tuum { namespace CMV {
 
     uint32_t operator()(uint8_t, uint8_t, uint8_t);
 
+    void dump();
+
   public:
     uint32_t clss_Y[16], clss_U[32], clss_V[32];
 
