@@ -1,10 +1,14 @@
 
+#include <boost/thread.hpp>
+
 #include "tuum_hal.hpp"
 #include "tuum_lpx.hpp"
 
 #include "tuum_system.hpp"
 
 namespace tuum {
+
+  boost::thread* gMotionThr = nullptr;
 
   System::System():
     mPhysics(&mEntityFilter),
@@ -22,6 +26,9 @@ namespace tuum {
 
     mVision.init();
     mMotion.init();
+
+    if(gMotionThr == nullptr)
+      gMotionThr = new boost::thread(boost::bind(&Motion::run, &mMotion));
   }
 
   void System::process()
@@ -30,7 +37,6 @@ namespace tuum {
     lpx::process();
 
     mVision.run();
-    mMotion.run();
 
     if(entityPassEnabled())
       mEntityFilter.digest(mVision.getFilter()->getBlobs());
