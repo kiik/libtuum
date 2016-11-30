@@ -70,8 +70,10 @@ namespace tuum { namespace wsocs {
   }
 
   int start() {
-    if(wsSrvThread == nullptr)
+    if(wsSrvThread == nullptr) {
       wsSrvThread = new boost::thread(&process);
+      wsSrvThread->detach();
+    }
   }
 
 }}
