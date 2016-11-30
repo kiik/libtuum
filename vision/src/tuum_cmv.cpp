@@ -35,6 +35,33 @@ namespace tuum { namespace CMV {
     return 0;
   }
 
+  void color_debug(uint8_t* dat, size_t i, uint32_t clss) {
+    // Threshold
+    if(clss == 0) {
+      dat[i] = 0;
+      dat[i + 1] = 0;
+      dat[i + 2] = 0;
+    } else {
+      if(clss == 0b1) { // Ball
+	dat[i] = 255;
+	dat[i + 1] = 128;
+	dat[i + 2] = 0;
+      } else if(clss == 0b10) { // Blue goal
+	dat[i] = 0;
+	dat[i + 1] = 0;
+	dat[i + 2] = 255;
+      } else if(clss == 0b100) { // Yellow goal
+	dat[i] = 255;
+	dat[i + 1] = 255;
+	dat[i + 2] = 51;
+      } else { // Unclassified
+	dat[i] = 255;
+	dat[i + 1] = 51;
+	dat[i + 2] = 153;
+      }
+    }
+  }
+
   void region_segment(uint8_t* dat, size_t length, FilterBase& flt, RunlineSet& out) {
     size_t i;
     uint8_t y, u, v;
@@ -82,26 +109,7 @@ namespace tuum { namespace CMV {
         blob_line.y  = Y;
       }
 
-      // Threshold
-      if(clss == 0) {
-        dat[i] = 0;
-        dat[i + 1] = 0;
-        dat[i + 2] = 0;
-      } else {
-        if(clss == 0b1) { // Ball
-          dat[i] = 255;
-          dat[i + 1] = 128;
-          dat[i + 2] = 0;
-        } else if(clss == 0b10) { // Blue battery
-          dat[i] = 0;
-          dat[i + 1] = 0;
-          dat[i + 2] = 255;
-        } else {
-          dat[i] = 102;
-          dat[i + 1] = 0;
-          dat[i + 2] = 102;
-        }
-      }
+      color_debug(dat, i, clss);
 
     }
   }
@@ -149,27 +157,7 @@ namespace tuum { namespace CMV {
         blob_line.y  = Y;
       }
 
-      // Threshold
-      /*
-      if(clss == 0) {
-        dat[i] = 0;
-        dat[i + 1] = 0;
-        dat[i + 2] = 0;
-      } else {
-        if(clss == 0b1) { // Ball
-          dat[i] = 255;
-          dat[i + 1] = 128;
-          dat[i + 2] = 0;
-        } else if(clss == 0b10) { // Blue battery
-          dat[i] = 0;
-          dat[i + 1] = 0;
-          dat[i + 2] = 255;
-        } else {
-          dat[i] = 102;
-          dat[i + 1] = 0;
-          dat[i + 2] = 102;
-        }
-      }*/
+      color_debug(dat, i, clss);
     }
   }
 

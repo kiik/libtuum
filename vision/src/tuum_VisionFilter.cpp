@@ -15,17 +15,17 @@ namespace tuum {
     mClss.clear();
     mFilter.clear();
 
-    ColorClass CLS_BALL = {67,98,156, 187,106,195}; // {94,97,141, 221,115,189};
+    ColorClass CLS_BALL = {99,98,150,194,108,204}; // {94,97,141, 221,115,189};
     CLS_BALL.name = "cBall";
     CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);
 
-    ColorClass CLS_GOAL_BLUE = {0,0,0, 0,0,0};
+    ColorClass CLS_GOAL_BLUE = {74,131,113,122,141,122};
     CLS_GOAL_BLUE.name = "cGoalBlue";
     CLS_GOAL_BLUE.type = Blob::TypeId::Goal_Blue;
     mClss.push_back(CLS_GOAL_BLUE);
 
-    ColorClass CLS_GOAL_YEL = {0,0,0, 0,0,0};
+    ColorClass CLS_GOAL_YEL = {152,91,147,191,96,159};
     CLS_GOAL_YEL.name = "cGoalYellow";
     CLS_GOAL_YEL.type = Blob::TypeId::Goal_Yellow;
     mClss.push_back(CLS_GOAL_YEL);

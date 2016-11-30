@@ -217,7 +217,7 @@ namespace tuum {
       if(gpu_threshold)
         (*ppl) << (*m_tex) << Pipeline::Process;
       else
-        (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
+        (*ppl) << (*m_tex) << Pipeline::Process; // << (*txDiscYUV)
 
 #ifdef PASS_BENCHMARK
       t2 = millis();
