@@ -20,10 +20,15 @@ namespace tuum {
     CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);
 
-    ColorClass CLS_GOAL_BLUE = {110,90,139, 140,90,150};
+    ColorClass CLS_GOAL_BLUE = {0,0,0, 0,0,0};
     CLS_GOAL_BLUE.name = "cGoalBlue";
-    CLS_BALL.type = Blob::TypeId::Goal_Blue;
+    CLS_GOAL_BLUE.type = Blob::TypeId::Goal_Blue;
     mClss.push_back(CLS_GOAL_BLUE);
+
+    ColorClass CLS_GOAL_YEL = {0,0,0, 0,0,0};
+    CLS_GOAL_YEL.name = "cGoalYellow";
+    CLS_GOAL_YEL.type = Blob::TypeId::Goal_Yellow;
+    mClss.push_back(CLS_GOAL_YEL);
   }
 
   int VisionFilter::updateYUVClassifier(ColorClass cls)
