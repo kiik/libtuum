@@ -45,7 +45,7 @@ namespace tuum {
 
   Visioning::Visioning():
     m_cam_N(1), m_lid(0),
-    m_threshold_enable(true)
+    m_threshold_enable(true), m_gpu_enable(true)
   {
     for(size_t i=0; i < m_cam_N; i++) {
       m_inpStreams[i] = nullptr;
@@ -154,8 +154,16 @@ namespace tuum {
   float value = 0.5;
   bool m_ppl_config_dirty = true;
 
-  void Visioning::pplConfig(const json& dat) {
+  void Visioning::configure(const json& dat) {
     auto ppl = m_plRtexFootball.get();
+
+    if(dat.find("gpu_en") != dat.end()) {
+      m_gpu_enable = dat["gpu_en"].get<bool>();
+    }
+
+    if(dat.find("thr_en") != dat.end()) {
+      m_threshold_enable = dat["thr_en"].get<bool>();
+    }
 
     auto it = dat.find("FisheyePwr");
     if(it != dat.end()) {
@@ -165,20 +173,22 @@ namespace tuum {
       //filter.program().setVar("uPower", GL_FLOAT, value);
       RTXLOG(format("Fisheye power updated to %.2f", value));
     }
+
   }
 
 
-  bool dbg = false;
   int Visioning::doFramePass()
   {
 #ifdef PASS_BENCHMARK
     size_t t0, t1, t2, t3, t4, t5;
 #endif
 
+    bool gpu_threshold = thresholdGPUEnabled() && thresholdPassEnabled();
+
     Pipeline *ppl, *nppl;
     try
     {
-      if(thresholdPassEnabled())
+      if(gpu_threshold)
         ppl = m_plRtexFootball.get();
       else
         ppl = m_plRtexFootball_im.get();
@@ -204,7 +214,7 @@ namespace tuum {
       t1 = millis();
 #endif
 
-      if(thresholdPassEnabled())
+      if(gpu_threshold)
         (*ppl) << (*m_tex) << Pipeline::Process;
       else
         (*ppl) << (*m_tex) << (*txDiscYUV) << Pipeline::Process;
@@ -221,7 +231,11 @@ namespace tuum {
 #endif
 
       if(thresholdPassEnabled()) {
-        mVisionFilter.parse(m_iFrame);
+        if(gpu_threshold)
+          mVisionFilter.parse(m_iFrame);
+        else
+          mVisionFilter.apply(m_iFrame);
+
         mVisionFilter.addBlobDebugLayer(m_iFrame);
       }
 
@@ -254,6 +268,15 @@ namespace tuum {
 
   bool Visioning::thresholdPassEnabled() {
     return m_threshold_enable;
+  }
+
+  bool Visioning::thresholdGPUEnabled() {
+    return m_gpu_enable;
+  }
+
+  void Visioning::toJSON(json& out) {
+    out["thr_en"] = m_threshold_enable;
+    out["gpu_en"] = m_gpu_enable;
   }
 
 }

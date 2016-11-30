@@ -39,7 +39,6 @@ namespace tuum {
   class Visioning
   {
   public:
-
     Visioning();
 
     void init();
@@ -56,6 +55,7 @@ namespace tuum {
     int doEntityPass();
 
     bool thresholdPassEnabled();
+    bool thresholdGPUEnabled();
 
     static void setup();
     static void process();
@@ -67,9 +67,11 @@ namespace tuum {
 
     void setThresholding(bool s) { m_threshold_enable = s; }
 
-    void pplConfig(const json& dat);
+    void configure(const json& dat);
 
     VisionFilter* getFilter() { return &mVisionFilter; }
+
+    void toJSON(json&);
 
   protected:
     ImageStream* m_inpStreams[TUUM_CAM_N];
@@ -84,7 +86,7 @@ namespace tuum {
     PipeBase m_plRtexFootball_im; // Preserves image
 
   private:
-    bool m_threshold_enable;
+    bool m_threshold_enable, m_gpu_enable;
 
     VisionFilter mVisionFilter;
   };
