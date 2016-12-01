@@ -57,7 +57,7 @@ namespace tuum { namespace Vision { namespace Perspective {
   }
 
   vec2i imageToWorld(vec2i p) {
-    return vec2i(CAMERA_HEIGHT - p.y - 400, CAMERA_WIDTH / 2.0 - p.x);
+    return vec2i((CAMERA_HEIGHT - p.y - 400), (CAMERA_WIDTH / 2.0 - p.x));
   }
 
 }}}

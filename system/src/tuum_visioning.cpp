@@ -21,6 +21,9 @@
 using namespace tuum::hal;
 using namespace std;
 
+//#define TUUM_VISION_BENCH
+//#define TUUM_VISION_PASS_BENCH
+
 namespace tuum {
 
   const char* DEF_PPL_NONE = "./assets/empty.ppl";
@@ -108,10 +111,32 @@ namespace tuum {
   }
 
   void Visioning::run() {
+#ifdef TUUM_VISION_BENCH
+    size_t t0, t1, t2, t3;
+#endif
+
     int res;
+
+#ifdef TUUM_VISION_BENCH
+    t0 = millis();
+#endif
+
     if(nextFrame() > 0) {
       //if(!pplIsReady()) return -2;
+#ifdef TUUM_VISION_BENCH
+      t1 = millis();
+#endif
+
       res = doFramePass();
+
+#ifdef TUUM_VISION_BENCH
+      t2 = millis();
+#endif
+
+#ifdef TUUM_VISION_BENCH
+      printf("[Vision - stat]frame %lums, pass %lums\n", (t1 - t0), (t2 - t1));
+#endif
+
       if(res < 0) {
         RTXLOG(format("'doFramePass' error %i", res), LOG_ERR);
         return;
@@ -179,7 +204,7 @@ namespace tuum {
 
   int Visioning::doFramePass()
   {
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
     size_t t0, t1, t2, t3, t4, t5;
 #endif
 
@@ -200,7 +225,7 @@ namespace tuum {
         m_ppl_config_dirty = false;
       }*/
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t0 = millis();
 #endif
 
@@ -210,7 +235,7 @@ namespace tuum {
       id = m_iFrame->id;
       m_iFrameLock.unlock();
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t1 = millis();
 #endif
 
@@ -219,14 +244,14 @@ namespace tuum {
       else
         (*ppl) << (*m_tex) << Pipeline::Process; // << (*txDiscYUV)
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t2 = millis();
 #endif
 
       while(!m_iFrameLock.try_lock()) {};
       ppl->out(0).read(m_iFrame->data);
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t3 = millis();
 #endif
 
@@ -236,10 +261,10 @@ namespace tuum {
         else
           mVisionFilter.apply(m_iFrame);
 
-        mVisionFilter.addBlobDebugLayer(m_iFrame);
+        //mVisionFilter.addBlobDebugLayer(m_iFrame);
       }
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t4 = millis();
 #endif
 
@@ -250,12 +275,12 @@ namespace tuum {
       m_iFrameLock.unlock();
       m_oFrameLock.unlock();
 
-#ifdef PASS_BENCHMARK
+#ifdef TUUM_VISION_PASS_BENCH
       t5 = millis();
 #endif
 
-#ifdef PASS_BENCHMARK
-      printf("input-copy: %lums, ppl-run: %lums, gl-read: %lums, clsfy: %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t3 - t2), (t4 - t3), (t5 - t4));
+#ifdef TUUM_VISION_PASS_BENCH
+      printf("input-copy: %lums, ppl-run: %lums, gl-read: %lums, clsfy(%s): %lums, output-copy: %lums\n", (t1 - t0), (t2 - t1), (t3 - t2), (gpu_threshold ? "gpu" : "cpu"), (t4 - t3), (t5 - t4));
 #endif
       return 1;
     } catch(Glip::Exception& e) {
