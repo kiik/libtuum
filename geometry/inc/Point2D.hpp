@@ -87,12 +87,14 @@ namespace tuum {
 
     template<typename T2 = double>
     T2 distanceFrom(const Point2D<T>* o) {
-      return sqrt(x * o->getX() + y * o->getY());
+      T2 _x = abs(x - o->getX()), _y = abs(y - o->getY());
+      return sqrt(pow(_x, 2) + pow(_y, 2));
     }
 
     template<typename T2 = double>
     T2 distanceFrom(const Point2D<T>& o) {
-      return sqrt(x * o.getX() + y * o.getY());
+      T2 _x = abs(x - o.getX()), _y = abs(y - o.getY());
+      return sqrt(pow(_x, 2) + pow(_y, 2));
     }
 
     T getX() const { return x; };
@@ -108,9 +110,9 @@ namespace tuum {
       return Point2D<T>({x - o.x, y - o.y});
     }
 
-    template<typename T2>
-    Point2D<T> operator*(T2 v) {
-      x *= v; y *= v;
+    template<typename T2 = double>
+    Point2D<T2> operator*(T2 v) {
+      return Point2D<T2>({x * v, y * v});
     }
 
   };
