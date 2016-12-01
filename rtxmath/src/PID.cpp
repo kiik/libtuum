@@ -50,4 +50,8 @@ namespace tuum {
   PID::pid_size_t PID::_i() { return m_i * gI; }
   PID::pid_size_t PID::_d() { return m_d * gD; }
 
+  void PID::debug() {
+    printf("PID: %.2f * %.2f + %.2f * %.2f + %.2f * %.2f = %.2f\n", P, m_p, I, m_i, D, m_d, (P * m_p + I * m_i + D * m_d));
+  }
+
 }

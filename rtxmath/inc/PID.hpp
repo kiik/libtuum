@@ -35,6 +35,8 @@ namespace tuum {
     pid_size_t _i();
     pid_size_t _d();
 
+    void debug();
+
   private:
     pid_size_t P, I, D, m_val;
     pid_size_t m_p, m_i, m_d;
