@@ -19,8 +19,10 @@ namespace tuum {
     Goal();
     Goal(const Transform&, const Blob&);
 
-    bool isAlly() const;
-    bool isOpponent() const;
+    bool isAlly();
+    bool isOpponent();
+
+    Blob::TypeId getType();
   };
 
 }

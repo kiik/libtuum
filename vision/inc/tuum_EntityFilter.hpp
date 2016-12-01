@@ -20,6 +20,7 @@ namespace tuum {
 
   //typedef std::vector<Feature*> FeatureSet;
   typedef std::vector<Ball*> BallSet;
+  typedef std::vector<Goal*> GoalSet;
   typedef std::vector<Robot*> RobotSet;
 
   typedef EDS<Ball>  BallDetect;
@@ -38,14 +39,19 @@ namespace tuum {
     void digest(BlobSet*);
 
     int digestBall(Blob&);
+    int digestGoal(Blob&);
 
     void toJSON(json&);
     void fromJSON(json);
 
     BallSet* getBalls() { return &(mBallDetect.objs); }
+    GoalSet* getGoals() { return &(mGoalDetect.objs); }
+
 
   protected:
     BallDetect mBallDetect;
+    GoalDetect mGoalDetect;
+
     Timer mDebugTmr;
   };
 

@@ -15,6 +15,7 @@ namespace tuum {
   void EntityFilter::process()
   {
     mBallDetect.update();
+    mGoalDetect.update();
 
     /*
     if(mDebugTmr.isTime()) {
@@ -33,6 +34,10 @@ namespace tuum {
         case Blob::TypeId::Ball:
           digestBall(*it);
           break;
+        case Blob::TypeId::Goal_Blue:
+        case Blob::TypeId::Goal_Yellow:
+          digestGoal(*it);
+          break;
       }
     }
   }
@@ -41,6 +46,13 @@ namespace tuum {
     double d = blob.getDistance(), a = blob.getAngle();
     Ball* b = new Ball(Transform((int)(cos(a)*d), (int)(sin(a)*d)), blob);
     mBallDetect.processProbableEntity(b);
+    return 1;
+  }
+
+  int EntityFilter::digestGoal(Blob& blob) {
+    double d = blob.getDistance(), a = blob.getAngle();
+    Goal* obj = new Goal(Transform((int)(cos(a)*d), (int)(sin(a)*d)), blob);
+    mGoalDetect.processProbableEntity(obj);
     return 1;
   }
 

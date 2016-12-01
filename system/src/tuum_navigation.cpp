@@ -155,12 +155,12 @@ namespace tuum {
   }
 
   Goal* Navigation::getOpponentGoal() {
-    /*
-    if(gC.getStr("Pattern.OpponentGoal") == "B")
-      return Visioning::blueGoal;
-    else
-      return Visioning::yellowGoal;
-    */
+    GoalSet* goals = gEntityFilter->getGoals();
+    if(goals == nullptr) return nullptr;
+
+    for(auto it = goals->begin(); it != goals->end(); it++) {
+      if((*it)->isOpponent()) return *it;
+    }
 
     return nullptr;
   }
