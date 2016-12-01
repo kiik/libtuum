@@ -6,8 +6,8 @@
 
 namespace tuum {
 
-  const size_t BLOB_MIN_AREA = 50;
-  const double BLOB_MIN_DENSITY = 0.4;
+  const size_t BLOB_MIN_AREA = 10;
+  const double BLOB_MIN_DENSITY = 0.3;
   const double BLOB_MAX_DENSITY = 1.0;
 
   void VisionFilter::initYUVClassifiers()
