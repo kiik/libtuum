@@ -351,11 +351,13 @@ namespace tuum { namespace CMV {
         for(auto p_rl_it = p_row->begin(); p_rl_it != p_row->end(); p_rl_it++) {
           rl_t* parent = *p_rl_it;
 
+          if(parent->cls != child->cls) continue;
+
           // If parent runline starts after us
-          if(parent->x0 > parent->x1) break;
+          if(parent->x0 > child->x1) break;
 
           // If parent runline ends before us
-          if(parent->x1 < parent->x0) continue;
+          if(parent->x1 < child->x0) continue;
 
           //printf("pa:%i,%i,%i\n", parent->x0, parent->x1, parent->y);
           //printf("ch:%i,%i,%i\n", child->x0, child->x1, child->y);
