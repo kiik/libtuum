@@ -41,17 +41,31 @@ namespace tuum { namespace CMV {
 
   int rle(uint8_t* data, size_t length, BlobSet& out) {
     RunlinePtrSet rows;
-    size_t t0, t1, t2;
 
+#ifdef TUUM_CMV_RLE_BENCH
+    size_t t0, t1, t2;
+#endif
+
+#ifdef TUUM_CMV_RLE_BENCH
     t0 = millis();
+#endif
+
     region_segment(data, length, rows);
+
+#ifdef TUUM_CMV_RLE_BENCH
     t1 = millis();
+#endif
 
     if(rows.size() > 0)
       region_group(rows, out);
-    t2 = millis();
 
+#ifdef TUUM_CMV_RLE_BENCH
+    t2 = millis();
+#endif
+
+#ifdef TUUM_CMV_RLE_BENCH
     printf("[tuum_cmv::rle - stat]segment %lums (%lun), merge %lums\n", (t1 - t0), rows.size(), (t2 - t1));
+#endif
 
     return 0;
   }
@@ -377,7 +391,9 @@ namespace tuum { namespace CMV {
 
     }
 
+#ifdef TUUM_CMV_RGRP_BENCH
     printf("[region_group - stat]rl_N = %lu, blob_N = %lu (%lu)\n", rl_N, blob_N, out.size());
+#endif
 
   }
 
