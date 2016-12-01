@@ -22,11 +22,17 @@ namespace tuum {
   MotionData::MotionData():
     tPos({0, 0}), tOrient(0.0)
   {
-    Pv = 1.0;
+    Pv = 0.050;
     Pr = 180.0 / 3.14;
 
-    mRotCtl.setPID(0.5, 0.15, 0.1);
-    mRotCtl.setILimit(100);
+    mRotCtl.setPID(0.8, 0.05, 0.10);
+    mRotCtl.setILimit(0.5);
+    
+    //mRotCtl.setPID(0.1, 0.0, 0.0);
+
+    
+    mSpdCtl.setPID(0.0, 0.0, 0.0);
+    mSpdCtl.setILimit(100);
   }
 
   void MotionData::setTargetPosition(vec2i in) {
@@ -55,17 +61,46 @@ namespace tuum {
 
     avg_dt = avg_dt * 0.2 + dt * 0.8;
 
-    m_speed = Pv * tPos.getMagnitude();
+    double d = tPos.getMagnitude();
+    
+    double C;
+
+    /*m_speed = mRotCtl.run(distance, dt);
     m_heading = tPos.getOrientation();
-    m_r_speed = mRotCtl.run(Pr * tOrient, dt);
-
-    if(abs(m_speed) > 40)
-      m_speed = 40 * m_speed / abs(m_speed);
-
-    if(abs(m_r_speed) > 170)
-      m_r_speed = 170 * m_r_speed / abs(m_r_speed);
+    m_r_speed = mRotCtl.run(Pr * tOrient, dt);*/
 
     t = t1;
+    const float NEAR_DIST = 400;
+    const float SPEED = 60.0;
+
+    if(abs(d) > NEAR_DIST)
+      m_speed = SPEED;
+    else
+      m_speed = d * SPEED / NEAR_DIST;
+
+    double dO = tPos.getOrientation();
+    if(abs(d) > NEAR_DIST) {
+      if(abs(dO) > 0.35) {
+        m_heading = dO * 0.9;
+        m_speed *= 0.8;
+      } 
+      else
+        m_heading = 0.0;
+    }
+
+    if((abs(tOrient) > 0.10) && (d < 600)) {
+      //m_r_speed = tOrient * 180.0 / 3.14 * d / 600 * 0.8;
+      float v = (d > 200 && abs(tOrient) > 1.0) ? 1.0 : d / 100.0 * 0.5;
+      m_r_speed = mRotCtl.run(tOrient, dt) * Pr * v;
+    }
+    else m_r_speed = 0;
+
+
+    t = t1;
+    //m_speed = 0;
+    //m_heading = 0;
+    m_r_speed = 0;
+    //mRotCtl.debug(); 
   }
 
   void MotionData::clear() {

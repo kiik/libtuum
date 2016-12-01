@@ -47,6 +47,7 @@ namespace tuum {
     int16_t m_r_speed;
 
     PID mRotCtl;
+    PID mSpdCtl;
 
   public:
     int16_t getSpeed() { return m_speed; }
