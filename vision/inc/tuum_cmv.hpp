@@ -11,9 +11,10 @@ namespace tuum { namespace CMV {
   int rle(uint8_t*, size_t, BlobSet&);
 
   void region_segment(uint8_t*, size_t, FilterBase&, RunlineSet&);
-  void region_segment(uint8_t*, size_t, RunlineSet&);
+  void region_segment(uint8_t*, size_t, RunlinePtrSet&);
 
   void region_merge(RunlineSet&, BlobSet&);
+  void region_group(RunlinePtrSet&, BlobSet&);
 
 }}
 
