@@ -29,6 +29,8 @@ namespace tuum {
 
     //if(gMotionThr == nullptr)
       //gMotionThr = new boost::thread(boost::bind(&Motion::loop, &mMotion));
+
+    RTXLOG("Setup done.");
   }
 
 
