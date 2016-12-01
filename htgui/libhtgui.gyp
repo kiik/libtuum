@@ -35,6 +35,8 @@
 
         'src/WSContext.cpp',
         'src/WebSocketServer.cpp',
+
+        'src/protocol/tuum_VisionProtocol.cpp',
       ],
 
       'direct_dependent_settings': {
