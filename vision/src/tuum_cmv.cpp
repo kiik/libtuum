@@ -18,7 +18,7 @@ double time_diff(struct timeval x , struct timeval y)
 
 namespace tuum { namespace CMV {
 
-  const size_t CMV_RUNLINE_MIN_LENGTH = 40;
+  const size_t CMV_RUNLINE_MIN_LENGTH = 10;
 
   bool rl_t::isTouching(rl_t o) {
     if(abs(o.y - y) > 1) return false;

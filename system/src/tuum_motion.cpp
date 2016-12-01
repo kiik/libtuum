@@ -17,8 +17,8 @@ namespace tuum {
   int Motion::MinDist = 10;
   int Motion::MinOrient = 0.08;
 
-  int Motion::DribblerPlaneOffset = 20;
-  int Motion::DribblerPlanePadding = 20;
+  int Motion::DribblerPlaneOffset = 5;  // Used to stop in front of ball
+  int Motion::DribblerPlanePadding = 20; // Used for blindy going forward to pickup ball
 
   Motion::Motion():
     m_running(true), m_target_achieved(true)
@@ -76,7 +76,11 @@ namespace tuum {
   void Motion::setTarget(vec2i pos, vec2i view_target) {
     mMotionData.clear();
     mMotionData.setTargetPosition(pos);
-    mMotionData.setTargetOrientation(view_target.getOrientation());
+
+
+    //TODO: Take into account localization
+    mMotionData.setTargetOrientation(view_target.getNormalized().getOrientation());
+
     start();
   }
 

@@ -58,48 +58,37 @@ namespace tuum {
     //TODO: Calculate speeds using PID with target position error as input
     size_t t1 = millis();
     double dt = (t1 - t) / 1000.0;
-
-    avg_dt = avg_dt * 0.2 + dt * 0.8;
+    t = t1;
 
     double d = tPos.getMagnitude();
-    
-    double C;
+    double dO = tPos.getOrientation();
 
-    /*m_speed = mRotCtl.run(distance, dt);
-    m_heading = tPos.getOrientation();
-    m_r_speed = mRotCtl.run(Pr * tOrient, dt);*/
-
-    t = t1;
-    const float NEAR_DIST = 400;
+    const float NEAR_DIST = 30;
     const float SPEED = 60.0;
+
 
     if(abs(d) > NEAR_DIST)
       m_speed = SPEED;
     else
       m_speed = d * SPEED / NEAR_DIST;
 
-    double dO = tPos.getOrientation();
-    if(abs(d) > NEAR_DIST) {
-      if(abs(dO) > 0.35) {
-        m_heading = dO * 0.9;
-        m_speed *= 0.8;
-      } 
-      else
-        m_heading = 0.0;
-    }
 
-    if((abs(tOrient) > 0.10) && (d < 600)) {
+    if((abs(d) > NEAR_DIST) && (abs(dO) > 0.40))
+      m_heading = dO;
+    else
+      m_heading = 0.0;
+
+
+    if(abs(tOrient) > 0.12) {
       //m_r_speed = tOrient * 180.0 / 3.14 * d / 600 * 0.8;
-      float v = (d > 200 && abs(tOrient) > 1.0) ? 1.0 : d / 100.0 * 0.5;
-      m_r_speed = mRotCtl.run(tOrient, dt) * Pr * v;
+      m_r_speed = mRotCtl.run(tOrient, dt) * Pr;
     }
     else m_r_speed = 0;
 
 
-    t = t1;
     //m_speed = 0;
-    //m_heading = 0;
-    m_r_speed = 0;
+   // m_heading = 0;
+    //m_r_speed = 0;
     //mRotCtl.debug(); 
   }
 
