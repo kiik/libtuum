@@ -16,9 +16,9 @@
 #include "Goal.hpp"
 #include "Robot.hpp"
 
-namespace tuum {
+#include "tuum_EntityFilter.hpp"
 
-  class EntityFilter;
+namespace tuum {
 
   class Navigation
   {
@@ -38,6 +38,9 @@ namespace tuum {
     vec2i calcGoalShootPos(Transform*);
 
     Ball* getNearestBall();
+
+    BallSet* getBalls();
+    GoalSet* getGoals();
 
     Goal* getOpponentGoal();
     Goal* getAllyGoal();

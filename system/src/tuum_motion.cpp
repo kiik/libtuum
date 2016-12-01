@@ -90,6 +90,7 @@ namespace tuum {
 
   void Motion::stop() {
     m_running = false;
+    setTarget({0, 0}, 0.0);
     gMotorControl->omniDrive(0, 0, 0);
   }
 
