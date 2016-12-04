@@ -65,7 +65,7 @@ namespace tuum {
     double dO = tPos.getOrientation();
 
     const float NEAR_DIST = 150;
-    const float SPEED = 150.0;
+    const float SPEED = 200.0;
 
 
     if(abs(d) > NEAR_DIST)

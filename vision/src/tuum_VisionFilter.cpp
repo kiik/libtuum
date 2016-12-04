@@ -20,12 +20,12 @@ namespace tuum {
     CLS_BALL.type = Blob::TypeId::Ball;
     mClss.push_back(CLS_BALL);
 
-    ColorClass CLS_GOAL_BLUE = {32,127,90,167,161,113};
+    ColorClass CLS_GOAL_BLUE = {55,137,98,111,151,113};
     CLS_GOAL_BLUE.name = "cGoalBlue";
     CLS_GOAL_BLUE.type = Blob::TypeId::Goal_Blue;
     mClss.push_back(CLS_GOAL_BLUE);
 
-    ColorClass CLS_GOAL_YEL = {125,94,139,228,103,147};
+    ColorClass CLS_GOAL_YEL = {151,89,138,215,101,148};
     CLS_GOAL_YEL.name = "cGoalYellow";
     CLS_GOAL_YEL.type = Blob::TypeId::Goal_Yellow;
     mClss.push_back(CLS_GOAL_YEL);
