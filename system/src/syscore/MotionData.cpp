@@ -89,7 +89,7 @@ namespace tuum {
     //m_speed = 0;
    // m_heading = 0;
     //m_r_speed = 0;
-    //mRotCtl.debug(); 
+    mRotCtl.debug(); 
   }
 
   void MotionData::clear() {
