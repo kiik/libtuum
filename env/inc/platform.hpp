@@ -32,6 +32,10 @@ struct Timer {
     _end = _start + T;
   }
 
+  unsigned long int getTimeLeft() {
+    return _start - millis();
+  }
+
   bool isTime() {
     return millis() >= _end;
   }

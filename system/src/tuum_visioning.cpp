@@ -218,8 +218,8 @@ namespace tuum {
       else
         ppl = m_plRtexFootball_im.get();
 
-      /*
-      if(m_ppl_config_dirty) {
+      
+      /*if(m_ppl_config_dirty) {
         Glip::CorePipeline::Filter& filter = (*ppl)[ppl->getElementID("FisheyeFilter")];
         filter.program().setVar("uPower", GL_FLOAT, value);
         m_ppl_config_dirty = false;
@@ -261,7 +261,7 @@ namespace tuum {
         else
           mVisionFilter.apply(m_iFrame);
 
-        //mVisionFilter.addBlobDebugLayer(m_iFrame);
+        mVisionFilter.addBlobDebugLayer(m_iFrame);
       }
 
 #ifdef TUUM_VISION_PASS_BENCH

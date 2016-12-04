@@ -25,14 +25,15 @@ namespace tuum {
     Pv = 0.050;
     Pr = 180.0 / 3.14;
 
-    mRotCtl.setPID(0.8, 0.05, 0.10);
-    mRotCtl.setILimit(0.5);
+    mRotCtl.setPID(0.8, 0.0, 0.1);
+    mRotCtl.setILimit(0.6);
     
     //mRotCtl.setPID(0.1, 0.0, 0.0);
 
     
     mSpdCtl.setPID(0.0, 0.0, 0.0);
     mSpdCtl.setILimit(100);
+    m_rotTimer.setPeriod(500);
   }
 
   void MotionData::setTargetPosition(vec2i in) {
@@ -63,8 +64,8 @@ namespace tuum {
     double d = tPos.getMagnitude();
     double dO = tPos.getOrientation();
 
-    const float NEAR_DIST = 30;
-    const float SPEED = 60.0;
+    const float NEAR_DIST = 150;
+    const float SPEED = 150.0;
 
 
     if(abs(d) > NEAR_DIST)
@@ -79,17 +80,18 @@ namespace tuum {
       m_heading = 0.0;
 
 
-    if(abs(tOrient) > 0.12) {
+    if(abs(tOrient) > 0.15) {
       //m_r_speed = tOrient * 180.0 / 3.14 * d / 600 * 0.8;
       m_r_speed = mRotCtl.run(tOrient, dt) * Pr;
-    }
-    else m_r_speed = 0;
+    } else if(abs(d) < 0.15) {
+      m_r_speed = tOrient * 0.8 * m_rotTimer.getTimeLeft()/500;
+    } else m_r_speed = 0;
 
 
     //m_speed = 0;
    // m_heading = 0;
     //m_r_speed = 0;
-    mRotCtl.debug(); 
+    //mRotCtl.debug(); 
   }
 
   void MotionData::clear() {

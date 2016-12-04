@@ -37,6 +37,7 @@ namespace tuum {
     size_t t;
     double avg_dt;
 
+    Timer m_rotTimer; 
     /**
      *  Omni drive parameter cmalculation members
      */

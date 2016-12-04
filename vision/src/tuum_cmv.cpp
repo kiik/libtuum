@@ -207,7 +207,7 @@ namespace tuum { namespace CMV {
         rl->y  = Y;
       }
 
-      //color_debug(dat, i, clss);
+      color_debug(dat, i, clss);
     }
 
     delete(rl);
