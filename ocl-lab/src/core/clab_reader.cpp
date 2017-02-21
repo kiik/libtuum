@@ -16,6 +16,8 @@ namespace lab {
     mBuffer = "";
     mDataPtr = mSource.c_str();
     mEndOfSource = mSource.size();
+
+    RTXLOG(format("Loaded '%s'.", path));
   }
 
   size_t Reader::getSize() {

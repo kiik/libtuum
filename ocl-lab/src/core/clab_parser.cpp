@@ -65,177 +65,54 @@ namespace lab {
 
   }
 
-  SymbolType Parser::tokenMatch(const std::string& value, const SymbolSet& set)
+  SymbolType Parser::matchSymbol(const std::string* buf)
   {
-    auto token_it = Parser::gSymbolMap.end();
-
-    std::vector<std::pair<std::string, SymbolType>> map_buf;
-
-    for(auto tok_it = Parser::gSymbolMap.begin(); tok_it != Parser::gSymbolMap.end(); tok_it++) {
-      for(auto it = set.begin(); it != set.end(); it++) {
-        if(*it == tok_it->second) map_buf.push_back(*tok_it);
-      }
-    }
-
-    for(size_t ix = 0; ix < map_buf.size(); ix++) {
-      auto tok = map_buf[ix];
-
-      if(boost::algorithm::ends_with(value.c_str(), tok.first)) {
-        //RTXLOG(format("matched (%s, %i)", tok.first.c_str(), tok.second));
-        return tok.second;
-      }
-    }
-
-    return SymbolType::ST_Unknown;
-  }
-
-  SymbolType Parser::tokenMatch(const std::string& value) {
+    SymbolType out = SymbolType::ST_Unknown;
 
     for(auto it = Parser::gSymbolMap.begin(); it != Parser::gSymbolMap.end(); it++) {
-      if(boost::algorithm::ends_with(value.c_str(), it->first)) {
-        //RTXLOG(format("matched '%s' => (%s, %i)", value.c_str(), it->first.c_str(), it->second));
-        return it->second;
+      if(boost::algorithm::ends_with(buf->c_str(), it->first)) {
+        out = it->second;
+        break;
       }
     }
 
-    return SymbolType::ST_Unknown;
+    return out;
   }
 
-  SymbolType Parser::bufferMatch(std::string& out) {
-    for(auto it = Parser::gSymbolMap.begin(); it != Parser::gSymbolMap.end(); it++) {
-      if(boost::algorithm::ends_with(mBuffer->c_str(), it->first)) {
-        //RTXLOG(format("matched '%s' => (%s, %i)", mBuffer->c_str(), it->first.c_str(), it->second));
-        out = it->first;
-        return it->second;
-      }
-    }
+  SymbolType Parser::matchSymbol(const std::string* buf, const SymbolSet& set)
+  {
+    SymbolType out = matchSymbol(buf);
 
-    return SymbolType::ST_Unknown;
-  }
-
-  SymbolType Parser::bufferMatch(SymbolSet set) {
-    return tokenMatch(*mBuffer, set);
-  }
-
-  SymbolType Parser::bufferMatch() {
-    std::string buf;
-    return bufferMatch(buf);
-  }
-
-
-  Parser::Symbol_t Parser::bufferSymbolMatch(const SymbolSet_t& set) {
     for(auto it = set.begin(); it != set.end(); it++) {
-      if(boost::algorithm::ends_with(*mBuffer->c_str(), *it)) {
-        return *it;
-      }
+      if(out == *it)
+        return out;
     }
 
-    return "";
+    return SymbolType::ST_Unknown;
   }
 
-  KeywordType Parser::keywordMatch(const std::string& in) {
-    auto it = Parser::gKeywordMap.find(in);
+  SymbolType Parser::matchSymbol(const SymbolSet& set) {
+    return matchSymbol(mReader->getBuffer(), set);
+  }
 
-    if(it != Parser::gKeywordMap.end())
-      return it->second;
-
-    return KeywordType::KW_Unknown;
+  SymbolType Parser::matchSymbol() {
+    return matchSymbol(mReader->getBuffer());
   }
 
 
-  int Parser::readScope() {
-    size_t lvl = 0;
 
-    SymbolSet set = {SymbolType::ST_ScopeBegin, SymbolType::ST_ScopeEnd};
-    SymbolType match;
+  /** Symbol iteration methods **/
 
+  int Parser::readUntil(SymbolType& match, const SymbolSet& set) {
     while(mReader->bufferChar() > 0) {
-      match = bufferMatch(set);
-
-      switch(match) {
-        case SymbolType::ST_ScopeBegin:
-          lvl++;
-          break;
-        case SymbolType::ST_ScopeEnd:
-          lvl--;
-          break;
-      }
-    }
-
-    printf("<scope(%lu)>\n", lvl);
-    mReader->clearBuffer();
-  }
-
-
-  int Parser::parseComment() {
-    std::string buf;
-
-    switch(bufferMatch(buf)) {
-      case SymbolType::ST_CommentBlock:
-      {
-        SymbolType match = SymbolType::ST_Unknown;
-        const SymbolSet set = {ST_CommentBlockE};
-
-        if(readSymbol(set, match) < 0) return -1;
-        mReader->clearBuffer();
-        break;
-      }
-      case SymbolType::ST_Comment:
-      {
-        SymbolType match = SymbolType::ST_Unknown;
-        const SymbolSet set = {SymbolType::ST_LineFeed};
-
-        if(readUntil(set, match) < 0) return -1;
-        mReader->clearBuffer();
-        break;
-      }
-      default:
-        RTXLOG(format("Error - Unkown comment token error '%s'", buf.c_str()));
-        return -1;
-    }
-
-    return 0;
-  }
-
-  int Parser::parseString() {
-    std::string buf;
-
-    SymbolType match = SymbolType::ST_Unknown;
-    const SymbolSet set = {ST_StringLiteral};
-
-    if(readUntil(set, match) < 0) return -1;
-
-    printf("<string %s>\n", mBuffer->c_str());
-    mReader->clearBuffer();
-
-    return 0;
-  }
-
-  int Parser::parseOperator() {
-    std::string buf;
-
-    Symbol_t match = "";
-    const SymbolSet_t set = {TupleEnd};
-
-    if(readUntil(set, match) < 0) return -1;
-
-    printf("<operator %s>\n", mBuffer->c_str());
-    mReader->clearBuffer();
-
-    return 0;
-  }
-
-
-
-  int Parser::readUntil(const SymbolSet& set, SymbolType& match) {
-    while(mReader->bufferChar() > 0) {
-      match = bufferMatch(set);
+      match = matchSymbol(set);
       if(match != SymbolType::ST_Unknown) break;
     }
 
     return 0;
   }
 
+  /*
   int Parser::readUntil(const SymbolSet_t& set, Symbol_t match) {
     while(mReader->bufferChar() > 0) {
       match = bufferSymbolMatch(set);
@@ -243,9 +120,7 @@ namespace lab {
     }
 
     return 0;
-  }
-
-
+  }*/
 
   int Parser::readSymbol(SymbolType &out) {
     SymbolType type;
@@ -255,8 +130,9 @@ namespace lab {
 
     bool run = true;
 
+    RTXLOG("Do");
     while((run == true) && (mReader->bufferChar() > 0)) {
-      type = bufferMatch(buf);
+      type = matchSymbol();
 
       // Handle keyword/literal terminators
       switch(type) {
@@ -303,11 +179,102 @@ namespace lab {
     return 0;
   }
 
-  int Parser::handleSymbol(const SymbolType& kw) {
+  int Parser::readSymbol(SymbolType& out, const SymbolSet& set) {
 
     return 0;
   }
 
+
+
+  /** Integrated parsing modules **/
+
+  int Parser::parseScope() {
+    size_t lvl = 0;
+
+    SymbolSet set = {SymbolType::ST_ScopeBegin, SymbolType::ST_ScopeEnd};
+    SymbolType match;
+
+    while(mReader->bufferChar() > 0) {
+      match = matchSymbol(set);
+
+      switch(match) {
+        case SymbolType::ST_ScopeBegin:
+          lvl++;
+          break;
+        case SymbolType::ST_ScopeEnd:
+          lvl--;
+          break;
+      }
+    }
+
+    printf("<scope(%lu)>\n", lvl);
+    mReader->clearBuffer();
+  }
+
+  int Parser::parseComment() {
+    switch(matchSymbol()) {
+      case SymbolType::ST_CommentBlock:
+      {
+        SymbolType match = SymbolType::ST_Unknown;
+        const SymbolSet set = {ST_CommentBlockE};
+
+        if(readSymbol(match, set) < 0) return -1;
+        mReader->clearBuffer();
+        break;
+      }
+      case SymbolType::ST_Comment:
+      {
+        SymbolType match = SymbolType::ST_Unknown;
+        const SymbolSet set = {SymbolType::ST_LineFeed};
+
+        if(readUntil(match, set) < 0) return -1;
+        mReader->clearBuffer();
+        break;
+      }
+      default:
+        RTXLOG(format("Error - Unkown comment token error '%s'", mReader->getBuffer()->c_str()));
+        return -1;
+    }
+
+    return 0;
+  }
+
+  int Parser::parseString() {
+    std::string buf;
+
+    SymbolType match = SymbolType::ST_Unknown;
+    const SymbolSet set = {ST_StringLiteral};
+
+    if(readUntil(match, set) < 0) return -1;
+
+    printf("<string %s>\n", mBuffer->c_str());
+    mReader->clearBuffer();
+
+    return 0;
+  }
+
+  int Parser::parseOperator() {
+    std::string buf;
+
+    /*
+    Symbol_t match = "";
+    */
+
+    SymbolType match;
+    const SymbolSet set = {SymbolType::ST_TupleEnd};
+
+    if(readUntil(match, set) < 0) return -1;
+
+    printf("<operator %s>\n", mBuffer->c_str());
+    mReader->clearBuffer();
+
+    return 0;
+  }
+
+  int Parser::handleSymbol(const SymbolType& symb, expr_t& out) {
+
+    return 0;
+  }
 
   int Parser::handleScopeLiteral(const char c)
   {
@@ -333,21 +300,24 @@ namespace lab {
   // High level public methods
   int Parser::load(const char* path) {
     mReader = new Reader(path);
+    return 1;
   }
 
   int Parser::parse() {
 
-    KeywordType kw;
+    SymbolType kw;
+    expr_t expr;
+
     while(mReader->getUnreadSize() > 0) {
       if(readSymbol(kw) < 0) goto ERR;
-      if(handleSymbol(kw) < 0) goto ERR;
+      if(handleSymbol(kw, expr) < 0) goto ERR;
     }
 
 FIN:
     RTXLOG("Script loaded.");
     return 0;
 ERR:
-    RTXLOG("Script load failed!");
+    RTXLOG("Script parsing failed!");
     return -1;
   }
 

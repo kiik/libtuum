@@ -74,6 +74,9 @@ namespace ocl {
       ST_Terminator,
       ST_LineFeed,
       ST_Operator,
+
+      ST_TupleBegin,
+      ST_TupleEnd,
       ST_ScopeBegin,
       ST_ScopeEnd,
 

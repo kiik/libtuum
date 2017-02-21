@@ -12,6 +12,7 @@
 
 #include "tuum_ocl.hpp"
 
+#include "core/clab_parser.hpp"
 
 namespace tuum {
 
@@ -86,7 +87,7 @@ namespace tuum {
     ocl::loadScript("./assets/ocl_tests.cls", ppl_ptr);
   }
 
-  bool test = true;
+  bool test = false;
 
   void ocl_process() {
     if(test) {

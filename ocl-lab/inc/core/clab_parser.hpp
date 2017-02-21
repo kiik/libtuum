@@ -40,6 +40,16 @@ namespace lab {
     std::string getBuffer() { return *mBuffer; }
 
   protected:
+    // Matces the end of given buffer to a symbol type.
+    SymbolType matchSymbol(const std::string*);
+    SymbolType matchSymbol(const std::string*, const SymbolSet&);
+
+    // Simpler overloads using 'Reader' member buffer.
+    SymbolType matchSymbol(const SymbolSet&);
+    SymbolType matchSymbol();
+
+    int readUntil(SymbolType&, const SymbolSet&);
+
     int readSymbol(SymbolType&);
     int readSymbol(SymbolType&, const SymbolSet&);
 
@@ -47,23 +57,12 @@ namespace lab {
 
     int readExpression(expr_t&);
 
-    int readScope();
-
-    SymbolType bufferMatch();
-    SymbolType bufferMatch(std::string&);
-    SymbolType bufferMatch(SymbolSet);
-
-    SymbolType tokenMatch(const std::string&);
-    SymbolType tokenMatch(const std::string&, const SymbolSet&);
-
-    KeywordType keywordMatch(const std::string&);
-
-    Symbol_t bufferSymbolMatch(const SymbolSet_t&);
-
-
+    // Misc
     int handleScopeLiteral(const char);
 
     // Integrated atomic parse modules
+    int parseScope();
+
     int parseComment();
     int parseString();
     int parseOperator();
