@@ -4,6 +4,8 @@
     'lpx/liblpx.gyp',
     'tdb/libtdb.gyp',
 
+    'ocl-lab/libocl-lab.gyp',
+
     'loc/libloc.gyp',
     'htgui/libhtgui.gyp',
 

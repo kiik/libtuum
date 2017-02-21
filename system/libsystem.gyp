@@ -8,8 +8,11 @@
         'libhal',
         'libenv',
         'liblpx',
+
         'libloc',
+        'libocl-lab',
         'libvision',
+
         'libgeometry',
         'librtxmath',
         'libentities',
