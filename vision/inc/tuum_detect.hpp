@@ -20,15 +20,15 @@ namespace tuum {
 
     std::vector<T*> objs;
     std::vector<T*> tmp_objs;
-    mutex mLock;
+    boost::mutex mLock;
 
     std::vector<T*>* getEntities() {
-      mutex::scoped_lock scoped_lock(mLock);
+      boost::mutex::scoped_lock scoped_lock(mLock);
       return &objs;
     }
 
     std::vector<T*>* getTmpEntities() {
-      mutex::scoped_lock scoped_lock(mLock);
+      boost::mutex::scoped_lock scoped_lock(mLock);
       return &tmp_objs;
     }
 

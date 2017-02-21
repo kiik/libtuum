@@ -79,7 +79,7 @@ namespace tuum {
 
     size_t m_cam_N, m_lid;
     image_t m_iFrame, m_oFrame;
-    mutex m_iFrameLock, m_oFrameLock;
+    boost::mutex m_iFrameLock, m_oFrameLock;
     Texture* m_tex;
 
     PipeBase m_plRtexFootball;    // Corrects image, subsamples colors, classifies pixels
