@@ -15,6 +15,8 @@ namespace lab {
 
     std::string* getBuffer() { return &mBuffer; }
 
+    size_t getLineNumber() { return mLineNumber; }
+
     size_t getSize();
     size_t getUnreadSize();
 
@@ -27,7 +29,7 @@ namespace lab {
   private:
     std::string mSource, mBuffer;
     const char* mDataPtr;
-    size_t mEndOfSource;
+    size_t mEndOfSource, mLineNumber;
   };
 
 }}}

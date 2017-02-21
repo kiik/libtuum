@@ -104,12 +104,18 @@ namespace lab {
   /** Symbol iteration methods **/
 
   int Parser::readUntil(SymbolType& match, const SymbolSet& set) {
-    while(mReader->bufferChar() > 0) {
+    char c[] = {'\0', '\0'};
+
+    int res = -1;
+    do {
+      res = mReader->bufferChar(c[0]);
+      if(res < 0) break;
+
       match = matchSymbol(set);
       if(match != SymbolType::ST_Unknown) break;
-    }
+    } while(res >= 0);
 
-    return 0;
+    return res;
   }
 
   /*
@@ -124,26 +130,27 @@ namespace lab {
 
   int Parser::readSymbol(SymbolType &out) {
     SymbolType type;
-    std::string buf = "";
+    std::string buf;
 
     mReader->clearBuffer();
 
     bool run = true;
+    int res = -1;
+    do {
+      res = mReader->bufferChar() > 0;
+      if(res < 0) break;
 
-    RTXLOG("Do");
-    while((run == true) && (mReader->bufferChar() > 0)) {
       type = matchSymbol();
 
       // Handle keyword/literal terminators
       switch(type) {
         case SymbolType::ST_LineFeed:
         case SymbolType::ST_Terminator:
-          if(mBuffer->size() == buf.size()) {
+          if(mBuffer->size() < 1) { // No expression to terminate.
             mReader->clearBuffer();
             continue;
-          }
-          else {
-            *mBuffer = mBuffer->substr(0, mBuffer->size() - buf.size());
+          } else {
+            *mBuffer = mBuffer->substr(0, mBuffer->size() - 1);
             type = SymbolType::ST_Keyword;
           }
           break;
@@ -156,17 +163,18 @@ namespace lab {
         case SymbolType::ST_Comment:
         case SymbolType::ST_CommentBlock:
         case SymbolType::ST_CommentBlockE:
-          parseComment();
+          if(parseComment() < 0) return -1;
           break;
         case SymbolType::ST_StringLiteral:
-          parseString();
+          if(parseString() < 0) return -1;
           break;
         case SymbolType::ST_Operator:
-          parseOperator();
+          if(parseOperator() < 0) return -1;
           break;
         default:
+          if(mBuffer->size() == 0) continue;
           //printf("tk: %s, type=%i, tok='%s' \n", mBuffer->c_str(), type, buf.c_str());
-          printf("<token %s>\n", mBuffer->c_str());
+          printf("<token '%s'[%lu]>\n", mBuffer->c_str(), mBuffer->size());
 
           out = type; //keywordMatch(*mBuffer);
           run = false;
@@ -174,9 +182,9 @@ namespace lab {
       }
 
       buf = "";
-    }
+    } while(run);
 
-    return 0;
+    return res;
   }
 
   int Parser::readSymbol(SymbolType& out, const SymbolSet& set) {
@@ -218,7 +226,7 @@ namespace lab {
         SymbolType match = SymbolType::ST_Unknown;
         const SymbolSet set = {ST_CommentBlockE};
 
-        if(readSymbol(match, set) < 0) return -1;
+        if(readUntil(match, set) < 0) return -1;
         mReader->clearBuffer();
         break;
       }
@@ -260,10 +268,17 @@ namespace lab {
     Symbol_t match = "";
     */
 
+    printf("parse operator from '%s'\n", mBuffer->c_str());
+
     SymbolType match;
     const SymbolSet set = {SymbolType::ST_TupleEnd};
 
-    if(readUntil(match, set) < 0) return -1;
+    size_t line = mReader->getLineNumber();
+
+    if(readUntil(match, set) < 0) {
+      RTXLOG(format("Error - failed to parse operator on line %lu!", line));
+      return -1;
+    }
 
     printf("<operator %s>\n", mBuffer->c_str());
     mReader->clearBuffer();
@@ -300,11 +315,12 @@ namespace lab {
   // High level public methods
   int Parser::load(const char* path) {
     mReader = new Reader(path);
+    mBuffer = mReader->getBuffer();
+
     return 1;
   }
 
   int Parser::parse() {
-
     SymbolType kw;
     expr_t expr;
 

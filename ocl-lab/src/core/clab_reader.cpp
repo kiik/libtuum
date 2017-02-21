@@ -16,6 +16,7 @@ namespace lab {
     mBuffer = "";
     mDataPtr = mSource.c_str();
     mEndOfSource = mSource.size();
+    mLineNumber = 1;
 
     RTXLOG(format("Loaded '%s'.", path));
   }
@@ -25,17 +26,22 @@ namespace lab {
   }
 
   size_t Reader::getUnreadSize() {
-    return mSource.size() - (mDataPtr - mSource.c_str() + 1);
+    return mSource.size() - (mDataPtr - mSource.c_str());
   }
 
+  size_t val = 0, nval = 1;
+
   int Reader::readChar(char& out, size_t offset) {
-    if(getUnreadSize() >= mEndOfSource) return -1;
+    if(getUnreadSize() <= 0) return -1;
 
     out = *(char*)((size_t)mDataPtr + offset);
     mDataPtr++;
 
+    if(out == '\n') mLineNumber++;
+
     return 1;
   }
+
 
   int Reader::bufferChar(char& out, size_t offset) {
     if(readChar(out, offset) < 0) return -1;

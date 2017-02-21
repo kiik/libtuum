@@ -78,7 +78,6 @@ namespace lab {
 
     std::string mSource, *mBuffer;
     const char* mDataPtr;
-    size_t mEndOfSource;
   };
 
 }}}
