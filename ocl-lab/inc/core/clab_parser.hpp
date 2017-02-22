@@ -28,7 +28,7 @@ namespace lab {
     typedef std::string Symbol_t;
     typedef std::vector<Symbol_t> SymbolSet_t;
 
-    static SymbolMap gSymbolMap;
+    static SymbolMap gSymbolMap, gOperatorMap;
     static KeywordMap gKeywordMap;
 
     Parser();
@@ -48,17 +48,29 @@ namespace lab {
     SymbolType matchSymbol(const SymbolSet&);
     SymbolType matchSymbol();
 
+    // Symbol subtype parsing.
+    SymbolType matchOperator(const std::string&);
+
+    // Keyword / dynamic symbol matching.
+    SymbolType matchKeyword(const std::string&, KeywordType&);
+    SymbolType matchKeyword(const std::string&);
+
+    // Symbol iteration methods.
     int readUntil(SymbolType&, const SymbolSet&);
 
     int readSymbol(SymbolType&);
     int readSymbol(SymbolType&, const SymbolSet&);
 
-    int handleSymbol(const SymbolType&, expr_t&);
+    // Keyword (special symbol) handling.
+    int handleKeyword(const KeywordType&);
 
+    // Expression iteration methods.
     int readExpression(expr_t&);
+    int handleExpression(const expr_t&);
 
     // Misc
     int handleScopeLiteral(const char);
+    int readScopeAsString(expr_t&);
 
     // Integrated atomic parse modules
     int parseScope();

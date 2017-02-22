@@ -46,18 +46,8 @@ namespace lab {
     int parse();
   };
 
-  class KernelParser : public ParserModule
-  {
-  public:
-    KernelParser(Parser* p):
-      ParserModule(p)
-    {
-
-    }
-
-    int parse();
-  };
-
 }}}
+
+#include "sys/clab_kernel.hpp"
 
 #endif

@@ -65,12 +65,15 @@ namespace ocl {
       ST_Unknown = -2,
       ST_Invalid = -1,
 
-      // Atomic types
-      ST_Keyword,
+      ST_None = 0,
+
+      /** Atomic types **/
+      ST_Keyword = 1,
+      ST_Symbol,
       ST_Literal,
       ST_StringLiteral,
 
-      // Basic types
+      /** Basic types **/
       ST_Terminator,
       ST_LineFeed,
       ST_Operator,
@@ -85,18 +88,27 @@ namespace ocl {
       ST_CommentBlockE,
 
 
-      // High level types
+      /** High level types **/
       ST_Identifier,
       ST_Namespace,
 
-      // Complex types
+      /** Complex types **/
       ST_Call,
+    };
+
+    enum OperatorType {
+      OT_Unknown = -2,
+      OT_Invalid = -1,
+
+      OT_TupleBegin = 0,
+      OT_TupleEnd,
     };
 
 
     struct expr_t {
       std::string data;
       SymbolType type;
+      KeywordType kwt;
     };
 
     struct expr_call_t : public expr_t {

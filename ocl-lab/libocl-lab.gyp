@@ -22,6 +22,7 @@
         'src/core/clab_parser.cpp',
 
         'src/sys/clab_pass.cpp',
+        'src/sys/clab_kernel.cpp',
       ],
 
 
