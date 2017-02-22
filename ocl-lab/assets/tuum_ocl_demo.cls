@@ -1,5 +1,5 @@
-/** @file ocl_tests.cls
- *  @file OpenCL scripting tests.
+/** @file tuum_ocl_demo.cls
+ *  @file OpenCL Tuum demo script.
  *
  *  @author Meelik Kiik (kiik.meelik@gmail.com)
  *  @date 14. February 2017
