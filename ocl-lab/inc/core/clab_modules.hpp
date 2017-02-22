@@ -26,10 +26,15 @@ namespace lab {
 
     }
 
+    std::string getBuffer();
+    std::string* getBufferPtr();
+
     int matchCustomSymbol(const std::string&);
 
     ScopeSignal scopeStep(SymbolType&);
     int scopeEnter();
+
+    void errUnexpSymbol(const SymbolType&);
 
     virtual int parse() = 0;
 

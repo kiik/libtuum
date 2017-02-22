@@ -15,12 +15,63 @@ namespace lab {
 
   }
 
+  int PassParser::parseRange() {
+    SymbolType type;
+
+    if(scopeStep(type) < ScopeSignal::Continue) return -1;
+
+    switch(type) {
+      case SymbolType::ST_Operator:
+        printf("#TODO: Range = %s\n", getBuffer().c_str());
+        break;
+      default:
+        RTXLOG("");
+        errUnexpSymbol(type);
+        return -2;
+    }
+
+    return 0;
+  }
+
+  int PassParser::parseCall() {
+    SymbolType type;
+
+    if(scopeStep(type) < ScopeSignal::Continue) return -1;
+
+    switch(type) {
+      case SymbolType::ST_Operator:
+        printf("#TODO: Task = %s\n", getBuffer().c_str());
+        break;
+      default:
+        RTXLOG("");
+        errUnexpSymbol(type);
+        return -2;
+    }
+
+    return 0;
+  }
+
   int PassParser::parseProcedure()
   {
-    RTXLOG("TODO");
+    SymbolType type;
 
     if(scopeEnter() < 0) return -1;
 
+    while(scopeStep(type) >= ScopeSignal::Continue) {
+      switch(type) {
+        case SymbolType::ST_Symbol:
+          if(matchCustomSymbol("Range") > 0) {
+            if(parseRange() < 0) return -2;
+            break;
+          } else if(matchCustomSymbol("Call") > 0) {
+            if(parseCall() < 0) return -3;
+            break;
+          }
+        default:
+          errUnexpSymbol(type);
+          return -5;
+      }
+    };
 
     return -100;
   }
@@ -31,24 +82,18 @@ namespace lab {
 
     if(scopeEnter() < 0) return -1;
 
-    int res;
-    size_t lvl = 1;
     while(scopeStep(type) >= ScopeSignal::Continue) {
-
       switch(type) {
         case SymbolType::ST_Symbol:
         case SymbolType::ST_Keyword:
-          if(matchCustomSymbol("Procedure")) {
+          if(matchCustomSymbol("Procedure") > 0) {
             if(parseProcedure() < 0) return -4;;
             break;
           }
-          //if(parseProperty(gParser->getBuffer()) < 0) return -4;
-        case SymbolType::ST_Operator:
         default:
-          RTXLOG(format("Error - unexpected symbol '%s'(%i)", gParser->getBuffer().c_str(), type));
+          errUnexpSymbol(type);
           return -5;
       }
-
     };
 
     return -1;

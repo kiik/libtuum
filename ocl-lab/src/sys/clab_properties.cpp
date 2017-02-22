@@ -46,8 +46,6 @@ namespace lab {
           continue;
       }
 
-      printf("%i, (seq %lu)\n", s, mScopeSeq);
-
       switch(type) {
         case SymbolType::ST_Symbol:
           if(parseProperty(gParser->getBuffer()) < 0) return -4;
