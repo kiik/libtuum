@@ -18,6 +18,7 @@
       'sources': [
         'src/tuum_ocl.cpp',
 
+        'src/core/clab_types.cpp',
         'src/core/clab_reader.cpp',
         'src/core/clab_parser.cpp',
 

@@ -39,6 +39,8 @@ namespace lab {
 
     std::string getBuffer() { return *mBuffer; }
 
+    script_ctx_t* getScriptContext() { return &mCtx; }
+
   protected:
     // Matces the end of given buffer to a symbol type.
     SymbolType matchSymbol(const std::string*);
@@ -85,6 +87,8 @@ namespace lab {
   private:
     size_t scope_seq = 0;
     size_t comment_type = 0;
+
+    script_ctx_t mCtx;
 
     Reader* mReader;
 
