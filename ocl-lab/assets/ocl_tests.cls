@@ -55,13 +55,13 @@ Pipeline "TuumVisionPpl" {
 
   Pass {
     Procedure {
-      Parallel {0, 460800, 0} // 1280*720/2 {0, {100, 100}, 0}
-      Kernel::ImageDecode(Properties::Input_YUYV, Properties::Data_YUV);
+      Call (Kernel::ImageDecode, Properties::Input_YUYV, Properties::Data_YUV);
+      Range (0, 460800, 0) // 1280*720/2 {0, {100, 100}, 0}
     }
 
     Procedure {
-      Parallel {0, 921600, 0} // 1280*720
-      Kernel::ToHumanColor(Properties::Data_YUV, Properties::Output_RGB);
+      Call (Kernel::ToHumanColor, Properties::Data_YUV, Properties::Output_RGB);
+      Range (0, 921600, 0) // 1280*720
     }
   }
 
