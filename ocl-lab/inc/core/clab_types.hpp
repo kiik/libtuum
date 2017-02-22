@@ -19,15 +19,8 @@ namespace ocl {
   typedef std::map<name_t, cl::Buffer*> BufferSet;
 
 
+  class PipelineScript;
 
-  class Pipeline;
-  class Pass;
-
-  typedef std::vector<Pass> PassSet;
-
-// Parse data
-// Construct meta-objects (unordered)
-// Construct CL objects (ordered)
 
   // Script related structures
   namespace lab {

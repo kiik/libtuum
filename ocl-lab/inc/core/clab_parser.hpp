@@ -34,12 +34,11 @@ namespace lab {
     Parser();
 
     int load(const char*);
-    int parse();
-    int make(ocl::Pipeline*&);
+    int parse(script_ctx_t*);
 
     std::string getBuffer() { return *mBuffer; }
 
-    script_ctx_t* getScriptContext() { return &mCtx; }
+    script_ctx_t* getScriptContext() { return mCtx; }
 
   protected:
     // Matces the end of given buffer to a symbol type.
@@ -88,7 +87,7 @@ namespace lab {
     size_t scope_seq = 0;
     size_t comment_type = 0;
 
-    script_ctx_t mCtx;
+    script_ctx_t* mCtx;
 
     Reader* mReader;
 

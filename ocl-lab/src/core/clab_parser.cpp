@@ -457,7 +457,9 @@ namespace lab {
     return 1;
   }
 
-  int Parser::parse() {
+  int Parser::parse(script_ctx_t* ctx) {
+    mCtx = ctx;
+
     SymbolType kw;
     expr_t expr;
 
@@ -473,11 +475,5 @@ ERR:
     RTXLOG("Script parsing failed!");
     return -1;
   }
-
-  int Parser::make(ocl::Pipeline*& out) {
-    out = nullptr;
-    return -1;
-  }
-
 
 }}}

@@ -16,14 +16,17 @@
         'inc',
       ],
       'sources': [
-        'src/tuum_ocl.cpp',
-
         'src/core/clab_types.cpp',
         'src/core/clab_reader.cpp',
         'src/core/clab_parser.cpp',
 
         'src/sys/clab_pass.cpp',
         'src/sys/clab_kernel.cpp',
+        'src/sys/clab_pipeline.cpp',
+        'src/sys/clab_script.cpp',
+
+        'src/tuum_ocl_ppl.cpp',
+        'src/tuum_ocl.cpp',
       ],
 
 

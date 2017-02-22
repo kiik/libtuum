@@ -12,7 +12,7 @@
 
 #include "tuum_ocl.hpp"
 
-#include "core/clab_parser.hpp"
+#include "sys/clab_script.hpp"
 
 namespace tuum {
 
@@ -117,22 +117,22 @@ namespace tuum {
 namespace ocl {
 
   int loadScript(const char* path, ocl::Pipeline*& out) {
-    lab::Parser p;
+    lab::PipelineScript scr(path);
 
-    if(p.load(path) < 0) {
-      RTXLOG("Script load failed!");
-      return -1;
-    }
+    RTXLOG("Loading script...");
 
-    if(p.parse() < 0) {
-      RTXLOG("Parsing failed!");
-      return -2;
-    }
+    if(scr.load() < 0) return -1;
 
-    if(p.make(out) < 0) {
-      RTXLOG("Pipeline build failed!");
-      return -3;
-    }
+    RTXLOG("Creating pipeline...");
+
+    Pipeline *ppl;
+    if(scr.createPipeline(ppl) < 0) return -2;
+
+    RTXLOG("Tests done.");
+
+    delete(ppl);
+
+    RTXLOG("Cleanup done.");
 
     return -100;
   }

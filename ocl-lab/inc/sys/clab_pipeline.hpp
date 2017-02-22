@@ -2,21 +2,19 @@
 #ifndef CLAB_PIPELINE_H
 #define CLAB_PIPELINE_H
 
+#include "core/clab_types.hpp"
+#include "core/clab_modules.hpp"
+
 namespace tuum {
 namespace ocl {
 namespace lab {
 
-  class Pipeline {
+  class PipelineParser : public ParserModule
+  {
   public:
-    Pipeline(); // BufferSet, PassSet
+    PipelineParser(Parser*);
 
-    int init();
-    int setup();
-    int process();
-
-  protected:
-    // BufferSet mBuffers;
-    // PassSet mPasses;
+    int parse();
   };
 
 }}}

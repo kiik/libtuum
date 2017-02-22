@@ -34,20 +34,10 @@ namespace lab {
     int parse();
   };
 
-  class PipelineParser : public ParserModule
-  {
-  public:
-    PipelineParser(Parser* p):
-      ParserModule(p)
-    {
-
-    }
-
-    int parse();
-  };
 
 }}}
 
+#include "sys/clab_pipeline.hpp"
 #include "sys/clab_kernel.hpp"
 
 #endif
