@@ -15,7 +15,7 @@ namespace lab {
     friend class lab::PipelineParser;
     friend class lab::PropertyParser;
     friend class lab::KernelParser;
-    friend class lab::PassParser;
+    friend class lab::ProcedureParser;
 
   public:
 

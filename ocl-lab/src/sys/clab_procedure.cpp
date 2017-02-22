@@ -3,19 +3,19 @@
 
 #include "core/clab_parser.hpp"
 
-#include "sys/clab_pass.hpp"
+#include "sys/clab_procedure.hpp"
 
 namespace tuum {
 namespace ocl {
 namespace lab {
 
-  PassParser::PassParser(Parser* p):
+  ProcedureParser::ProcedureParser(Parser* p):
     ParserModule(p)
   {
 
   }
 
-  int PassParser::parseRange() {
+  int ProcedureParser::parseRange() {
     SymbolType type;
 
     if(scopeStep(type) < ScopeSignal::Continue) return -1;
@@ -33,7 +33,7 @@ namespace lab {
     return 0;
   }
 
-  int PassParser::parseCall() {
+  int ProcedureParser::parseCall() {
     SymbolType type;
 
     if(scopeStep(type) < ScopeSignal::Continue) return -1;
@@ -51,7 +51,7 @@ namespace lab {
     return 0;
   }
 
-  int PassParser::parseProcedure()
+  int ProcedureParser::parseProcedure()
   {
     SymbolType type;
 
@@ -76,7 +76,7 @@ namespace lab {
     return -100;
   }
 
-  int PassParser::parse()
+  int ProcedureParser::parse()
   {
     SymbolType type;
 
@@ -86,7 +86,7 @@ namespace lab {
       switch(type) {
         case SymbolType::ST_Symbol:
         case SymbolType::ST_Keyword:
-          if(matchCustomSymbol("Procedure") > 0) {
+          if(matchCustomSymbol("Pass") > 0) {
             if(parseProcedure() < 0) return -4;;
             break;
           }

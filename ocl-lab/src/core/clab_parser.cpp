@@ -57,7 +57,7 @@ namespace lab {
     {std::string("Properties"), KeywordType::KW_Properties},
 
     {std::string("Kernel"), KeywordType::KW_Kernel},
-    {std::string("Pass"), KeywordType::KW_Pass},
+    {std::string("Procedure"), KeywordType::KW_Procedure},
 
     {std::string("Procedure"), KeywordType::KW_Procedure}
   };
@@ -243,9 +243,9 @@ namespace lab {
         KernelParser p(this);
         return p.parse();
       }
-      case KeywordType::KW_Pass:
+      case KeywordType::KW_Procedure:
       {
-        PassParser p(this);
+        ProcedureParser p(this);
         return p.parse();
       }
     }

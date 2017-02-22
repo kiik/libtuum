@@ -9,10 +9,10 @@ namespace tuum {
 namespace ocl {
 namespace lab {
 
-  class PassParser : public ParserModule
+  class ProcedureParser : public ParserModule
   {
   public:
-    PassParser(Parser*);
+    ProcedureParser(Parser*);
 
     int parseRange();
     int parseCall();

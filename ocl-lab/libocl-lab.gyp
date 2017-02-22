@@ -22,7 +22,7 @@
         'src/core/clab_modules.cpp',
 
         'src/sys/clab_properties.cpp',
-        'src/sys/clab_pass.cpp',
+        'src/sys/clab_procedure.cpp',
         'src/sys/clab_kernel.cpp',
         'src/sys/clab_pipeline.cpp',
         'src/sys/clab_script.cpp',

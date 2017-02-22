@@ -110,7 +110,7 @@ namespace ocl {
     class PipelineParser;
     class PropertyParser;
     class KernelParser;
-    class PassParser;
+    class ProcedureParser;
 
 
     enum KeywordType {
@@ -121,7 +121,6 @@ namespace ocl {
 
       KW_Properties,
       KW_Kernel,
-      KW_Pass,
       KW_Procedure,
     };
 

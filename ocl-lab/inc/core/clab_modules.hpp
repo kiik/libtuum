@@ -47,7 +47,7 @@ namespace lab {
 
 #include "sys/clab_properties.hpp"
 #include "sys/clab_kernel.hpp"
-#include "sys/clab_pass.hpp"
+#include "sys/clab_procedure.hpp"
 #include "sys/clab_pipeline.hpp"
 
 #endif
