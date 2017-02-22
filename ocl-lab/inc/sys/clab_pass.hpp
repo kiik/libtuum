@@ -14,6 +14,10 @@ namespace lab {
   public:
     PassParser(Parser*);
 
+    int parseRange();
+    int parseCall();
+    int parseProcedure();
+
     int parse();
   };
 

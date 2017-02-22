@@ -35,23 +35,20 @@ namespace lab {
   {
     SymbolType type;
 
-    int res = gParser->readSymbol(type);
-    if(res < 0) return -1;
+    if(scopeEnter() < 0) return -1;
 
-    if(type != SymbolType::ST_ScopeBegin) {
-      RTXLOG(format("Error - expected scope, got <symbol %i>", type));
-      return -2;
-    }
+    while(true) {
+      ScopeSignal s = scopeStep(type);
+      switch(s) {
+        case ScopeSignal::OutOfScope:
+          return 1;
+        case ScopeSignal::Exit:
+          continue;
+      }
 
-    size_t lvl = 1;
-    do {
-      res = gParser->readSymbol(type);
-      if(res < 0) return -3;
+      printf("%i, (seq %lu)\n", s, mScopeSeq);
 
       switch(type) {
-        case SymbolType::ST_ScopeEnd:
-          lvl--;
-          break;
         case SymbolType::ST_Symbol:
           if(parseProperty(gParser->getBuffer()) < 0) return -4;
           break;
@@ -62,7 +59,7 @@ namespace lab {
           return -5;
       }
 
-    } while(lvl > 0);
+    }
 
     return 0;
   }
