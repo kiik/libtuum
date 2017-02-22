@@ -41,6 +41,7 @@ namespace lab {
     int parse(script_ctx_t*);
 
     std::string getBuffer() { return *mBuffer; }
+    std::string* getBufferPtr() { return mBuffer; }
 
     script_ctx_t* getScriptContext() { return mCtx; }
 
