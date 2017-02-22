@@ -233,9 +233,19 @@ namespace lab {
 
   int Parser::handleKeyword(const KeywordType& in) {
     switch(in) {
+      case KeywordType::KW_Properties:
+      {
+        PropertyParser p(this);
+        return p.parse();
+      }
       case KeywordType::KW_Kernel:
       {
         KernelParser p(this);
+        return p.parse();
+      }
+      case KeywordType::KW_Pass:
+      {
+        PassParser p(this);
         return p.parse();
       }
     }

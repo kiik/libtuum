@@ -22,22 +22,11 @@ namespace lab {
     Parser* gParser;
   };
 
-  class PropertyParser : public ParserModule
-  {
-  public:
-    PropertyParser(Parser* p):
-      ParserModule(p)
-    {
-
-    }
-
-    int parse();
-  };
-
-
 }}}
 
-#include "sys/clab_pipeline.hpp"
+#include "sys/clab_properties.hpp"
 #include "sys/clab_kernel.hpp"
+#include "sys/clab_pass.hpp"
+#include "sys/clab_pipeline.hpp"
 
 #endif
