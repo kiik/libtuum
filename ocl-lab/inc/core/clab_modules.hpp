@@ -10,18 +10,32 @@ namespace lab {
 
   class ParserModule {
   public:
+    enum ScopeSignal {
+      ScopeError = -1,
+
+      OutOfScope = 0,
+      Exit,
+      Continue,
+      Enter
+    };
+
     ParserModule(Parser* p):
-      gParser(p)
+      gParser(p),
+      mScopeSeq(0)
     {
 
     }
 
-    int enterScope();
+    int matchCustomSymbol(const std::string&);
+
+    ScopeSignal scopeStep(SymbolType&);
+    int scopeEnter();
 
     virtual int parse() = 0;
 
   protected:
     Parser* gParser;
+    size_t mScopeSeq;
   };
 
 }}}
