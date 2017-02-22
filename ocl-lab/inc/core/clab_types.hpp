@@ -108,7 +108,9 @@ namespace ocl {
     class ParserModule;
 
     class PipelineParser;
+    class PropertyParser;
     class KernelParser;
+    class PassParser;
 
 
     enum KeywordType {

@@ -10,8 +10,12 @@ namespace lab {
 
   class Parser
   {
+    friend class lab::ParserModule;
+
     friend class lab::PipelineParser;
+    friend class lab::PropertyParser;
     friend class lab::KernelParser;
+    friend class lab::PassParser;
 
   public:
 

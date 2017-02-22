@@ -14,6 +14,8 @@ namespace lab {
   public:
     PropertyParser(Parser*);
 
+    int parseProperty(const std::string&);
+
     int parse();
   };
 
