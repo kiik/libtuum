@@ -16,6 +16,8 @@ namespace lab {
 
     }
 
+    int enterScope();
+
     virtual int parse() = 0;
 
   protected:

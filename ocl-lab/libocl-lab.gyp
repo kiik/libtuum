@@ -19,6 +19,7 @@
         'src/core/clab_types.cpp',
         'src/core/clab_reader.cpp',
         'src/core/clab_parser.cpp',
+        'src/core/clab_modules.cpp',
 
         'src/sys/clab_properties.cpp',
         'src/sys/clab_pass.cpp',
