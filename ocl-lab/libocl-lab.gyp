@@ -17,6 +17,7 @@
       ],
       'sources': [
         'src/core/clab_types.cpp',
+        'src/core/clab_lang.cpp',
         'src/core/clab_reader.cpp',
         'src/core/clab_parser.cpp',
         'src/core/clab_modules.cpp',

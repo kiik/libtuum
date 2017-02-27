@@ -4,66 +4,10 @@
 
 #include "tuum_logger.hpp"
 
+#include "core/clab_lang.hpp"
 #include "core/clab_reader.hpp"
-#include "core/clab_parser.hpp"
 #include "core/clab_modules.hpp"
-
-namespace tuum {
-namespace ocl {
-namespace lab {
-
-  const std::string TupleBegin = "(",
-                    TupleEnd   = ")",
-
-                    ArrBegin   = "[",
-                    ArrEnd     = "]",
-
-                    DQuote     = "\"",
-                    NewLine    = "\n",
-
-                    ScopeBegin = "{",
-                    ScopeEnd   = "}";
-
-
-  Parser::SymbolMap Parser::gSymbolMap = {
-    {TupleBegin, SymbolType::ST_Operator},
-    {TupleEnd,   SymbolType::ST_Operator},
-
-    {std::string(" "), SymbolType::ST_Terminator},
-    {std::string(";"), SymbolType::ST_Terminator},
-    {NewLine, SymbolType::ST_LineFeed},
-
-    {DQuote, SymbolType::ST_StringLiteral},
-
-    {ScopeBegin, SymbolType::ST_ScopeBegin},
-    {ScopeEnd,   SymbolType::ST_ScopeEnd},
-
-    {std::string("//"), SymbolType::ST_Comment},
-    {std::string("/*"), SymbolType::ST_CommentBlock},
-    {std::string("*/"), SymbolType::ST_CommentBlockE}
-  };
-
-  Parser::SymbolMap Parser::gOperatorMap = {
-    {TupleBegin, SymbolType::ST_TupleBegin},
-    {TupleEnd,   SymbolType::ST_TupleEnd},
-
-    {ScopeBegin, SymbolType::ST_ScopeBegin},
-    {ScopeEnd,   SymbolType::ST_ScopeEnd},
-  };
-
-  Parser::KeywordMap Parser::gKeywordMap = {
-    {std::string("Pipeline"), KeywordType::KW_Pipeline},
-
-    {std::string("Properties"), KeywordType::KW_Properties},
-
-    {std::string("Kernel"), KeywordType::KW_Kernel},
-    {std::string("Procedure"), KeywordType::KW_Procedure},
-
-    {std::string("Procedure"), KeywordType::KW_Procedure}
-  };
-
-}}}
-
+#include "core/clab_parser.hpp"
 
 namespace tuum {
 namespace ocl {
@@ -74,75 +18,14 @@ namespace lab {
 
   }
 
-  SymbolType Parser::matchSymbol(const std::string* buf)
-  {
-    SymbolType out = SymbolType::ST_Unknown;
-
-    for(auto it = Parser::gSymbolMap.begin(); it != Parser::gSymbolMap.end(); it++) {
-      if(boost::algorithm::ends_with(buf->c_str(), it->first)) {
-        out = it->second;
-        break;
-      }
-    }
-
-    return out;
-  }
-
-  SymbolType Parser::matchSymbol(const std::string* buf, const SymbolSet& set)
-  {
-    SymbolType out = matchSymbol(buf);
-
-    for(auto it = set.begin(); it != set.end(); it++) {
-      if(out == *it)
-        return out;
-    }
-
-    return SymbolType::ST_Unknown;
-  }
-
   SymbolType Parser::matchSymbol(const SymbolSet& set) {
-    return matchSymbol(mReader->getBuffer(), set);
+    return match_symbol(mReader->getBuffer(), set);
   }
 
   SymbolType Parser::matchSymbol() {
-    return matchSymbol(mReader->getBuffer());
+    return match_symbol(mReader->getBuffer());
   }
 
-  SymbolType Parser::matchOperator(const std::string& buf) {
-    SymbolType out = SymbolType::ST_Unknown;
-
-    for(auto it = Parser::gOperatorMap.begin(); it != Parser::gOperatorMap.end(); it++) {
-      if(boost::algorithm::ends_with(buf.c_str(), it->first)) {
-        out = it->second;
-        break;
-      }
-    }
-
-    return out;
-  }
-
-  SymbolType Parser::matchKeyword(const std::string& buf, KeywordType& kw_out) {
-    SymbolType out = SymbolType::ST_Symbol;
-
-    for(auto it = Parser::gKeywordMap.begin(); it != Parser::gKeywordMap.end(); it++) {
-      if(boost::algorithm::ends_with(buf.c_str(), it->first)) {
-        out = SymbolType::ST_Keyword;
-        kw_out = it->second;
-        break;
-      }
-    }
-
-    return out;
-  }
-
-  SymbolType Parser::matchKeyword(const std::string& buf) {
-    KeywordType kwt;
-    return matchKeyword(buf, kwt);
-  }
-
-
-
-  /** Symbol iteration methods **/
 
   int Parser::readUntil(SymbolType& match, const SymbolSet& set) {
     char c[] = {'\0', '\0'};
@@ -158,16 +41,6 @@ namespace lab {
 
     return res;
   }
-
-  /*
-  int Parser::readUntil(const SymbolSet_t& set, Symbol_t match) {
-    while(mReader->bufferChar() > 0) {
-      match = bufferSymbolMatch(set);
-      if(match != "") break;
-    }
-
-    return 0;
-  }*/
 
   int Parser::readSymbol(SymbolType &type) {
     std::string buf;
@@ -192,7 +65,7 @@ namespace lab {
             continue;
           } else {
             *mBuffer = mBuffer->substr(0, mBuffer->size() - 1);
-            type = matchKeyword(*mBuffer);
+            type = match_keyword(*mBuffer);
           }
           break;
       }
@@ -276,7 +149,7 @@ namespace lab {
             dbg_name = "operator";
             break;
           case SymbolType::ST_Keyword:
-            matchKeyword(out.data, out.kwt);
+            match_keyword(out.data, out.kwt);
             dbg_name = "keyword";
             break;
           case SymbolType::ST_Symbol:
@@ -397,7 +270,7 @@ namespace lab {
         return -1;
       }
 
-      match = matchOperator(*mBuffer);
+      match = match_operator(*mBuffer);
 
       if(match == SymbolType::ST_TupleEnd) return 1;
     }

@@ -24,17 +24,6 @@ namespace lab {
     // expr_t("Kernel::XXX_TO_YYY(Buffer::B1, Buffer::B2)", ST_Call)
     // NSP::FN_NAME(ARGS) - ST_FunctionCall -> {ST_Namespace, ST_FunctionName}
 
-    typedef std::map<const std::string, SymbolType> SymbolMap;
-    typedef std::vector<SymbolType> SymbolSet;
-
-    typedef std::map<const std::string, KeywordType> KeywordMap;
-
-    typedef std::string Symbol_t;
-    typedef std::vector<Symbol_t> SymbolSet_t;
-
-    static SymbolMap gSymbolMap, gOperatorMap;
-    static KeywordMap gKeywordMap;
-
     Parser();
 
     int load(const char*);
@@ -46,20 +35,9 @@ namespace lab {
     script_ctx_t* getScriptContext() { return mCtx; }
 
   protected:
-    // Matces the end of given buffer to a symbol type.
-    SymbolType matchSymbol(const std::string*);
-    SymbolType matchSymbol(const std::string*, const SymbolSet&);
-
     // Simpler overloads using 'Reader' member buffer.
     SymbolType matchSymbol(const SymbolSet&);
     SymbolType matchSymbol();
-
-    // Symbol subtype parsing.
-    SymbolType matchOperator(const std::string&);
-
-    // Keyword / dynamic symbol matching.
-    SymbolType matchKeyword(const std::string&, KeywordType&);
-    SymbolType matchKeyword(const std::string&);
 
     // Symbol iteration methods.
     int readUntil(SymbolType&, const SymbolSet&);

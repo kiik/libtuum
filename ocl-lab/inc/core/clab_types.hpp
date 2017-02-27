@@ -167,6 +167,16 @@ namespace ocl {
       OT_TupleEnd,
     };
 
+
+    typedef std::map<const std::string, SymbolType> SymbolMap;
+    typedef std::vector<SymbolType> SymbolSet;
+
+    typedef std::map<const std::string, KeywordType> KeywordMap;
+
+    typedef std::string Symbol_t;
+    typedef std::vector<Symbol_t> SymbolSet_t;
+
+
     struct expr_t {
       std::string data;
       SymbolType type;
