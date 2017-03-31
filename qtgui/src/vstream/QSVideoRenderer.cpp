@@ -26,8 +26,10 @@ namespace tuum { namespace gui {
     QSGGeometry *geometry;
     ImageStream* m_image = m_camera->getStream();
 
-    if (!m_texture)
-      m_texture = new VideoTexture(m_image->getWidth(), m_image->getHeight());
+    if (!m_texture) {
+      auto frm = m_image->getFormat();
+      m_texture = new VideoTexture(frm.width, frm.height);
+    }
 
     if (!m_node) {
       m_node = new QSGGeometryNode();
@@ -83,6 +85,7 @@ namespace tuum { namespace gui {
 
   void QSVideoRenderer::run()
   {
+    /*
     if (m_camera->openDevice() < 0) return;
     if (m_camera->startCapture() < 0) return;
 
@@ -96,7 +99,7 @@ namespace tuum { namespace gui {
     }
 
     m_camera->stopCapture();
-    m_camera->closeDevice();
+    m_camera->closeDevice();*/
   }
 
   void QSVideoRenderer::updateTexture(const uchar *data, int width, int height)
@@ -106,21 +109,21 @@ namespace tuum { namespace gui {
     textureProcess(data, width, height);
 
     ImageStream* m_image = m_camera->getStream();
-    m_image->swapImage();
+    //m_image->swapImage();
 
     emit imageChanged();
   }
 
   void QSVideoRenderer::updateMaterial()
   {
-    ImageStream* m_image = m_camera->getStream();
-    m_texture->updateFrame(m_image->getFrontImage());
+    //ImageStream* m_image = m_camera->getStream();
+    //m_texture->updateFrame(m_image->getFrame());
   }
 
   void QSVideoRenderer::textureProcess(const uchar *data, int width, int height)
   {
-    ImageStream* m_image = m_camera->getStream();
-    m_image->yuyv2rgb(data, width, height);
+    //ImageStream* m_image = m_camera->getStream();
+    //m_image->yuyv2rgb(data, width, height);
   }
 
 }}

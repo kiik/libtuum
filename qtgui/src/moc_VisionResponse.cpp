@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'VisionResponse.hpp'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.4.2)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.5.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,31 +12,31 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'VisionResponse.hpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.4.2. It"
+#error "This file was generated using the moc from 5.5.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_rtx__gui__VisionResponse_t {
+struct qt_meta_stringdata_tuum__gui__VisionResponse_t {
     QByteArrayData data[8];
-    char stringdata[90];
+    char stringdata0[91];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_rtx__gui__VisionResponse_t, stringdata) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_tuum__gui__VisionResponse_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_rtx__gui__VisionResponse_t qt_meta_stringdata_rtx__gui__VisionResponse = {
+static const qt_meta_stringdata_tuum__gui__VisionResponse_t qt_meta_stringdata_tuum__gui__VisionResponse = {
     {
-QT_MOC_LITERAL(0, 0, 24), // "tuum::gui::VisionResponse"
-QT_MOC_LITERAL(1, 25, 11), // "playChanged"
-QT_MOC_LITERAL(2, 37, 0), // ""
-QT_MOC_LITERAL(3, 38, 4), // "sync"
-QT_MOC_LITERAL(4, 43, 7), // "cleanup"
-QT_MOC_LITERAL(5, 51, 19), // "handleWindowChanged"
-QT_MOC_LITERAL(6, 71, 13), // "QQuickWindow*"
-QT_MOC_LITERAL(7, 85, 4) // "play"
+QT_MOC_LITERAL(0, 0, 25), // "tuum::gui::VisionResponse"
+QT_MOC_LITERAL(1, 26, 11), // "playChanged"
+QT_MOC_LITERAL(2, 38, 0), // ""
+QT_MOC_LITERAL(3, 39, 4), // "sync"
+QT_MOC_LITERAL(4, 44, 7), // "cleanup"
+QT_MOC_LITERAL(5, 52, 19), // "handleWindowChanged"
+QT_MOC_LITERAL(6, 72, 13), // "QQuickWindow*"
+QT_MOC_LITERAL(7, 86, 4) // "play"
 
     },
     "tuum::gui::VisionResponse\0playChanged\0"
@@ -45,7 +45,7 @@ QT_MOC_LITERAL(7, 85, 4) // "play"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_rtx__gui__VisionResponse[] = {
+static const uint qt_meta_data_tuum__gui__VisionResponse[] = {
 
  // content:
        7,       // revision
@@ -87,6 +87,7 @@ void tuum::gui::VisionResponse::qt_static_metacall(QObject *_o, QMetaObject::Cal
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         VisionResponse *_t = static_cast<VisionResponse *>(_o);
+        Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->playChanged((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 1: _t->sync(); break;
@@ -104,11 +105,31 @@ void tuum::gui::VisionResponse::qt_static_metacall(QObject *_o, QMetaObject::Cal
             }
         }
     }
+#ifndef QT_NO_PROPERTIES
+    else if (_c == QMetaObject::ReadProperty) {
+        VisionResponse *_t = static_cast<VisionResponse *>(_o);
+        Q_UNUSED(_t)
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast< bool*>(_v) = _t->play(); break;
+        default: break;
+        }
+    } else if (_c == QMetaObject::WriteProperty) {
+        VisionResponse *_t = static_cast<VisionResponse *>(_o);
+        Q_UNUSED(_t)
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: _t->setPlay(*reinterpret_cast< bool*>(_v)); break;
+        default: break;
+        }
+    } else if (_c == QMetaObject::ResetProperty) {
+    }
+#endif // QT_NO_PROPERTIES
 }
 
 const QMetaObject tuum::gui::VisionResponse::staticMetaObject = {
-    { &QQuickItem::staticMetaObject, qt_meta_stringdata_rtx__gui__VisionResponse.data,
-      qt_meta_data_rtx__gui__VisionResponse,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+    { &QQuickItem::staticMetaObject, qt_meta_stringdata_tuum__gui__VisionResponse.data,
+      qt_meta_data_tuum__gui__VisionResponse,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
@@ -120,7 +141,7 @@ const QMetaObject *tuum::gui::VisionResponse::metaObject() const
 void *tuum::gui::VisionResponse::qt_metacast(const char *_clname)
 {
     if (!_clname) return Q_NULLPTR;
-    if (!strcmp(_clname, qt_meta_stringdata_rtx__gui__VisionResponse.stringdata))
+    if (!strcmp(_clname, qt_meta_stringdata_tuum__gui__VisionResponse.stringdata0))
         return static_cast<void*>(const_cast< VisionResponse*>(this));
     return QQuickItem::qt_metacast(_clname);
 }
@@ -140,21 +161,9 @@ int tuum::gui::VisionResponse::qt_metacall(QMetaObject::Call _c, int _id, void *
         _id -= 4;
     }
 #ifndef QT_NO_PROPERTIES
-      else if (_c == QMetaObject::ReadProperty) {
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: *reinterpret_cast< bool*>(_v) = play(); break;
-        default: break;
-        }
-        _id -= 1;
-    } else if (_c == QMetaObject::WriteProperty) {
-        void *_v = _a[0];
-        switch (_id) {
-        case 0: setPlay(*reinterpret_cast< bool*>(_v)); break;
-        default: break;
-        }
-        _id -= 1;
-    } else if (_c == QMetaObject::ResetProperty) {
+   else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
+            || _c == QMetaObject::ResetProperty || _c == QMetaObject::RegisterPropertyMetaType) {
+        qt_static_metacall(this, _c, _id, _a);
         _id -= 1;
     } else if (_c == QMetaObject::QueryPropertyDesignable) {
         _id -= 1;
@@ -165,10 +174,6 @@ int tuum::gui::VisionResponse::qt_metacall(QMetaObject::Call _c, int _id, void *
     } else if (_c == QMetaObject::QueryPropertyEditable) {
         _id -= 1;
     } else if (_c == QMetaObject::QueryPropertyUser) {
-        _id -= 1;
-    } else if (_c == QMetaObject::RegisterPropertyMetaType) {
-        if (_id < 1)
-            *reinterpret_cast<int*>(_a[0]) = -1;
         _id -= 1;
     }
 #endif // QT_NO_PROPERTIES

@@ -18,27 +18,27 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-struct qt_meta_stringdata_rtx__ts__TuumScene_t {
+struct qt_meta_stringdata_tuum__ts__TuumScene_t {
     QByteArrayData data[3];
-    char stringdata0[26];
+    char stringdata0[27];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_rtx__ts__TuumScene_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_tuum__ts__TuumScene_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_rtx__ts__TuumScene_t qt_meta_stringdata_rtx__ts__TuumScene = {
+static const qt_meta_stringdata_tuum__ts__TuumScene_t qt_meta_stringdata_tuum__ts__TuumScene = {
     {
-QT_MOC_LITERAL(0, 0, 18), // "tuum::ts::TuumScene"
-QT_MOC_LITERAL(1, 19, 5), // "paint"
-QT_MOC_LITERAL(2, 25, 0) // ""
+QT_MOC_LITERAL(0, 0, 19), // "tuum::ts::TuumScene"
+QT_MOC_LITERAL(1, 20, 5), // "paint"
+QT_MOC_LITERAL(2, 26, 0) // ""
 
     },
     "tuum::ts::TuumScene\0paint\0"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_rtx__ts__TuumScene[] = {
+static const uint qt_meta_data_tuum__ts__TuumScene[] = {
 
  // content:
        7,       // revision
@@ -74,8 +74,8 @@ void tuum::ts::TuumScene::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
 }
 
 const QMetaObject tuum::ts::TuumScene::staticMetaObject = {
-    { &QThread::staticMetaObject, qt_meta_stringdata_rtx__ts__TuumScene.data,
-      qt_meta_data_rtx__ts__TuumScene,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
+    { &QThread::staticMetaObject, qt_meta_stringdata_tuum__ts__TuumScene.data,
+      qt_meta_data_tuum__ts__TuumScene,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
@@ -87,7 +87,7 @@ const QMetaObject *tuum::ts::TuumScene::metaObject() const
 void *tuum::ts::TuumScene::qt_metacast(const char *_clname)
 {
     if (!_clname) return Q_NULLPTR;
-    if (!strcmp(_clname, qt_meta_stringdata_rtx__ts__TuumScene.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_tuum__ts__TuumScene.stringdata0))
         return static_cast<void*>(const_cast< TuumScene*>(this));
     if (!strcmp(_clname, "QOpenGLFunctions"))
         return static_cast< QOpenGLFunctions*>(const_cast< TuumScene*>(this));
