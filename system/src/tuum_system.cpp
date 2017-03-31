@@ -10,6 +10,41 @@ namespace tuum {
 
   boost::thread* gMotionThr = nullptr;
 
+  size_t Subsystem::id_seq = 1;
+
+  Subsystem::Subsystem(System* p):
+    mParent(p)
+  {
+    mId = Subsystem::id_seq++;
+
+    {
+      char buf[100];
+      snprintf(buf, sizeof(buf), "<Subsystem #%lu>", mId);
+      mName = buf;
+    }
+  }
+
+  int Subsystem::setProperty(const std::string& pname, const json& pval)
+  {
+    return -1;
+  }
+
+  std::string Subsystem::getName()
+  {
+    return mName;
+  }
+
+  json Subsystem::getStats() {
+    json out = json::object();
+    return out;
+  }
+
+  json Subsystem::getProperties() {
+    json out = json::object();
+    return out;
+  }
+
+
   System::System():
     mPhysics(&mEntityFilter),
     mNavi(&mEntityFilter)
@@ -24,8 +59,10 @@ namespace tuum {
     tuum::lpx::init();
     tuum::lpx::setup();
 
-    mVision.init();
-    mMotion.init();
+
+
+    //mVision.init();
+    //mMotion.init();
 
     //if(gMotionThr == nullptr)
       //gMotionThr = new boost::thread(boost::bind(&Motion::loop, &mMotion));
@@ -36,6 +73,8 @@ namespace tuum {
 
   void System::process()
   {
+    return;
+
 #ifdef TUUM_SYS_BENCH
     size_t t0, t1, t2, t3, t4, t5;
 #endif

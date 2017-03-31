@@ -8,6 +8,7 @@
 
     'loc/libloc.gyp',
     'htgui/libhtgui.gyp',
+    'qtgui/libqtgui.gyp',
 
     'user/libuser.gyp',
 

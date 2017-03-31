@@ -78,8 +78,8 @@ namespace tuum {
     // Load graphics pipeline
     m_plRtexFootball.use(gLdr);
     m_plRtexFootball.load(DEF_PPL_RTEX_FOOTBALL, "RobotexFootballPipe");
-    m_plRtexFootball_im.use(gLdr);
-    m_plRtexFootball_im.load(DEF_PPL_RTEX_FOOTBALL_IM, "RobotexFootballPipe");
+    //m_plRtexFootball_im.use(gLdr);
+    //m_plRtexFootball_im.load(DEF_PPL_RTEX_FOOTBALL_IM, "RobotexFootballPipe");
 
     initYUVDiscreteLUT();
 
