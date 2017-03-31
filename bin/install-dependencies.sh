@@ -5,6 +5,8 @@ apt-get install -y libwebsockets7 libwebsockets-dev
 apt-get install -y sqlite3 libsqlite3-dev
 apt-get install -y libglfw3 libglfw3-dev
 
+apt-get install -y ninja-build gyp
+
 
 #apt-get install -y assimp-utils libassimp-dev
 #apt-get install -y libboost-all-dev # Latest boost >=1.62
