@@ -25,7 +25,7 @@ using namespace Glip::CoreGL;
 using namespace Glip::Modules;
 using namespace Glip::CorePipeline;
 
-namespace tuum { namespace lpx {
+namespace tuum {
 
   size_t width = CAMERA_WIDTH, height = CAMERA_HEIGHT;
 
@@ -108,7 +108,7 @@ namespace tuum { namespace lpx {
         while(!outputFrameLock.try_lock()) {};
         inputStream->read(processedFrame);
         processedFrame->id = inputStream->getSeq();
-        lpx::pipeline_pass(processedFrame);
+        //lpx::pipeline_pass(processedFrame);
 
         outputFrameLock.unlock();
         //TODO: write to 'processedFrame'
@@ -180,4 +180,4 @@ namespace tuum { namespace lpx {
     }
   }
 
-}}
+}

@@ -1,3 +1,8 @@
+/** @file lpx_iformat.hpp
+ *  @brief Misc image transformation functions.
+ *
+ *  @author Meelik Kiik ( kiik.meelik@gmail.com )
+ */
 
 #ifndef TUUM_LPX_IFORMAT_H
 #define TUUM_LPX_IFORMAT_H

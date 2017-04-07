@@ -11,7 +11,9 @@
       'dependencies': [
         'libenv',
         'libhal',
+
         'liblpx',
+
         'libsystem',
         'librtxmath',
       ],

@@ -6,8 +6,12 @@
 
       'dependencies': [
         'libenv',
+
         'libhal',
         'liblpx',
+
+        'libogl-lab',
+
         'libgeometry',
         'librtxmath',
         'libentities',

@@ -23,7 +23,7 @@ namespace Glip {
 using namespace Glip::Modules;
 using namespace Glip::CorePipeline;
 
-namespace tuum { namespace lpx {
+namespace tuum {
 
   int ogl_init();
 
@@ -39,6 +39,6 @@ namespace tuum { namespace lpx {
 
   LayoutLoader* ogl_get_loader();
 
-}}
+}
 
 #endif

@@ -6,7 +6,7 @@
 
       'dependencies': [
         'libenv',
-        'liblpx',
+        'libhal',
       ],
 
       'cflags': [

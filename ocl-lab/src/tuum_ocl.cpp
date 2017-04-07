@@ -6,7 +6,6 @@
 
 #include "tuum_logger.hpp"
 
-#include "lpx_iformat.hpp"
 #include "tuum_fs.hpp"
 #include "tuum_hal.hpp"
 

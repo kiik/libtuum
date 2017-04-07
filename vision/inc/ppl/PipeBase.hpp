@@ -3,7 +3,22 @@
 #define TUUM_PIPEBASE_H
 
 #include "tuum_resource.hpp"
-#include "tuum_ogl.hpp"
+#include "tuum_buff.hpp"
+
+namespace Glip {
+  namespace CoreGL {
+    class HdlTexture;
+    class HdlTextureFormat;
+  }
+
+  namespace CorePipeline {
+    class Pipeline;
+  }
+
+  namespace Modules {
+    class LayoutLoader;
+  }
+}
 
 namespace tuum { namespace vision {
 
@@ -12,6 +27,7 @@ namespace tuum { namespace vision {
   typedef Glip::CoreGL::HdlTexture Texture;
   typedef Glip::CoreGL::HdlTextureFormat TxFormat;
   typedef Glip::Modules::LayoutLoader LayoutLoader;
+  typedef Glip::CorePipeline::Pipeline Pipeline;
 
   LayoutLoader* create_layout_loader();
 

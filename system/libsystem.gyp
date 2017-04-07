@@ -10,6 +10,7 @@
         'liblpx',
 
         'libloc',
+        'libogl-lab',
         'libocl-lab',
         'libvision',
 
@@ -22,13 +23,14 @@
         '--std=c++11'
       ],
       'include_dirs': [
-	'inc'
+        'inc'
       ],
       'sources': [
         'src/tuum_localization.cpp',
         'src/tuum_navigation.cpp',
         'src/tuum_motion.cpp',
         'src/tuum_context.cpp',
+        'src/tuum_addons.cpp',
 
         'src/tuum_physics.cpp',
         'src/tuum_visioning.cpp',

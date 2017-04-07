@@ -7,7 +7,10 @@
       'dependencies': [
         'libenv',
         'libhal',
+
         'libtdb',
+        'libogl-lab',
+        'libocl-lab',
       ],
 
       'cflags': [
@@ -19,11 +22,9 @@
       ],
       'include_dirs': [
         'inc',
-        '/usr/local/include/glip-lib',
       ],
       'sources': [
         'src/tuum_lpx.cpp',
-        'src/tuum_ogl.cpp',
 
         'src/lpx_iformat.cpp',
 
@@ -51,10 +52,7 @@
           '<!@(pkg-config --libs gtkmm-3.0)',
           '<!@(pkg-config --libs sigc++-2.0)',
           '<!@(pkg-config --libs libpng)',
-          '-lglip',
-          '<!@(pkg-config --libs gl)',
-          '<!@(pkg-config --libs glfw3)',
-          '<!@(pkg-config --libs glew)',
+
           '<!@(pkg-config --libs sqlite3)',
         ],
       },

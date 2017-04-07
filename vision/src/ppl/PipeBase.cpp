@@ -2,7 +2,9 @@
 #include "ppl/PipeBase.hpp"
 
 #include "tuum_logger.hpp"
+
 #include "tuum_ogl_core.hpp"
+#include "tuum_ogl.hpp"
 
 namespace tuum { namespace vision {
 
