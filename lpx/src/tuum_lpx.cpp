@@ -61,11 +61,13 @@ namespace tuum { namespace lpx {
   }
 
   void setup() {
-
+    for(auto it = gAddons.begin(); it != gAddons.end(); it++)
+      it->setup();
   }
 
   void process() {
-
+    for(auto it = gAddons.begin(); it != gAddons.end(); it++)
+      it->process();
   }
 
 }}

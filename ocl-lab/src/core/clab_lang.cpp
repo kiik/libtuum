@@ -2,68 +2,56 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "tuum_logger.hpp"
+
 #include "core/clab_lang.hpp"
 
 namespace tuum {
 namespace ocl {
 namespace lab {
 
-  const std::string TupleBegin = "(",
-                    TupleEnd   = ")",
+  size_t symbol_id_seq = 1;
+  size_t expr_id_seq = 1;
 
-                    ArrBegin   = "[",
-                    ArrEnd     = "]",
+  /** @name gTokenMap
+  *  @brief Mapping of symbol literals to token types.
+  */
+  TokenMap gTokenMap = {
+    {std::string("\""), Token::TK_String},
 
-                    DQuote     = "\"",
-                    NewLine    = "\n",
+    {std::string("("),   Token::TK_Tuple}, {")",   Token::TK_TupleE},
+    {std::string("{"),   Token::TK_Scope}, {"}",   Token::TK_ScopeE},
 
-                    ScopeBegin = "{",
-                    ScopeEnd   = "}";
+    {std::string(" "), Token::TK_Terminator},
+    {std::string(";"), Token::TK_Terminator},
+    {std::string(","), Token::TK_Terminator},
 
+    {std::string("\n"), Token::TK_LineFeed},
 
-  SymbolMap gSymbolMap = {
-    {TupleBegin, SymbolType::ST_Operator},
-    {TupleEnd,   SymbolType::ST_Operator},
-
-    {std::string(" "), SymbolType::ST_Terminator},
-    {std::string(";"), SymbolType::ST_Terminator},
-    {NewLine, SymbolType::ST_LineFeed},
-
-    {DQuote, SymbolType::ST_StringLiteral},
-
-    {ScopeBegin, SymbolType::ST_ScopeBegin},
-    {ScopeEnd,   SymbolType::ST_ScopeEnd},
-
-    {std::string("//"), SymbolType::ST_Comment},
-    {std::string("/*"), SymbolType::ST_CommentBlock},
-    {std::string("*/"), SymbolType::ST_CommentBlockE}
+    {std::string("//"), Token::TK_Comment},
+    {std::string("/*"), Token::TK_CommentBlock},
+    {std::string("*/"), Token::TK_CommentBlockE}
   };
 
-  SymbolMap gOperatorMap = {
-    {TupleBegin, SymbolType::ST_TupleBegin},
-    {TupleEnd,   SymbolType::ST_TupleEnd},
-
-    {ScopeBegin, SymbolType::ST_ScopeBegin},
-    {ScopeEnd,   SymbolType::ST_ScopeEnd},
-  };
-
+  /** @name gKeywordMap
+   *  @brief Mapping of static script keywords.
+   */
   KeywordMap gKeywordMap = {
-    {std::string("Pipeline"), KeywordType::KW_Pipeline},
+    {std::string("Pipeline"), Keyword::KW_Pipeline},
 
-    {std::string("Properties"), KeywordType::KW_Properties},
+    {std::string("Properties"), Keyword::KW_Properties},
 
-    {std::string("Kernel"), KeywordType::KW_Kernel},
-    {std::string("Procedure"), KeywordType::KW_Procedure},
-
-    {std::string("Procedure"), KeywordType::KW_Procedure}
+    {std::string("Kernel"), Keyword::KW_Kernel},
+    {std::string("Procedure"), Keyword::KW_Procedure}
   };
 
 
-  SymbolType match_symbol(const std::string* buf)
-  {
-    SymbolType out = SymbolType::ST_Unknown;
 
-    for(auto it = gSymbolMap.begin(); it != gSymbolMap.end(); it++) {
+  Token match_token(const std::string* buf)
+  {
+    Token out = Token::TK_Unknown;
+
+    for(auto it = gTokenMap.begin(); it != gTokenMap.end(); it++) {
       if(boost::algorithm::ends_with(buf->c_str(), it->first)) {
         out = it->second;
         break;
@@ -73,22 +61,22 @@ namespace lab {
     return out;
   }
 
-  SymbolType match_symbol(const std::string* buf, const SymbolSet& set)
+  Token match_token(const std::string* buf, const TokenSet& set)
   {
-    SymbolType out = match_symbol(buf);
+    Token out = match_token(buf);
 
     for(auto it = set.begin(); it != set.end(); it++) {
       if(out == *it)
         return out;
     }
 
-    return SymbolType::ST_Unknown;
+    return Token::TK_Unknown;
   }
 
-  SymbolType match_operator(const std::string& buf) {
-    SymbolType out = SymbolType::ST_Unknown;
+  Keyword match_keyword(const std::string& buf) {
+    Keyword out = Keyword::KW_Unknown;
 
-    for(auto it = gOperatorMap.begin(); it != gOperatorMap.end(); it++) {
+    for(auto it = gKeywordMap.begin(); it != gKeywordMap.end(); it++) {
       if(boost::algorithm::ends_with(buf.c_str(), it->first)) {
         out = it->second;
         break;
@@ -98,39 +86,56 @@ namespace lab {
     return out;
   }
 
-  SymbolType match_keyword(const std::string& buf, KeywordType& kw_out) {
-    SymbolType out = SymbolType::ST_Symbol;
 
-    for(auto it = gKeywordMap.begin(); it != gKeywordMap.end(); it++) {
-      if(boost::algorithm::ends_with(buf.c_str(), it->first)) {
-        out = SymbolType::ST_Keyword;
-        kw_out = it->second;
+  /**
+   *  expr_t { symbol_t{ST_Operator, ST_TupleBegin}, "(...)", args={expr_t(...), ...} }
+   *
+   */
+   /*
+  int parse_expression(char* dptr, expr_t& expr, SymbolType EOS = SymbolType::ST_Unknown) {
+    symbol_t sy;
+    if(read_symbol(sy.type, sy.subType, dptr) < 0) return -1;
+
+    switch(sy.type) {
+      case SymbolType::ST_Operator:
+        switch(sy.subType) {
+          case SymbolType::ST_TupleBegin:
+            //expr.type = type;
+            //expr.subType = sub_type;
+            printf("ST_TupleBegin\n");
+            break;
+          case SymbolType::ST_TupleEnd:
+            printf("ST_TupleEnd\n");
+            break;
+        }
         break;
-      }
+      default:
+        return -100;
     }
 
-    return out;
-  }
+    switch(EOS) {
+      case SymbolType::ST_Unknown:
+        EOS = SymbolType::ST_Operator;
 
-  SymbolType match_keyword(const std::string& buf) {
-    KeywordType kwt;
-    return match_keyword(buf, kwt);
-  }
-
-  int parse_tuple(const char* dptr, expr_t& expr) {
-
-  }
-
-  int parse_expression(const std::string& data, expr_t& expr) {
-    char c;
-
-    // expr_t {type: ST_Operator}
-
-    for(size_t ix = 0; ix < data.size(); ix++) {
-
+        //parse_expression(data, );
+        break;
+      default:
+        // Return symbol finish
+        break;
     }
 
-    return 0;
+  }*/
+
+  int parse_numeric(expr_t* expr) {
+    try {
+      expr->int_val = boost::lexical_cast<int>( expr->str_val );
+      expr->type = Token::TK_Integer;
+    } catch( boost::bad_lexical_cast const& ) {
+      return -1;
+    }
+
+    return 1;
   }
+
 
 }}}

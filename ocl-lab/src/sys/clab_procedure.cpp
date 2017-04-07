@@ -1,6 +1,7 @@
 
 #include "tuum_logger.hpp"
 
+#include "core/clab_lang.hpp"
 #include "core/clab_parser.hpp"
 
 #include "sys/clab_procedure.hpp"
@@ -16,44 +17,69 @@ namespace lab {
   }
 
   int ProcedureParser::parseRange() {
-    SymbolType type;
+    /*
+    Token type;
 
     if(scopeStep(type) < ScopeSignal::Continue) return -1;
 
+    expr_t expr;
+
     switch(type) {
-      case SymbolType::ST_Operator:
+      case Token::TK_Operator:
+      {
+        const std::string data = getBuffer();
+
         printf("#TODO: Range = %s\n", getBuffer().c_str());
+
+        if(parse_expression(data.c_str(), expr) < 0) return -2;
+
+        printf("#TODO: set Range%s\n", data.c_str());
+
         break;
+      }
       default:
         RTXLOG("");
         errUnexpSymbol(type);
         return -2;
     }
+
+    //getContext()->add(expr);
+    */
 
     return 0;
   }
 
   int ProcedureParser::parseCall() {
-    SymbolType type;
+    Token type;
 
+    /*
     if(scopeStep(type) < ScopeSignal::Continue) return -1;
 
     switch(type) {
-      case SymbolType::ST_Operator:
-        printf("#TODO: Task = %s\n", getBuffer().c_str());
+      case Token::TK_Operator:
+      {
+        const std::string data = getBuffer();
+        printf("#TODO: Task = %s\n", data.c_str());
+
+        expr_t expr;
+        //if(parse_expression(data.c_str(), expr) < 0) return -2;
+
+        //printf("#TODO: set Task%s\n", data.c_str());
         break;
+      }
       default:
         RTXLOG("");
         errUnexpSymbol(type);
         return -2;
-    }
+    }*/
 
     return 0;
   }
 
   int ProcedureParser::parseProcedure()
   {
-    SymbolType type;
+    /*
+    Token type;
 
     if(scopeEnter() < 0) return -1;
 
@@ -72,13 +98,14 @@ namespace lab {
           return -5;
       }
     };
-
+    */
     return -100;
   }
 
   int ProcedureParser::parse()
   {
-    SymbolType type;
+    /*
+    Token type;
 
     if(scopeEnter() < 0) return -1;
 
@@ -95,7 +122,7 @@ namespace lab {
           return -5;
       }
     };
-
+    */
     return -1;
   }
 

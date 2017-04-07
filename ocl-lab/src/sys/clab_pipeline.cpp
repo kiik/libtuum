@@ -13,7 +13,21 @@ namespace lab {
 
   int PipelineParser::parse()
   {
-    return -1;
+    printf("#TODO: PipelineParser::parse\n");
+
+    std::string name;
+    expr_t expr;
+
+    if(read({Token::TK_String}, expr) < 0) return -1;
+
+    name = expr.str_val;
+
+    if(read({Token::TK_Scope}, expr) < 0) return -2;
+    if(parseScope(&expr) < 0) return -3;
+
+    printf("#TODO: PipelineParser::parse - Build pipeline");
+
+    return -100;
   }
 
 }}}

@@ -2,6 +2,7 @@
 #ifndef CLAB_PARSER_H
 #define CLAB_PARSER_H
 
+#include "core/clab_lang.hpp"
 #include "core/clab_types.hpp"
 
 namespace tuum {
@@ -35,36 +36,25 @@ namespace lab {
     script_ctx_t* getScriptContext() { return mCtx; }
 
   protected:
-    // Simpler overloads using 'Reader' member buffer.
-    SymbolType matchSymbol(const SymbolSet&);
-    SymbolType matchSymbol();
+    Token matchToken(const TokenSet&);
+    Token matchToken();
 
-    // Symbol iteration methods.
-    int readUntil(SymbolType&, const SymbolSet&);
-
-    int readSymbol(SymbolType&);
-    int readSymbol(SymbolType&, const SymbolSet&);
-
-    // Keyword (special symbol) handling.
-    int handleKeyword(const KeywordType&);
-
-    // Expression iteration methods.
-    int readExpression(expr_t&);
-    int handleExpression(const expr_t&);
-
-    // Misc
-    int handleScopeLiteral(const char);
-    int readScopeAsString(expr_t&);
-
-    // Integrated atomic parse modules
-    int parseScope();
+    int readUntil(Token&, const TokenSet&);
 
     int parseComment();
-    int parseString();
-    int parseOperator();
+    int parseString(expr_t&);
+    int parseTuple(expr_t*);
+    int parseScope(expr_t*);
 
-    int readKeyword();
+    int readExpression(expr_t&);
+    int readScopeAsString(expr_t&);
+    int readContainer(expr_t*, const Token);
 
+    int handleKeyword(const Keyword&);
+    int handleSymbol(expr_t*);
+    int handleExpression(expr_t*);
+
+    int read(const TokenSet&, expr_t&);
 
   private:
     size_t scope_seq = 0;

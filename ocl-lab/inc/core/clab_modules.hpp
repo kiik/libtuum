@@ -2,6 +2,7 @@
 #ifndef CLAB_MODULES_H
 #define CLAB_MODULES_H
 
+#include "core/clab_lang.hpp"
 #include "core/clab_types.hpp"
 
 namespace tuum {
@@ -31,10 +32,16 @@ namespace lab {
 
     int matchCustomSymbol(const std::string&);
 
-    ScopeSignal scopeStep(SymbolType&);
+    int read(expr_t&);
+    int read(const TokenSet&, expr_t&);
+
+    int enterScope(expr_t*);
+    int parseScope(expr_t*);
+
+    ScopeSignal scopeStep(Token&);
     int scopeEnter();
 
-    void errUnexpSymbol(const SymbolType&);
+    void errUnexpSymbol(const Token&);
 
     virtual int parse() = 0;
 

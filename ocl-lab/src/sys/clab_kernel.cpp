@@ -22,24 +22,27 @@ namespace lab {
 
     if(gParser->readExpression(expr) < 0) return -1;
 
-    if(expr.type != SymbolType::ST_StringLiteral) {
-      RTXLOG(format("Error - Expected string, got '%s'", expr.data.c_str()));
+    if(expr.type != Token::TK_String) {
+      RTXLOG(format("Error - Expected string, got '%s'", expr.str_val.c_str()));
       return -2;
     }
 
-    name = expr.data;
+    name = expr.str_val;
 
-    if(gParser->readScopeAsString(expr) < 0) return -3;
+    //if(gParser->readScopeAsString(expr) < 0) return -3;
 
+    /*
     if(expr.type != SymbolType::ST_StringLiteral) {
       RTXLOG(format("Error - Expected string, got '%s'", expr.data.c_str()));
       return -4;
-    }
+    }*/
 
-    RTXLOG(format("new Kernel(%s, \"%s\");", name.c_str(), expr.data.c_str()));
+    //RTXLOG(format("new Kernel(%s, \"%s\");", name.c_str(), expr.data.c_str()));
 
+    /*
     kernel_t kernel(name, expr.data); // name, body
     gParser->getScriptContext()->add(kernel);
+    */
 
     return 0;
   }

@@ -23,7 +23,8 @@ namespace tuum {
 
 namespace tuum { namespace lpx {
 
-  static void nullfn() {}
+  static void nullfn() {};
+
 
   struct addon_t {
     std::string name;
