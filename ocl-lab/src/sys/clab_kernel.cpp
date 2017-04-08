@@ -26,12 +26,14 @@ namespace lab {
     }
     mExpr->addChild(expr);
 
-    printf("#TODO: Kernel scope string");
+    expr = new expr_t();
 
-    //if(gParser->readScopeAsString(expr) < 0) return -3;
+    expr->setParent(mExpr);
+    if(enterScope(expr) < 0) return -2;
+    if(gParser->readScopeAsString(*expr) < 0) return -3;
+    mExpr->addChild(expr);
 
-
-    return -100;
+    return 1;
   }
 
 }}}

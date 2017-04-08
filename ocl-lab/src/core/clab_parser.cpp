@@ -111,6 +111,38 @@ namespace lab {
     return 0;
   }
 
+  int Parser::readScopeAsString(expr_t& out)
+  {
+    if(out.type != Token::TK_Scope) return -1;
+
+    mReader->clearBuffer();
+
+    Token tok;
+    size_t lvl = 1;
+
+    do
+    {
+      if(readUntil(tok, {Token::TK_Scope, Token::TK_ScopeE}) < 0) {
+        return -2;
+      }
+
+      switch(tok) {
+        case Token::TK_Scope:
+          lvl++;
+          break;
+        case Token::TK_ScopeE:
+          lvl--;
+          break;
+      }
+
+    } while(lvl > 0);
+
+    out.type = Token::TK_String;
+    out.str_val = *mBuffer;
+
+    return 1;
+  }
+
   int Parser::parseTuple(expr_t* out) {
     out->str_val = "Tuple";
 
@@ -415,41 +447,6 @@ END:
 
     return 0;
   }*/
-
-
-  /*
-  int Parser::readScopeAsString(expr_t& out)
-  {
-    out.type = SymbolType::ST_Unknown;
-    SymbolType type;
-
-    if(readSymbol(type) < 0) return -1;
-
-    if(type != SymbolType::ST_ScopeBegin) {
-      RTXLOG("Error - Expected scope!");
-      return -2;
-    }
-
-    size_t lvl = 1;
-    mReader->clearBuffer();
-    while(readUntil(type, {SymbolType::ST_ScopeBegin, SymbolType::ST_ScopeEnd}) >= 0) {
-      switch(type) {
-        case SymbolType::ST_ScopeBegin:
-          lvl++;
-          break;
-        case SymbolType::ST_ScopeEnd:
-          if(lvl == 1) {
-            out.type = SymbolType::ST_StringLiteral;
-            out.data = *mBuffer;
-            return 1;
-          } else {
-            lvl--;
-          }
-          break;
-      }
-    }
-  }*/
-
 
   // High level public methods
   int Parser::load(const char* path) {
