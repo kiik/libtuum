@@ -12,17 +12,18 @@ Pipeline "TuumVisionPpl" {
 
   // Public properties
   Properties {
-    Input_YUYV ("Input YUYV", Buffer);
-    Data_YUV ("Data YUV", Buffer);
-    Output_RGB ("Output RGB", Buffer);
+    Buffer Input_YUYV ( "Input YUYV", 1280, 860, 1 );
+    Buffer Data_YUV ( "Data YUV", 1280, 860, 1 );
+    Buffer Output_RGB ( "Output RGB", 1280, 860, 1 );
   }
 
+  /*
   Kernel "stdlib" {
     typedef struct iformat_t {
       unsigned long int width, height;
       unsigned long int bytesPerPixel, bytesPerLine; // bytesPerLine == stride
     };
-  }
+  }*/
 
   Kernel "ImageDecode" {
 
@@ -55,13 +56,13 @@ Pipeline "TuumVisionPpl" {
 
   Procedure {
     Pass {
-      Call (Kernel::ImageDecode, Properties::Input_YUYV, Properties::Data_YUV);
-      Range (0, 460800, 0) // 1280*720/2 {0, {100, 100}, 0}
+      Range (0, 460800, 0 ) // 1280*720/2
+      Call (ImageDecode, Input_YUYV, Data_YUV );
     }
 
     Pass {
-      Call (Kernel::ToHumanColor, Properties::Data_YUV, Properties::Output_RGB);
-      Range (0, 921600, 0) // 1280*720
+      Range (0, 921600, 0 ) // 1280*720
+      Call (ToHumanColor, Data_YUV, Output_RGB );
     }
   }
 
