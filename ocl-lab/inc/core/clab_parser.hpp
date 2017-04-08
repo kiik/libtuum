@@ -19,12 +19,6 @@ namespace lab {
     friend class lab::ProcedureParser;
 
   public:
-
-    //readExpression(expr_t);
-
-    // expr_t("Kernel::XXX_TO_YYY(Buffer::B1, Buffer::B2)", ST_Call)
-    // NSP::FN_NAME(ARGS) - ST_FunctionCall -> {ST_Namespace, ST_FunctionName}
-
     Parser();
 
     int load(const char*);
@@ -58,9 +52,6 @@ namespace lab {
     int read(const TokenSet&, expr_t*);
 
   private:
-    size_t scope_seq = 0;
-    size_t comment_type = 0;
-
     script_ctx_t* mCtx;
 
     Reader* mReader;

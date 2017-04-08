@@ -32,6 +32,8 @@ namespace lab {
     TK_Comment,
     TK_Terminator,
     TK_LineFeed,
+
+    TK_Reference,
   };
 
   enum TokenGroup {
@@ -68,11 +70,11 @@ namespace lab {
 
   enum SymbolType {
     ST_Unknown = 0,
-    ST_Reference,
     ST_Function,
     ST_BoundFunction,
     ST_Class,
     ST_Object,
+    ST_Kernel,
   };
 
   typedef size_t SymbolId;
@@ -113,6 +115,8 @@ namespace lab {
 
   typedef std::map<std::string, symbol_t*> SymbolTable;
 
+  extern symbol_t sym_Unknown;
+
   extern size_t expr_id_seq;
 
   struct expr_t {
@@ -121,7 +125,7 @@ namespace lab {
     Token type;
     TokenGroup group;
 
-    Keyword kw;
+    Keyword kw = Keyword::KW_Unknown;
 
     // Literal members
     std::string str_val;
@@ -161,45 +165,76 @@ namespace lab {
     void setSymbolTable(const SymbolTable& in) { symbols = in; }
 
     int addSymbol(symbol_t* ptr) {
-      /*
-      if(parent == nullptr) {
-        printf("expr_t: Error - root scope symbol table is static.\n");
-        return -1;
-      }
-      */
-
       symbols[ptr->name] = ptr;
       return 1;
     }
 
+    // Return closest scope
     expr_t* getScope() {
-      if(parent == nullptr)
-        if(type == Token::TK_Scope) return this;
+      if(type == Token::TK_Scope) return this;
 
-      if(parent->type == Token::TK_Scope) return parent;
+      if(parent != nullptr) {
+        if(parent->type == Token::TK_Scope) return parent;
+        else return parent->getScope();
+      }
 
-      return parent->getScope();
+      return this;
+    }
+
+    expr_t* getRootScope() {
+      if(parent == nullptr) return this;
+
+      expr_t* ptr, *_ptr = parent, *last_valid_ptr = nullptr;
+      do {
+        ptr = _ptr;
+
+        if(ptr->type == Token::TK_Scope) last_valid_ptr = ptr;
+
+        _ptr = ptr->getRootScope();
+      } while(_ptr != ptr);
+
+      if(last_valid_ptr != nullptr) return last_valid_ptr;
+      return this;
     }
 
     //TODO: Traverse full scope tree
     symbol_t* findSymbol(const std::string& name)
     {
-      auto it = symbols.find(name);
-      if(it == symbols.end()) return symbols["0"];
-      return it->second;
+      {
+        auto it = symbols.find(name);
+        if(it != symbols.end()) return it->second;
+      }
+
+      if(parent != nullptr) {
+        symbol_t* out;
+        out = parent->getScope()->findSymbol(name);
+        if(out != &sym_Unknown) return out;
+      }
+
+      return &sym_Unknown;
+    }
+
+    symbol_t* findChildSymbol(const std::string& name)
+    {
+      if(type == Token::TK_Scope) {
+        auto it = symbols.find(name);
+        if(it != symbols.end()) return it->second;
+      }
+
+      for(auto it = children.begin(); it != children.end(); it++) {
+        symbol_t* out;
+        out = (*it)->findChildSymbol(name);
+        if(out != &sym_Unknown) return out;
+      }
+
+      return &sym_Unknown;
     }
 
     // Symbol references
-    expr_t* _ref = nullptr;     // Reference to another expression
-    std::vector<expr_t*> _refs; // Dependant expressions
+    symbol_t* _ref = nullptr;     // Reference to another expression
 
-    void setReference(expr_t* ref) {
-      ref->addReference(this);
-    }
-
-    void addReference(expr_t* ref) {
-      ref->_ref = this;
-      _refs.push_back(ref);
+    void setReference(symbol_t* ref) {
+      _ref = ref;
     }
 
     void debugPrint() {
@@ -210,8 +245,15 @@ namespace lab {
           printf("<Keyword %s>\n", str_val.c_str());
           break;
         case Token::TK_Symbol:
-          printf("<Symbol %s>\n", str_val.c_str());
+          printf("<Symbol %s(id=%lu, t=%i)>\n", str_val.c_str(), id, type);
           break;
+        case Token::TK_Reference:
+        {
+          symbol_t* ptr = _ref;
+          printf("<Ref %s(id=%lu, t=%i) -> ", str_val.c_str(), id, type);
+          printf("'%s': symbol_t(id=%lu, t=%i)>\n", ptr->name.c_str(), ptr->id, ptr->type);
+          break;
+        }
         case Token::TK_String:
           printf("<String '%s'>\n", str_val.c_str());
           break;
@@ -219,7 +261,7 @@ namespace lab {
           printf("<Integer %i>\n", int_val);
           break;
         case Token::TK_Scope:
-          printf("<Scope {\n");
+          printf("<Scope(id=%lu) {\n", id);
 
           for(auto it = symbols.begin(); it != symbols.end(); it++)
             printf("  '%s': symbol_t(id=%lu, t=%i),\n", it->first.c_str(), it->second->id, it->second->type);
@@ -236,6 +278,8 @@ namespace lab {
 
           printf(")>\n");
           break;
+        case Token::TK_ScopeE:
+          printf("<Scope End Token>\n");
         case Token::TK_TupleE:
           printf("<Tuple End Token>\n");
           break;
@@ -281,8 +325,6 @@ namespace lab {
 
   extern TokenMap gTokenMap;
   extern KeywordMap gKeywordMap;
-
-  extern symbol_t sym_Unknown;
 
   // Matces the end of given buffer to a token.
   Token match_token(const std::string*);

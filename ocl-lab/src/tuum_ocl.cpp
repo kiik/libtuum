@@ -124,12 +124,13 @@ namespace ocl {
 
     RTXLOG("Creating pipeline...");
 
-    Pipeline *ppl;
+    Pipeline *ppl = nullptr;
     if(scr.createPipeline(ppl) < 0) return -2;
 
     RTXLOG("Tests done.");
 
-    delete(ppl);
+    if(ppl != nullptr)
+      delete(ppl);
 
     RTXLOG("Cleanup done.");
 

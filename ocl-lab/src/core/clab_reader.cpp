@@ -26,7 +26,7 @@ namespace lab {
   }
 
   size_t Reader::getUnreadSize() {
-    return mSource.size() - (mDataPtr - mSource.c_str());
+    return mSource.size() - (mDataPtr - mSource.c_str()) - 1;
   }
 
   size_t val = 0, nval = 1;

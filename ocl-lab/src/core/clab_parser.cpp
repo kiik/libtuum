@@ -192,7 +192,6 @@ namespace lab {
       switch(tok) {
         case Token::TK_LineFeed:
         case Token::TK_Terminator:
-          //printf("term: '%s'[%lu]\n", mBuffer->c_str(), mBuffer->size());
 
           size_t token_len = 1;
 
@@ -203,6 +202,8 @@ namespace lab {
           } else {
             *mBuffer = mBuffer->substr(0, mBuffer->size() - token_len); //TODO: - sizeof(token_str)
             kw = match_keyword(*mBuffer);
+
+            //printf("term: '%s'[%lu]\n", mBuffer->c_str(), mBuffer->size());
 
             out->str_val = *mBuffer;
             out->kw = kw;
@@ -227,10 +228,11 @@ namespace lab {
           if(parseString(*out) < 0) return -1;
           else goto END;
           break;
-        case Token::TK_Tuple:
-        case Token::TK_TupleE:
         case Token::TK_Scope:
         case Token::TK_ScopeE:
+          out->str_val = "Scope";
+        case Token::TK_Tuple:
+        case Token::TK_TupleE:
         case Token::TK_Namespace:
           out->type = tok;
           goto END;
@@ -245,6 +247,8 @@ namespace lab {
     } while(run);
 
 END:
+
+    //printf("read: ");
     //out->debugPrint();
 
     return 1;
@@ -347,6 +351,13 @@ END:
 
     symbol_t* sym = scope->findSymbol(in->str_val);
 
+    if(sym->type == SymbolType::ST_Unknown) {
+      if(scope->parent != nullptr) {
+        expr_t* root_scope = scope->getRootScope();
+        sym = root_scope->findChildSymbol(in->str_val);
+      }
+    }
+
     switch(sym->type) {
       case SymbolType::ST_Class:
         {
@@ -424,17 +435,18 @@ END:
         //printf("%s %s = new %s(...);\n", in->str_val.c_str(), xname->str_val.c_str(), in->str_val.c_str());
       }
       return 1;
-
       case SymbolType::ST_Unknown:
-        printf("[Parser::handleSymbol]Error - Unkown symbol '%s'\n", in->str_val.c_str());
+        printf("[Parser::handleSymbol]Error - Unknown symbol '%s'\n", in->str_val.c_str());
         return -2;
       default:
-        printf("Unhandled symbol type '%i' ('%s')\n", sym->type, sym->name.c_str());
-        scope->debugPrint();
         break;
     }
 
-    return -2;
+    // Otherwise is reference
+    in->type = Token::TK_Reference;
+    in->setReference(sym);
+
+    return 1;
   }
 
   int Parser::handleExpression(expr_t* in)
@@ -488,13 +500,13 @@ END:
     while(mReader->getUnreadSize() > 0) {
       expr = new expr_t();
       expr->setParent(root_scope);
+      root_scope->addChild(expr);
 
       if(readExpression(expr) < 0) goto ERR;
       if(handleExpression(expr) < 0) goto ERR;
-
-      root_scope->addChild(expr);
     }
 
+    //root_scope->debugTreePrint();
 
     RTXLOG("Script loaded.");
     delete(root_scope);
@@ -503,10 +515,8 @@ END:
 ERR:
     RTXLOG("Script parsing failed!");
 
-    if(expr != nullptr) {
+    if(expr != nullptr)
       expr->debugTreePrint();
-      delete(expr);
-    }
 
     delete(root_scope);
     return -1;

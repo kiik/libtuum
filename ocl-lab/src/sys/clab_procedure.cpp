@@ -14,7 +14,6 @@ namespace lab {
   symbol_t fn_Call = {SymbolType::ST_Function, "Call"};
 
   SymbolTable gPassSymbolTable = {
-    {"0", &sym_Unknown},
     {"Range", &fn_Range},
     {"Call", &fn_Call}
   };
@@ -137,6 +136,7 @@ namespace lab {
             }
           }
           break;
+        case Token::TK_ScopeE: break;
         default:
           printf("[ProcedureParser::parse]Error - Unexpected token: ");
           expr->debugPrint();
@@ -144,9 +144,11 @@ namespace lab {
           return -5;
       }
 
+      mExpr->addChild(expr);
+
     } while(expr->type != Token::TK_ScopeE);
 
-    return -1;
+    return 1;
   }
 
 }}}
