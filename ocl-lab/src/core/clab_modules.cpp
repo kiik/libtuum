@@ -97,8 +97,6 @@ namespace lab {
           scope_seq--;
           break;
         default:
-          printf("#TODO: handle subexpression - ");
-          expr_ptr->debugPrint();
           if(gParser->handleExpression(expr_ptr) < 0) {
             delete(expr_ptr);
             return -3;

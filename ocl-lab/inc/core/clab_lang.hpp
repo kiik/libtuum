@@ -135,7 +135,7 @@ namespace lab {
     expr_t()
     {
       id = expr_id_seq++;
-      printf("new expr_t(id=%lu)\n", id);
+      //printf("new expr_t(id=%lu)\n", id);
     }
 
     ~expr_t()
@@ -150,7 +150,7 @@ namespace lab {
         delete(*it);
       }
 
-      printf("~expr_t(id=%lu, %i, '%s', %i)\n", id, type, str_val.c_str(), int_val);
+      //printf("~expr_t(id=%lu, %i, '%s', %i)\n", id, type, str_val.c_str(), int_val);
     }
 
     void setParent(expr_t* ptr) { parent = ptr; }

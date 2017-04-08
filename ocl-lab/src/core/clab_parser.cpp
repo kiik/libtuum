@@ -248,15 +248,12 @@ END:
     if(in->type != Token::TK_Symbol) return -1;
 
     expr_t* scope = in->getScope();
-    printf("DTE: %i\n", (scope == nullptr));
 
     symbol_t* sym = scope->findSymbol(in->str_val);
-    printf("SYMBOL %i\n", sym->type);
 
     switch(sym->type) {
       case SymbolType::ST_Class:
         {
-          printf("New object '%s'\n", in->str_val.c_str());
           expr_t* xname = new expr_t(), *xargs = new expr_t();
 
           xname->setParent(in);
@@ -321,8 +318,6 @@ END:
         return handleKeyword(in->kw);
       case Token::TK_Symbol:
         if(parse_numeric(in) > 0) return 1;
-
-        printf("#TODO: handleSYmbol '%s'\n", in->str_val.c_str());
         return handleSymbol(in);
       case Token::TK_Tuple:
         return parseTuple(in);
