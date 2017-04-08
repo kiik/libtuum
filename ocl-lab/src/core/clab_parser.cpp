@@ -92,7 +92,7 @@ namespace lab {
 
       expr_ptr->setParent(out);
 
-      if(readExpression(*expr_ptr) < 0) {
+      if(readExpression(expr_ptr) < 0) {
         delete(expr_ptr);
         return -1;
       }
@@ -137,7 +137,7 @@ namespace lab {
   /** :struct expr_t: {name: Kernel, type: ST_Keyword, kval: KW_Kernel}
    *
    */
-  int Parser::readExpression(expr_t& out)
+  int Parser::readExpression(expr_t* out)
   {
     std::string buf;
     Token tok;
@@ -169,11 +169,11 @@ namespace lab {
             *mBuffer = mBuffer->substr(0, mBuffer->size() - token_len); //TODO: - sizeof(token_str)
             kw = match_keyword(*mBuffer);
 
-            out.str_val = *mBuffer;
-            out.kw = kw;
+            out->str_val = *mBuffer;
+            out->kw = kw;
             if(kw == Keyword::KW_Unknown) {
-              out.type = Token::TK_Symbol;
-            } else out.type = Token::TK_Keyword;
+              out->type = Token::TK_Symbol;
+            } else out->type = Token::TK_Keyword;
             goto END;
           }
           break;
@@ -189,14 +189,14 @@ namespace lab {
           if(parseComment() < 0) return -1;
           break;
         case Token::TK_String:
-          if(parseString(out) < 0) return -1;
+          if(parseString(*out) < 0) return -1;
           else goto END;
           break;
         case Token::TK_Tuple:
         case Token::TK_TupleE:
         case Token::TK_Scope:
         case Token::TK_ScopeE:
-          out.type = tok;
+          out->type = tok;
           goto END;
         default:
           printf("Error - Unhandled token type '%i' ('%s')\n", tok, mBuffer->c_str());
@@ -209,33 +209,33 @@ namespace lab {
     } while(run);
 
 END:
-    //out.debugPrint();
+    //out->debugPrint();
 
     return 1;
   }
 
 
 
-  int Parser::handleKeyword(const Keyword& in) {
-    switch(in) {
+  int Parser::handleKeyword(expr_t* in) {
+    switch(in->kw) {
       case Keyword::KW_Pipeline:
       {
-        PipelineParser p(this);
+        PipelineParser p(this, in);
         return p.parse();
       }
       case Keyword::KW_Properties:
       {
-        PropertyParser p(this);
+        PropertyParser p(this, in);
         return p.parse();
       }
       case Keyword::KW_Kernel:
       {
-        KernelParser p(this);
+        KernelParser p(this, in);
         return p.parse();
       }
       case Keyword::KW_Procedure:
       {
-        ProcedureParser p(this);
+        ProcedureParser p(this, in);
         return p.parse();
       }
     }
@@ -259,7 +259,7 @@ END:
           xname->setParent(in);
           xargs->setParent(in);
 
-          if(read({Token::TK_Symbol}, *xname) < 0) {
+          if(read({Token::TK_Symbol}, xname) < 0) {
             delete(xname);
             delete(xargs);
             return -2;
@@ -272,7 +272,7 @@ END:
             return -4;
           }
 
-          if(read({Token::TK_Tuple}, *xargs) < 0) {
+          if(read({Token::TK_Tuple}, xargs) < 0) {
             delete(xname);
             delete(xargs);
             return -3;
@@ -295,8 +295,7 @@ END:
 
           if(scope->addSymbol(obj) < 0) return -6;
 
-          printf("%s %s = new %s(...);\n", in->str_val.c_str(), xname->str_val.c_str(), in->str_val.c_str());
-          xargs->debugPrint();
+          //printf("%s %s = new %s(...);\n", in->str_val.c_str(), xname->str_val.c_str(), in->str_val.c_str());
         }
 
         return 1;
@@ -315,7 +314,7 @@ END:
   {
     switch(in->type) {
       case Token::TK_Keyword:
-        return handleKeyword(in->kw);
+        return handleKeyword(in);
       case Token::TK_Symbol:
         if(parse_numeric(in) > 0) return 1;
         return handleSymbol(in);
@@ -328,14 +327,14 @@ END:
 
 
 
-  int Parser::read(const TokenSet& filter, expr_t& out) {
+  int Parser::read(const TokenSet& filter, expr_t* out) {
     if(readExpression(out) < 0) return -1;
 
     for(auto it = filter.begin(); it != filter.end(); it++) {
-      if(*it == out.type) return 1;
+      if(*it == out->type) return 1;
     }
 
-    printf("[Parser::read]Error - unexpected token %i ('%s')\n", out.type, out.str_val.c_str());
+    printf("[Parser::read]Error - unexpected token %i ('%s')\n", out->type, out->str_val.c_str());
 
     return -2;
   }
@@ -463,18 +462,34 @@ END:
   int Parser::parse(script_ctx_t* ctx) {
     mCtx = ctx;
 
-    expr_t expr;
+    expr_t* root_scope = new expr_t();
+    root_scope->type = Token::TK_Scope;
+    expr_t* expr = nullptr;
 
     while(mReader->getUnreadSize() > 0) {
+      expr = new expr_t();
+      expr->setParent(root_scope);
+
       if(readExpression(expr) < 0) goto ERR;
-      if(handleExpression(&expr) < 0) goto ERR;
+      if(handleExpression(expr) < 0) goto ERR;
+
+      root_scope->addChild(expr);
     }
 
-FIN:
+
     RTXLOG("Script loaded.");
+    delete(root_scope);
+
     return 0;
 ERR:
     RTXLOG("Script parsing failed!");
+
+    if(expr != nullptr) {
+      expr->debugTreePrint();
+      delete(expr);
+    }
+
+    delete(root_scope);
     return -1;
   }
 

@@ -48,31 +48,29 @@ namespace lab {
     return 1;
   }*/
 
-  int ParserModule::read(expr_t& out) {
+  int ParserModule::read(expr_t* out) {
     return gParser->readExpression(out);
   }
 
-  int ParserModule::read(const TokenSet& filter, expr_t& out) {
+  int ParserModule::read(const TokenSet& filter, expr_t* out) {
     if(gParser->readExpression(out) < 0) return -1;
 
     for(auto it = filter.begin(); it != filter.end(); it++) {
-      if(*it == out.type) return 1;
+      if(*it == out->type) return 1;
     }
 
-    printf("Error - unexpected token %i ('%s')\n", out.type, out.str_val.c_str());
+    printf("Error - unexpected token %i ('%s')\n", out->type, out->str_val.c_str());
 
     return -2;
   }
 
   int ParserModule::enterScope(expr_t* out) {
-    if(read({Token::TK_Scope}, *out) < 0) return -1;
+    if(read({Token::TK_Scope}, out) < 0) return -1;
     return 1;
   }
 
   int ParserModule::parseScope(expr_t* out) {
     if(out->type != Token::TK_Scope) return -1;
-
-    printf("#TODO: ParserModule::parseScope\n");
 
     expr_t* scope_ptr = out;
     size_t scope_seq = 1;
@@ -84,7 +82,7 @@ namespace lab {
 
       expr_ptr->setParent(scope_ptr);
 
-      if(gParser->readExpression(*expr_ptr) < 0) {
+      if(gParser->readExpression(expr_ptr) < 0) {
         delete(expr_ptr);
         return -2;
       }

@@ -46,15 +46,15 @@ namespace lab {
     int parseTuple(expr_t*);
     int parseScope(expr_t*);
 
-    int readExpression(expr_t&);
-    int readScopeAsString(expr_t&);
+    int readExpression(expr_t*);
     int readContainer(expr_t*, const Token);
+    int readScopeAsString(expr_t&);
 
-    int handleKeyword(const Keyword&);
+    int handleKeyword(expr_t*);
     int handleSymbol(expr_t*);
     int handleExpression(expr_t*);
 
-    int read(const TokenSet&, expr_t&);
+    int read(const TokenSet&, expr_t*);
 
   private:
     size_t scope_seq = 0;

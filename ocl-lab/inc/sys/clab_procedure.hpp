@@ -12,7 +12,7 @@ namespace lab {
   class ProcedureParser : public ParserModule
   {
   public:
-    ProcedureParser(Parser*);
+    ProcedureParser(Parser*, expr_t*);
 
     int parseRange();
     int parseCall();

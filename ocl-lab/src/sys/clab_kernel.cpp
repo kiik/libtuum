@@ -8,43 +8,30 @@ namespace tuum {
 namespace ocl {
 namespace lab {
 
-  KernelParser::KernelParser(Parser* p):
-    ParserModule(p)
+  KernelParser::KernelParser(Parser* p, expr_t* expr):
+    ParserModule(p, expr)
   {
 
   }
 
   int KernelParser::parse()
   {
-    std::string name;
 
-    expr_t expr;
+    expr_t* expr = new expr_t();
 
-    if(gParser->readExpression(expr) < 0) return -1;
-
-    if(expr.type != Token::TK_String) {
-      RTXLOG(format("Error - Expected string, got '%s'", expr.str_val.c_str()));
-      return -2;
+    expr->setParent(mExpr);
+    if(read({Token::TK_String}, expr) < 0) {
+      delete(expr);
+      return -1;
     }
+    mExpr->addChild(expr);
 
-    name = expr.str_val;
+    printf("#TODO: Kernel scope string");
 
     //if(gParser->readScopeAsString(expr) < 0) return -3;
 
-    /*
-    if(expr.type != SymbolType::ST_StringLiteral) {
-      RTXLOG(format("Error - Expected string, got '%s'", expr.data.c_str()));
-      return -4;
-    }*/
 
-    //RTXLOG(format("new Kernel(%s, \"%s\");", name.c_str(), expr.data.c_str()));
-
-    /*
-    kernel_t kernel(name, expr.data); // name, body
-    gParser->getScriptContext()->add(kernel);
-    */
-
-    return 0;
+    return -100;
   }
 
 }}}

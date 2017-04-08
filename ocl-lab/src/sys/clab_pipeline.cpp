@@ -5,29 +5,34 @@ namespace tuum {
 namespace ocl {
 namespace lab {
 
-  PipelineParser::PipelineParser(Parser* p):
-    ParserModule(p)
+  PipelineParser::PipelineParser(Parser* p, expr_t* expr):
+    ParserModule(p, expr)
   {
 
   }
 
   int PipelineParser::parse()
   {
-    printf("#TODO: PipelineParser::parse\n");
+    expr_t* expr = new expr_t();
 
-    std::string name;
-    expr_t expr;
+    expr->setParent(mExpr);
+    if(read({Token::TK_String}, expr) < 0) {
+      delete(expr);
+      return -1;
+    }
+    mExpr->addChild(expr);
 
-    if(read({Token::TK_String}, expr) < 0) return -1;
+    expr = new expr_t();
+    expr->setParent(mExpr);
+    if(enterScope(expr) < 0) {
+      delete(expr);
+      return -2;
+    }
+    mExpr->addChild(expr);
 
-    name = expr.str_val;
+    if(parseScope(expr) < 0) return -3;
 
-    if(read({Token::TK_Scope}, expr) < 0) return -2;
-    if(parseScope(&expr) < 0) return -3;
-
-    printf("#TODO: PipelineParser::parse - Build pipeline");
-
-    return -100;
+    return 1;
   }
 
 }}}

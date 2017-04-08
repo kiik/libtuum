@@ -12,9 +12,7 @@ namespace lab {
   class PropertyParser : public ParserModule
   {
   public:
-    PropertyParser(Parser*);
-
-    int parseProperty(const std::string&);
+    PropertyParser(Parser*, expr_t*);
 
     int parse();
   };

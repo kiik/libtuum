@@ -10,8 +10,8 @@ namespace tuum {
 namespace ocl {
 namespace lab {
 
-  ProcedureParser::ProcedureParser(Parser* p):
-    ParserModule(p)
+  ProcedureParser::ProcedureParser(Parser* p, expr_t* expr):
+    ParserModule(p, expr)
   {
 
   }

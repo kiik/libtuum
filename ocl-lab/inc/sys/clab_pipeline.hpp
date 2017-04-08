@@ -12,7 +12,7 @@ namespace lab {
   class PipelineParser : public ParserModule
   {
   public:
-    PipelineParser(Parser*);
+    PipelineParser(Parser*, expr_t*);
 
     int parse();
   };

@@ -20,9 +20,9 @@ namespace lab {
       Enter
     };
 
-    ParserModule(Parser* p):
+    ParserModule(Parser* p, expr_t* expr):
       gParser(p),
-      mScopeSeq(0)
+      mExpr(expr)
     {
 
     }
@@ -32,8 +32,8 @@ namespace lab {
 
     int matchCustomSymbol(const std::string&);
 
-    int read(expr_t&);
-    int read(const TokenSet&, expr_t&);
+    int read(expr_t*);
+    int read(const TokenSet&, expr_t*);
 
     int enterScope(expr_t*);
     int parseScope(expr_t*);
@@ -47,7 +47,7 @@ namespace lab {
 
   protected:
     Parser* gParser;
-    size_t mScopeSeq;
+    expr_t* mExpr;
   };
 
 }}}

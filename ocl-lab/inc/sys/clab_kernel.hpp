@@ -12,7 +12,7 @@ namespace lab {
   class KernelParser : public ParserModule
   {
   public:
-    KernelParser(Parser*);
+    KernelParser(Parser*, expr_t*);
 
     int parse();
   };
