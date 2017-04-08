@@ -10,6 +10,15 @@ namespace tuum {
 namespace ocl {
 namespace lab {
 
+  symbol_t fn_Range = {SymbolType::ST_Function, "Range"};
+  symbol_t fn_Call = {SymbolType::ST_Function, "Call"};
+
+  SymbolTable gPassSymbolTable = {
+    {"0", &sym_Unknown},
+    {"Range", &fn_Range},
+    {"Call", &fn_Call}
+  };
+
   ProcedureParser::ProcedureParser(Parser* p, expr_t* expr):
     ParserModule(p, expr)
   {
@@ -76,53 +85,67 @@ namespace lab {
     return 0;
   }
 
-  int ProcedureParser::parseProcedure()
+  int ProcedureParser::parsePass(expr_t* out)
   {
-    /*
-    Token type;
+    expr_t* scope = new expr_t();
 
-    if(scopeEnter() < 0) return -1;
+    scope->setParent(out);
+    if(enterScope(scope) < 0) {
+      delete(scope);
+      return -1;
+    }
+    out->addChild(scope);
 
-    while(scopeStep(type) >= ScopeSignal::Continue) {
-      switch(type) {
-        case SymbolType::ST_Symbol:
-          if(matchCustomSymbol("Range") > 0) {
-            if(parseRange() < 0) return -2;
-            break;
-          } else if(matchCustomSymbol("Call") > 0) {
-            if(parseCall() < 0) return -3;
-            break;
-          }
-        default:
-          errUnexpSymbol(type);
-          return -5;
-      }
-    };
-    */
-    return -100;
+    scope->setSymbolTable(gPassSymbolTable);
+
+    if(parseScope(scope) < 0) return -2;
+
+    return 1;
   }
 
   int ProcedureParser::parse()
   {
-    /*
-    Token type;
+    expr_t* scope = new expr_t();
 
-    if(scopeEnter() < 0) return -1;
+    scope->setParent(mExpr);
+    if(enterScope(scope) < 0) {
+      delete(scope);
+      return -1;
+    }
+    mExpr->addChild(scope);
 
-    while(scopeStep(type) >= ScopeSignal::Continue) {
-      switch(type) {
-        case SymbolType::ST_Symbol:
-        case SymbolType::ST_Keyword:
-          if(matchCustomSymbol("Pass") > 0) {
-            if(parseProcedure() < 0) return -4;;
-            break;
+    expr_t* expr;
+    do {
+      expr = new expr_t();
+      expr->setParent(mExpr);
+
+      if(read(expr) < 0) {
+        delete(expr);
+        return -2;
+      }
+
+      switch(expr->type) {
+        case Token::TK_Symbol:
+          if(expr->str_val != "Pass") {
+            printf("[ProcedureParser::parse]Error - Expected 'Pass' symbol, got '%s'\n", expr->str_val.c_str());
+            delete(expr);
+            return -3;
+          } else {
+            if(parsePass(expr) < 0) {
+              delete(expr);
+              return -4;
+            }
           }
+          break;
         default:
-          errUnexpSymbol(type);
+          printf("[ProcedureParser::parse]Error - Unexpected token: ");
+          expr->debugPrint();
+          delete(expr);
           return -5;
       }
-    };
-    */
+
+    } while(expr->type != Token::TK_ScopeE);
+
     return -1;
   }
 

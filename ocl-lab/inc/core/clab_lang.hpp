@@ -68,9 +68,11 @@ namespace lab {
 
   enum SymbolType {
     ST_Unknown = 0,
-    ST_Class,     // Buffer
-    ST_Function,  // Call(...)
-    ST_Object    // Input_YUYV
+    ST_Reference,
+    ST_Function,
+    ST_BoundFunction,
+    ST_Class,
+    ST_Object,
   };
 
   typedef size_t SymbolId;

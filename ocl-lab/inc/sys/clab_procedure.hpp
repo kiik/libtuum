@@ -16,7 +16,8 @@ namespace lab {
 
     int parseRange();
     int parseCall();
-    int parseProcedure();
+
+    int parsePass(expr_t*);
 
     int parse();
   };

@@ -26,6 +26,8 @@ namespace lab {
     {std::string(";"), Token::TK_Terminator},
     {std::string(","), Token::TK_Terminator},
 
+    {std::string("::"), Token::TK_Namespace},
+
     {std::string("\n"), Token::TK_LineFeed},
 
     {std::string("//"), Token::TK_Comment},
