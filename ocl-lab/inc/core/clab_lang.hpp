@@ -280,6 +280,8 @@ namespace lab {
   extern TokenMap gTokenMap;
   extern KeywordMap gKeywordMap;
 
+  extern symbol_t sym_Unknown;
+
   // Matces the end of given buffer to a token.
   Token match_token(const std::string*);
   Token match_token(const std::string*, const TokenSet&);

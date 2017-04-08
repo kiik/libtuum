@@ -84,91 +84,53 @@ namespace lab {
     return 0;
   }
 
-  int Parser::readContainer(expr_t* out, const Token TK_End) {
-    expr_t* expr_ptr;
-
-    do {
-      expr_ptr = new expr_t();
-
-      expr_ptr->setParent(out);
-
-      if(readExpression(expr_ptr) < 0) {
-        delete(expr_ptr);
-        return -1;
-      }
-
-      if(expr_ptr->type != TK_End) {
-        if(handleExpression(expr_ptr) < 0) {
-          delete(expr_ptr);
-          return -2;
-        }
-      }
-
-      out->addChild(expr_ptr);
-
-    } while(expr_ptr->type != TK_End);
-
-    return 0;
-  }
-
-  int Parser::readScopeAsString(expr_t& out)
-  {
-    if(out.type != Token::TK_Scope) return -1;
-
-    mReader->clearBuffer();
-
-    Token tok;
-    size_t lvl = 1;
-
-    do
-    {
-      if(readUntil(tok, {Token::TK_Scope, Token::TK_ScopeE}) < 0) {
-        return -2;
-      }
-
-      switch(tok) {
-        case Token::TK_Scope:
-          lvl++;
-          break;
-        case Token::TK_ScopeE:
-          lvl--;
-          break;
-      }
-
-    } while(lvl > 0);
-
-    out.type = Token::TK_String;
-    out.str_val = *mBuffer;
-
-    return 1;
-  }
-
   int Parser::parseTuple(expr_t* out) {
     out->str_val = "Tuple";
 
     return readContainer(out, {TK_TupleE});
   }
 
+  int Parser::parseScope(expr_t* out)
+  {
+    if(out->type != Token::TK_Scope) return -1;
 
-  /*
+    expr_t* scope_ptr = out;
+    size_t scope_seq = 1;
 
-    expr_t(TK_Keyword, "Pipeline") -> PipelineParser()->parse(this) -> expr_t
+    expr_t* expr_ptr;
 
-    Pipeline::parse() {
-      expr_t(TK_String, "TestPipeline")
+    do {
+      expr_ptr = new expr_t();
 
-      expr_t(TK_Keyword, "Properties") -> PropertiesParser() {
+      expr_ptr->setParent(scope_ptr);
 
+      if(readExpression(expr_ptr) < 0) {
+        delete(expr_ptr);
+        return -2;
       }
 
-    }
+      switch(expr_ptr->type) {
+        case Token::TK_Scope:
+          scope_seq++;
+          break;
+        case Token::TK_ScopeE:
+          scope_seq--;
+          break;
+        default:
+          if(handleExpression(expr_ptr) < 0) {
+            delete(expr_ptr);
+            return -3;
+          }
+          break;
+      }
 
-  */
+      scope_ptr->addChild(expr_ptr);
 
+    } while(scope_seq > 0);
 
-  /** :struct expr_t: {name: Kernel, type: ST_Keyword, kval: KW_Kernel}
-   *
-   */
+    return 1;
+  }
+
   int Parser::readExpression(expr_t* out)
   {
     std::string buf;
@@ -242,6 +204,66 @@ namespace lab {
 
 END:
     //out->debugPrint();
+
+    return 1;
+  }
+
+
+  int Parser::readContainer(expr_t* out, const Token TK_End) {
+    expr_t* expr_ptr;
+
+    do {
+      expr_ptr = new expr_t();
+
+      expr_ptr->setParent(out);
+
+      if(readExpression(expr_ptr) < 0) {
+        delete(expr_ptr);
+        return -1;
+      }
+
+      if(expr_ptr->type != TK_End) {
+        if(handleExpression(expr_ptr) < 0) {
+          delete(expr_ptr);
+          return -2;
+        }
+      }
+
+      out->addChild(expr_ptr);
+
+    } while(expr_ptr->type != TK_End);
+
+    return 0;
+  }
+
+  int Parser::readScopeAsString(expr_t& out)
+  {
+    if(out.type != Token::TK_Scope) return -1;
+
+    mReader->clearBuffer();
+
+    Token tok;
+    size_t lvl = 1;
+
+    do
+    {
+      if(readUntil(tok, {Token::TK_Scope, Token::TK_ScopeE}) < 0) {
+        return -2;
+      }
+
+      switch(tok) {
+        case Token::TK_Scope:
+          lvl++;
+          break;
+        case Token::TK_ScopeE:
+          lvl--;
+          break;
+      }
+
+    } while(lvl > 0);
+
+    out.type = Token::TK_String;
+    out.str_val = *mBuffer;
 
     return 1;
   }
@@ -329,13 +351,44 @@ END:
 
           //printf("%s %s = new %s(...);\n", in->str_val.c_str(), xname->str_val.c_str(), in->str_val.c_str());
         }
-
         return 1;
+
+      case SymbolType::ST_Function:
+      {
+        expr_t* xargs = new expr_t();
+
+        xargs->setParent(in);
+
+        if(read({Token::TK_Tuple}, xargs) < 0) {
+          delete(xargs);
+          return -2;
+        }
+
+        if(handleExpression(xargs) < 0) {
+          delete(xargs);
+          return -3;
+        }
+
+        in->addChild(xargs);
+
+        // new expr_t({TK_Symbol}, "Buffer", {(TK_Symbol, "Input_YUYV"), (TK_Tuple, (...))})
+        // new symbol_t({ST_Object, "Input_YUYV", expr_t*, parent("Buffer")})
+        symbol_t* obj = new symbol_t({ST_BoundFunction, in->str_val});
+        obj->setSource(in);
+        obj->setClass(sym);
+
+        if(scope->addSymbol(obj) < 0) return -4;
+
+        //printf("%s %s = new %s(...);\n", in->str_val.c_str(), xname->str_val.c_str(), in->str_val.c_str());
+      }
+      return 1;
+
       case SymbolType::ST_Unknown:
         printf("[Parser::handleSymbol]Error - Unkown symbol '%s'\n", in->str_val.c_str());
         return -2;
       default:
-        printf("Unhandled symbol type '%i'\n", sym->type);
+        printf("Unhandled symbol type '%i' ('%s')\n", sym->type, sym->name.c_str());
+        scope->debugPrint();
         break;
     }
 
@@ -371,82 +424,7 @@ END:
     return -2;
   }
 
-  /*
 
-          std::string dbg_name;
-          switch(type) {
-            case SymbolType::ST_Operator:
-              dbg_name = "operator";
-              break;
-            case SymbolType::ST_Keyword:
-              match_keyword(out.data, out.kwt);
-              dbg_name = "keyword";
-              break;
-            case SymbolType::ST_Symbol:
-              dbg_name = "symbol";
-              break;
-            case SymbolType::ST_StringLiteral:
-              dbg_name = "string";
-              break;
-            case SymbolType::ST_ScopeBegin:
-            case SymbolType::ST_ScopeEnd:
-              dbg_name = "scope";
-              break;
-            default:
-              dbg_name = "token";
-              break;
-          }
-          */
-
-
-
-
-
-  /** Integrated parsing modules **/
-
-  /*
-  int Parser::parseScope() {
-    size_t lvl = 0;
-
-    SymbolSet set = {SymbolType::ST_ScopeBegin, SymbolType::ST_ScopeEnd};
-    SymbolType match;
-
-    while(mReader->bufferChar() > 0) {
-      match = matchSymbol(set);
-
-      switch(match) {
-        case SymbolType::ST_ScopeBegin:
-          lvl++;
-          break;
-        case SymbolType::ST_ScopeEnd:
-          lvl--;
-          break;
-      }
-    }
-
-    printf("<scope(%lu)>\n", lvl);
-    mReader->clearBuffer();
-  }*/
-
-  /*
-  int Parser::handleScopeLiteral(const char c)
-  {
-    switch(c) {
-      case '{':
-        scope_seq++;
-        break;
-      case '}':
-        if(scope_seq <= 1) {
-          scope_seq = 0;
-          return 1;
-        }
-
-        scope_seq--;
-        break;
-    }
-
-    return 0;
-  }*/
 
   // High level public methods
   int Parser::load(const char* path) {

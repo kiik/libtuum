@@ -70,43 +70,7 @@ namespace lab {
   }
 
   int ParserModule::parseScope(expr_t* out) {
-    if(out->type != Token::TK_Scope) return -1;
-
-    expr_t* scope_ptr = out;
-    size_t scope_seq = 1;
-
-    expr_t* expr_ptr;
-
-    do {
-      expr_ptr = new expr_t();
-
-      expr_ptr->setParent(scope_ptr);
-
-      if(gParser->readExpression(expr_ptr) < 0) {
-        delete(expr_ptr);
-        return -2;
-      }
-
-      switch(expr_ptr->type) {
-        case Token::TK_Scope:
-          scope_seq++;
-          break;
-        case Token::TK_ScopeE:
-          scope_seq--;
-          break;
-        default:
-          if(gParser->handleExpression(expr_ptr) < 0) {
-            delete(expr_ptr);
-            return -3;
-          }
-          break;
-      }
-
-      scope_ptr->addChild(expr_ptr);
-
-    } while(scope_seq > 0);
-
-    return 1;
+    return gParser->parseScope(out);
   }
 
   void ParserModule::errUnexpSymbol(const Token& type) {
