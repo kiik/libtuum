@@ -131,6 +131,47 @@ namespace lab {
     return 1;
   }
 
+  int Parser::parseNamespace(expr_t* out)
+  {
+    if(out->type != Token::TK_Namespace) return -1;
+
+    expr_t* expr_ptr = new expr_t();
+
+    expr_ptr->setParent(out);
+
+    if(readExpression(expr_ptr) < 0) {
+      delete(expr_ptr);
+      return -2;
+    }
+
+    printf("#TODO: parseNamespace\n");
+    //expr_ptr->debugPrint();
+
+    //out->addChild(expr_ptr);
+
+    /*
+    switch(expr_ptr->type) {
+      case Token::TK_Scope:
+        scope_seq++;
+        break;
+      case Token::TK_ScopeE:
+        scope_seq--;
+        break;
+      default:
+        if(handleExpression(expr_ptr) < 0) {
+          delete(expr_ptr);
+          return -3;
+        }
+        break;
+    }*/
+
+      //scope_ptr->addChild(expr_ptr);
+
+    return -100;
+  }
+
+
+
   int Parser::readExpression(expr_t* out)
   {
     std::string buf;
@@ -190,6 +231,7 @@ namespace lab {
         case Token::TK_TupleE:
         case Token::TK_Scope:
         case Token::TK_ScopeE:
+        case Token::TK_Namespace:
           out->type = tok;
           goto END;
         default:
@@ -405,6 +447,8 @@ END:
         return handleSymbol(in);
       case Token::TK_Tuple:
         return parseTuple(in);
+      case Token::TK_Namespace:
+        return parseNamespace(in);
     }
 
     return 0;

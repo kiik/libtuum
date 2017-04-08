@@ -45,6 +45,7 @@ namespace lab {
     int parseString(expr_t&);
     int parseTuple(expr_t*);
     int parseScope(expr_t*);
+    int parseNamespace(expr_t*);
 
     int readExpression(expr_t*);
     int readContainer(expr_t*, const Token);

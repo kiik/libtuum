@@ -20,34 +20,6 @@ namespace lab {
   std::string ParserModule::getBuffer() { return gParser->getBuffer(); }
   std::string* ParserModule::getBufferPtr() { return gParser->getBufferPtr(); }
 
-  /*
-  ParserModule::ScopeSignal ParserModule::scopeStep(SymbolType& type) {
-    if(gParser->readSymbol(type) < 0) return ScopeSignal::ScopeError;
-
-    switch(type) {
-      case Token::TK_ScopeEnd:
-        mScopeSeq--;
-        if(mScopeSeq == 0) return ScopeSignal::OutOfScope;
-        return ScopeSignal::Exit;
-      case SymbolType::ST_ScopeBegin:
-        mScopeSeq++;
-        return ScopeSignal::Enter;
-    }
-
-    return ScopeSignal::Continue;
-  }
-
-  int ParserModule::scopeEnter() {
-    SymbolType type;
-
-    if(scopeStep(type) != ScopeSignal::Enter) {
-      RTXLOG(format("Error - expected scope, got <symbol '%s'(%i)>", gParser->getBuffer().c_str(), type));
-      return -2;
-    }
-
-    return 1;
-  }*/
-
   int ParserModule::read(expr_t* out) {
     return gParser->readExpression(out);
   }
