@@ -244,31 +244,29 @@ namespace lab {
     }
 
     void debugTreePrint(std::string intent = "") {
-      if(intent == "")
-        printf("TRACE:\n");
+      std::string buf = str_val.size() > 20 ? "/.../" : str_val;
+      printf("%sexpr_t(id=%lu, t=%i, str='%s', int=%i)", intent.c_str(), id, type, buf.c_str(), int_val);
+
+      if(type == Token::TK_Scope || children.size() > 0) printf(" {\n");
+      else printf(",\n");
 
       if(type == Token::TK_Scope) {
-        printf("%sSymbols: {\n", intent.c_str());
+        printf("%s  Symbols: {\n", intent.c_str());
         for(auto it = symbols.begin(); it != symbols.end(); it++)
-        printf("%s  '%s': symbol_t(id=%lu, t=%i),\n", intent.c_str(), it->first.c_str(), it->second->id, it->second->type);
-        printf("%s}\n", intent.c_str());
+        printf("%s    '%s': symbol_t(id=%lu, t=%i),\n", intent.c_str(), it->first.c_str(), it->second->id, it->second->type);
+        printf("%s  }\n", intent.c_str());
       }
 
       if(children.size() > 0) {
-        printf("%sChildren: (\n", intent.c_str());
+        printf("%s  Children: (\n", intent.c_str());
         for(auto it = children.begin(); it != children.end(); it++) {
           expr_t* ptr = *it;
-
-          if(ptr->children.size() > 0) {
-            printf("%s  expr_t(id=%lu, t=%i, str='%s', int=%i) {\n", intent.c_str(), ptr->id, ptr->type, ptr->str_val.c_str(), ptr->int_val);
-            ptr->debugTreePrint(intent + "    ");
-            printf("%s  },\n", intent.c_str());
-          } else {
-            printf("%s  expr_t(id=%lu, t=%i, str='%s', int=%i),\n", intent.c_str(), ptr->id, ptr->type, ptr->str_val.c_str(), ptr->int_val);
-          }
+          ptr->debugTreePrint(intent + "    ");
         }
-        printf("%s)\n", intent.c_str());
+        printf("%s  )\n", intent.c_str());
       }
+
+      if(type == Token::TK_Scope || children.size() > 0) printf("%s}\n", intent.c_str());
     }
 
   };
