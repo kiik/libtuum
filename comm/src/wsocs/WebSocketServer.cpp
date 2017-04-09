@@ -1,21 +1,14 @@
 
-#include <gdkmm/pixbuf.h>
-#include <glib.h>
-#include <gtkmm.h>
-
-
-#include "hal.hpp"
-#include "lpx_iformat.hpp"
-
 #include "tuum_wsproto.hpp"
 #include "tuum_http.hpp"
-#include "tuum_wsocs.hpp"
 
 #include "WSContext.hpp"
 
-using namespace tuum::lpx;
+#include "wsocs/WebSocketServer.hpp"
+#include "wsocs/protocols.hpp"
 
-namespace tuum { namespace wsocs {
+namespace tuum {
+namespace wsocs {
 
   WSContext wsCtx;
 

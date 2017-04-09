@@ -2,7 +2,7 @@
 #include <boost/thread.hpp>
 #include <boost/date_time.hpp>
 
-#include "htgui.hpp"
+#include "tuum_comm.hpp"
 
 #include "application.hpp"
 
@@ -26,7 +26,7 @@ namespace usr {
     sys_init();
 
     //boost::thread workerThread(sys_main);
-    tuum::gui::startup(argc, argv); //htgui runs in separate thread
+    tuum::gui::startup(argc, argv);
 
     while(1) {
       sys_main();

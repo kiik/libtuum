@@ -7,10 +7,10 @@
     'ogl-lab/libogl-lab.gyp',
     'ocl-lab/libocl-lab.gyp',
 
-    'loc/libloc.gyp',
-    'htgui/libhtgui.gyp',
+    'comm/libcomm.gyp',
     'qtgui/libqtgui.gyp',
 
+    'loc/libloc.gyp',
     'user/libuser.gyp',
 
     'system/libsystem.gyp',

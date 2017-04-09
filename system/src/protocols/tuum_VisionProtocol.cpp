@@ -6,13 +6,11 @@
 
 #include "hal.hpp"
 
-#include "tuum_system.hpp"
-#include "tuum_visioning.hpp"
-#include "tuum_context.hpp"
-
 #include "lpx_iformat.hpp"
+#include "tuum_visioning.hpp"
+#include "tuum_system.hpp"
 
-#include "protocol/tuum_VisionProtocol.hpp"
+#include "protocols/tuum_VisionProtocol.hpp"
 
 using namespace tuum::wsocs;
 

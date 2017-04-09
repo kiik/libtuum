@@ -5,12 +5,14 @@
 #include <libwebsockets.h>
 
 #include "json.hpp"
+
 #include "tuum_platform.hpp"
 #include "tuum_wsproto.hpp"
 
 using json = nlohmann::json;
 
-namespace tuum { namespace wsocs {
+namespace tuum {
+namespace wsocs {
 
   class WebSocketServer
   {
@@ -70,4 +72,4 @@ namespace tuum { namespace wsocs {
 
 }}
 
-#endif // TUUM_WSOCS_H
+#endif

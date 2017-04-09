@@ -9,14 +9,17 @@
         'libenv',
         'liblpx',
 
-        'libloc',
-        'libogl-lab',
-        'libocl-lab',
-        'libvision',
-
         'libgeometry',
         'librtxmath',
         'libentities',
+
+        'libcomm',
+        'libloc',
+
+        'libogl-lab',
+        'libocl-lab',
+
+        'libvision',
       ],
 
       'cflags': [
@@ -37,6 +40,8 @@
         'src/tuum_system.cpp',
 
         'src/syscore/MotionData.cpp',
+
+        'src/protocols/tuum_VisionProtocol.cpp'
       ],
 
 

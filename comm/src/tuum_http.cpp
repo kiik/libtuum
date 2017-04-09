@@ -6,14 +6,11 @@
  * @version 0.1
  */
 
+#include <sstream>
+
 #include <libwebsockets.h>
 
 #include "platform.hpp"
-#include "hal.hpp"
-#include "lpx_iformat.hpp"
-
-#include "tuum_lpx.hpp"
-#include "tuum_visioning.hpp"
 
 #include "tuum_http.hpp"
 
@@ -53,10 +50,12 @@ namespace tuum { namespace http {
   }
 
   size_t read_data_stream(size_t lid, image_t& out) {
+    /*
     tuum::Visioning* vis = tuum::gVision;
     if(vis == nullptr) return 0;
     if(vis->readFrame(out) < 0) return 0;
-    return out->id;
+    return out->id;*/
+    return 0;
   }
 
   void mjpeg_headers(lws *wsi) {
@@ -77,6 +76,8 @@ namespace tuum { namespace http {
   image_t img;
 
   void mjpeg_stream(lws *wsi) {
+    return;
+
     if(!img) {
       RTXLOG("Initializing stream buffer.", LOG_WARN);
       Env::spawnBuffer(img);
@@ -88,7 +89,7 @@ namespace tuum { namespace http {
     lframe = fid;
     //fps();
 
-    image_t out_jpg = lpx::rgb_to_png(img);
+    image_t out_jpg; // = lpx::rgb_to_png(img);
 
     lws_write(wsi, (unsigned char*)mjpeg_boundary, strlen(mjpeg_boundary), LWS_WRITE_HTTP);
 

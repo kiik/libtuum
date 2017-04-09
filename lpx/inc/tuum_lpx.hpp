@@ -15,6 +15,7 @@ namespace tuum {
     TUUM_DB,
     TUUM_OGL,
     TUUM_OCL,
+    TUUM_COMM,
   };
 
   int init_addon(const TuumAddon&);

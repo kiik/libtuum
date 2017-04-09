@@ -31,7 +31,8 @@ Dependencies which might need to be compiled manually are specified in the scrip
 - 'loc' : Localization functionality module
 - 'vision' : Vision functionality module
 
-- 'htgui' : Web interface module.
+- 'comm' : Communication interface module.
+
 - 'qtgui' : Qt5 interface module. ( Currently deprecated. )
 
 - 'tv9' : Google V9 engine bindings ( Work in progress. )

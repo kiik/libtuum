@@ -9,6 +9,8 @@
         'libhal',
 
         'libtdb',
+        'libcomm',
+
         'libogl-lab',
         'libocl-lab',
       ],

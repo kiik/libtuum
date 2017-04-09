@@ -10,6 +10,7 @@
 
 #include "tuum_fs.hpp"
 #include "tuum_db.hpp"
+#include "tuum_comm.hpp"
 
 #include "tuum_ogl.hpp"
 #include "tuum_ocl.hpp"
@@ -27,11 +28,15 @@ namespace tuum {
         break;
       case TuumAddon::TUUM_OGL:
         tuum::ogl_init();
-        lpx::register_addon({"tuum::ocl", tuum::ogl_setup, tuum::ogl_process});
+        lpx::register_addon({"tuum::ogl", tuum::ogl_setup, tuum::ogl_process});
         break;
       case TuumAddon::TUUM_OCL:
         tuum::ocl_init();
         lpx::register_addon({"tuum::ocl", tuum::ocl_setup, tuum::ocl_process});
+        break;
+      case TuumAddon::TUUM_COMM:
+        tuum::comm::init();
+        lpx::register_addon({"tuum::comm", tuum::comm::setup, tuum::comm::process});
         break;
     }
 

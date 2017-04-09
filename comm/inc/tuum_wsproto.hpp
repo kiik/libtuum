@@ -1,5 +1,4 @@
 
-
 #ifndef TUUM_WSPROTO_H
 #define TUUM_WSPROTO_H
 
@@ -8,13 +7,15 @@
 #include <map>
 
 #include <libwebsockets.h>
+
 #include "json.hpp"
 
 #include "platform.hpp"
 
 using json = nlohmann::json;
 
-namespace tuum { namespace wsocs {
+namespace tuum {
+namespace wsocs {
 
   class WebSocketServer;
 

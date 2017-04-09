@@ -1,16 +1,16 @@
 {
   'targets': [
     {
-      'target_name': 'libhtgui',
+      'target_name': 'libcomm',
       'type': 'static_library',
       'defines': [
 
       ],
       'dependencies': [
         'libenv',
-        'liblpx',
+
+        #TODO: Remove extra dependencies
         'libhal',
-        'libsystem',
       ],
 
       'includes': [
@@ -27,16 +27,15 @@
 	'inc',
       ],
      'sources': [
-        'src/tuum_htgui.cpp',
-        'src/tuum_scripting.cpp',
-        'src/tuum_wsocs.cpp',
+        'src/wsocs/protocols.cpp',
+        'src/wsocs/serving.cpp',
+        'src/wsocs/WebSocketServer.cpp',
+
         'src/tuum_http.cpp',
         'src/tuum_wsproto.cpp',
+        'src/tuum_comm.cpp',
 
         'src/WSContext.cpp',
-        'src/WebSocketServer.cpp',
-
-        'src/protocol/tuum_VisionProtocol.cpp',
       ],
 
       'direct_dependent_settings': {

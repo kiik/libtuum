@@ -1,0 +1,21 @@
+
+#ifndef WSOCS_SERVING_H
+#define WSOCS_SERVING_H
+
+#include "wsocs/declarations.hpp"
+
+namespace tuum {
+namespace wsocs {
+
+  int register_server(WebSocketServer*);
+
+  WebSocketServer* fetch_server();
+
+  int service_init();
+  int service_bootstrap();
+
+  void service_process();
+
+}}
+
+#endif

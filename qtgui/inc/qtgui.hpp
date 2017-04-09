@@ -1,13 +1,13 @@
-/** @file loc.hpp
- *  Localization functionality consolidation header.
+/** @file qtgui.hpp
+ *  Qt based graphical interface.
  *
  *  @authors Meelik Kiik
  *  @version 0.1
  *  @date 24. October 2015
  */
 
-#ifndef RTX_LOC_H
-#define RTX_LOC_H
+#ifndef TUUM_QTGUI_H
+#define TUUM_QTGUI_H
 
 namespace tuum { namespace gui {
 
