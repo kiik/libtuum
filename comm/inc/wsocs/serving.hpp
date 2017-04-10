@@ -7,9 +7,9 @@
 namespace tuum {
 namespace wsocs {
 
-  int register_server(WebSocketServer*);
-
   WebSocketServer* fetch_server();
+
+  int register_server(WebSocketServer*);
 
   int service_init();
   int service_bootstrap();

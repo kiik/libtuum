@@ -1,11 +1,13 @@
 
+#include <libwebsockets.h>
+
 #include "tuum_wsproto.hpp"
 #include "tuum_http.hpp"
+#include "wsocs/protocols.hpp"
 
 #include "WSContext.hpp"
 
 #include "wsocs/WebSocketServer.hpp"
-#include "wsocs/protocols.hpp"
 
 namespace tuum {
 namespace wsocs {
@@ -34,29 +36,39 @@ namespace wsocs {
   int WebSocketServer::init() {
     if(loadProtocols() < 0) return -1;
 
-    memset(&m_info, 0, sizeof(m_info));
-    m_info.port = m_port;
-    m_info.iface = m_iface;
-    m_info.protocols = gProtocols;
-    m_info.extensions = gExts;
-    m_info.ssl_cert_filepath = NULL;
-    m_info.ssl_private_key_filepath = NULL;
-    m_info.gid = -1;
-    m_info.uid = -1;
-    m_info.options = m_opts;
+    /*
+    RTXLOG("Set lws log...", LOG_INFO);
+    lws_set_log_level(0b11111111111, NULL);
+    */
 
-    RTXLOG("Creating wsoc context...", LOG_INFO);
+    RTXLOG("Creating context...", LOG_INFO);
     m_ctx = lws_create_context(&m_info);
 
-    if(m_ctx == nullptr){
-      RTXLOG("libwebsocket init failed!", LOG_ERR);
+    if(m_ctx == nullptr) {
+      RTXLOG("libwebsocket context creation failed!", LOG_ERR);
       return -2;
     }
 
-    return 0;
+    return 1;
   }
 
   int WebSocketServer::loadProtocols() {
+    memset(&m_info, 0, sizeof(m_info));
+
+    m_info.port = m_port;
+    m_info.iface = m_iface;
+
+    m_info.protocols = gProtocols;
+    m_info.extensions = gExts;
+
+    m_info.ssl_cert_filepath = NULL;
+    m_info.ssl_private_key_filepath = NULL;
+
+    m_info.gid = -1;
+    m_info.uid = -1;
+
+    m_info.options = m_opts;
+
     return 0;
   }
 
@@ -83,7 +95,7 @@ namespace wsocs {
         return 0;
       case LWS_CALLBACK_HTTP:
 
-        http::mjpeg_headers(wsi);
+        //http::mjpeg_headers(wsi);
         lws_callback_on_writable(wsi);
 
         return 0;
@@ -93,7 +105,7 @@ namespace wsocs {
       {
         WSContext::ctx_t ctx;
         if(wsCtx.find(*cId, ctx) >= 0) {
-          http::mjpeg_stream(wsi);
+          //http::mjpeg_stream(wsi);
           lws_callback_on_writable(wsi);
         } else {
           printf("[WSS:cb_http]Unknown id %lu.\n", *cId);

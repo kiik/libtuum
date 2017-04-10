@@ -27,16 +27,16 @@ namespace tuum {
         tuum::db::init();
         break;
       case TuumAddon::TUUM_OGL:
-        tuum::ogl_init();
         lpx::register_addon({"tuum::ogl", tuum::ogl_setup, tuum::ogl_process});
+        tuum::ogl_init();
         break;
       case TuumAddon::TUUM_OCL:
-        tuum::ocl_init();
         lpx::register_addon({"tuum::ocl", tuum::ocl_setup, tuum::ocl_process});
+        tuum::ocl_init();
         break;
       case TuumAddon::TUUM_COMM:
-        tuum::comm::init();
         lpx::register_addon({"tuum::comm", tuum::comm::setup, tuum::comm::process});
+        tuum::comm::init();
         break;
     }
 
@@ -47,22 +47,19 @@ namespace tuum {
 
 namespace tuum { namespace lpx {
 
-  //Glib::RefPtr<Gtk::Application> gtkApp;
-
   typedef std::vector<addon_t> AddonSet;
 
   AddonSet gAddons;
 
   int register_addon(const addon_t& addon)
   {
-    RTXLOG(format("Enabling '%s'", addon.name));
+    RTXLOG(format("'%s'", addon.name));
     gAddons.push_back(addon);
     return 0;
   }
 
-  void init() {
-    //auto gtkApp = Gtk::Application::create();
-    //run_file_tests();
+  int init() {
+    return 0;
   }
 
   void setup() {

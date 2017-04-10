@@ -15,6 +15,22 @@ namespace wsocs {
 
   bool running = true;
 
+  //FIXME: Generate callbacks per-server instance.
+  int cb_http_proxy(lws *wsi, lws_callback_reasons reason,
+                  void *user, void *in, size_t len) {
+    if(wsock_srvs[0] != nullptr) wsock_srvs[0]->cb_http(wsi, reason, user, in, len);
+  }
+
+  int cb_wsjs_proxy(lws *wsi, lws_callback_reasons reason,
+                  void *user, void *in, size_t len) {
+    if(wsock_srvs[0] != nullptr) wsock_srvs[0]->cb_wsjs(wsi, reason, user, in, len);
+  }
+
+  int cb_wsbin_proxy(lws *wsi, lws_callback_reasons reason,
+                  void *user, void *in, size_t len) {
+    if(wsock_srvs[0] != nullptr) wsock_srvs[0]->cb_wsbin(wsi, reason, user, in, len);
+  }
+
   int register_server(WebSocketServer* srv) {
     for(int i=0; i < WSOCS_SRV_N; i++) {
       if(wsock_srvs[i] != nullptr) continue;

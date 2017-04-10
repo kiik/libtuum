@@ -9,7 +9,7 @@
 #ifndef TUUM_COMM_H
 #define TUUM_COMM_H
 
-#include "wsocs/declarations.hpp"
+#include "wsocs/serving.hpp"
 
 namespace tuum { namespace comm {
 

@@ -75,6 +75,7 @@ namespace tuum {
   }
 
   void ocl_setup() {
+    /*
     Env::spawnBuffer(frame);
     Env::spawnBuffer(oframe);
 
@@ -83,13 +84,13 @@ namespace tuum {
     frame->id = 0;
 
     ocl::Pipeline* ppl_ptr = nullptr;
-    ocl::loadScript("./assets/ocl_tests.cls", ppl_ptr);
+    ocl::loadScript("./assets/ocl_tests.cls", ppl_ptr);*/
   }
 
   bool test = false;
 
   void ocl_process() {
-    if(test) {
+    if(false) {
       strm->read(frame);
       if(frame->id <= oframe->id) return;
 

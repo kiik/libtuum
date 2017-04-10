@@ -40,7 +40,8 @@ namespace tuum { namespace lpx {
 
   int register_addon(const addon_t&);
 
-  void init();
+  int init();
+
   void setup();
   void process();
 

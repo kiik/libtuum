@@ -1,32 +1,24 @@
-/** @file tuum_comm.cpp
- *  Communication module interface.
- *
- *  @authors Meelik Kiik
- *  @version 0.2
- *  @date 10. September 2016
- */
-
-#include "wsocs/WebSocketServer.hpp"
-#include "wsocs/serving.hpp"
 
 #include "tuum_comm.hpp"
 
+#include "wsocs/serving.hpp"
+
 namespace tuum { namespace comm {
 
-  int init()
-  {
+  int register_server(wsocs::WebSocketServer* ptr) {
+    return wsocs::register_server(ptr);
+  }
+
+  int init() {
     wsocs::service_init();
     return 0;
   }
 
-  void setup()
-  {
+  void setup() {
     wsocs::service_bootstrap();
-    wsocs::register_server(new wsocs::WebSocketServer());
   }
 
-  void process()
-  {
+  void process() {
 
   }
 

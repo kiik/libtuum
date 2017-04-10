@@ -8,8 +8,6 @@
       ],
       'dependencies': [
         'libenv',
-
-        #TODO: Remove extra dependencies
         'libhal',
       ],
 
@@ -24,18 +22,17 @@
         '--std=c++11',
       ],
       'include_dirs': [
-	'inc',
+        'inc',
       ],
      'sources': [
-        'src/wsocs/protocols.cpp',
-        'src/wsocs/serving.cpp',
-        'src/wsocs/WebSocketServer.cpp',
-
-        'src/tuum_http.cpp',
-        'src/tuum_wsproto.cpp',
         'src/tuum_comm.cpp',
+        #'src/tuum_http.cpp',
+        'src/tuum_wsproto.cpp',
 
         'src/WSContext.cpp',
+        'src/wsocs/WebSocketServer.cpp',
+
+        'src/wsocs/serving.cpp',
       ],
 
       'direct_dependent_settings': {
