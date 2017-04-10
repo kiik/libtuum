@@ -19,6 +19,86 @@ namespace wsocs {
 
   class WebSocketServer;
 
+  enum WSType {
+    WST_Integer,
+    WST_String,
+  };
+
+  struct wsp_arg_t {
+    std::string name;
+    std::string key;
+    WSType type;
+
+    json toJSON() {
+      json out = json::object();
+      out["n"] = name;
+      out["k"] = key;
+      out["t"] = type;
+
+      return out;
+    }
+  };
+
+  struct wsp_endpoint_t {
+    std::string urn;
+    std::string uri;
+    std::vector<wsp_arg_t> args;
+
+    json toJSON() {
+      json out = json::object();
+      out["urn"] = urn;
+      out["uri"] = uri;
+
+      out["args"] = json::array();
+      for(auto it = args.begin(); it != args.end(); it++)
+        out["args"].push_back(it->toJSON());
+
+      return out;
+    }
+  };
+
+  struct wsp_t {
+    std::string urn;
+    std::string uri;
+    std::string ver;
+    std::vector<wsp_endpoint_t> rscs;
+
+    WSProtocol* wsp;
+
+    json toJSON() {
+      json out;
+      out["urn"] = urn;
+      out["uri"] = uri;
+      out["ver"] = ver;
+
+      out["rscs"] = json::array();
+      for(auto it = rscs.begin(); it != rscs.end(); it++)
+        out["rscs"].push_back(it->toJSON());
+
+      return out;
+    }
+  };
+
+  /*
+  {
+    urn: "Drive protocol",
+    uri: "/drive",
+    ver: "0.0.1-al.0",
+    rscs: [
+      {
+        urn: "Omni Drive",
+        uri: "/omni",
+        args: [
+        {n: "Motor Power", k: "mp", t: INT},
+        {n: "Motor Valve", k: "mv", t: INT},
+        {n: "Joint Valve", k: "jv", t: INT},
+        ],
+      }
+    ]
+  }
+  */
+
+
   class WSProtocol {
   public:
     typedef unsigned char* data_t;
