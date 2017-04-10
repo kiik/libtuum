@@ -138,10 +138,28 @@ namespace wsocs {
       case LWS_CALLBACK_RECEIVE:
         {
           if(len <= 0) break;
+          bool err_flag = false;
+          json data;
 
           //TODO: Error handling
-          json data = json::parse((char*)in);
-          onMessage({data, wsi});
+          try {
+            data = json::parse((char*)in);
+          } catch (const std::invalid_argument& err) {
+            err_flag = true;
+            printf("[WSS::cb_wsjs]%s ( '%s' )\n", err.what(), (char*)in);
+            //TODO: 'onError' callback
+          }
+
+          if(!err_flag) {
+            onMessage({data, wsi});
+            try {
+            }
+            catch (const std::domain_error& err) {
+              printf("[WSS::cb_wsjs]%s ( '%s' )\n", err.what(), (char*)in);
+              err_flag = true;
+              //TODO: 'onError' callback
+            }
+          }
          }
         break;
       case LWS_CALLBACK_SERVER_WRITEABLE:
