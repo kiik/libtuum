@@ -102,13 +102,21 @@ namespace wsocs {
 
     json toJSON() {
       json out;
-      out["urn"] = urn;
-      out["uri"] = uri;
-      out["ver"] = ver;
 
-      out["rscs"] = json::array();
-      for(auto it = rscs.begin(); it != rscs.end(); it++)
-        out["rscs"].push_back(it->toJSON());
+      if(urn != "") {
+        out["urn"] = urn;
+        out["uri"] = uri;
+        out["ver"] = ver;
+
+        out["rscs"] = json::array();
+        for(auto it = rscs.begin(); it != rscs.end(); it++)
+          out["rscs"].push_back(it->toJSON());
+
+      } else {
+        out = json::array();
+        for(auto it = rscs.begin(); it != rscs.end(); it++)
+          out.push_back(it->toJSON());
+      }
 
       return out;
     }
@@ -181,7 +189,7 @@ namespace wsocs {
 
     virtual wsp_t* getDescriptor();
 
-    virtual json getJSONDescriptor();
+    json getProtocols();
 
     void setWS(WebSocketServer* ptr);
 

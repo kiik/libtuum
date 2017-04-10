@@ -11,7 +11,8 @@ namespace tuum { namespace wsocs {
 
   WSProtocol::WSProtocol():
     mWS(nullptr),
-    route_id_seq(1)
+    route_id_seq(1),
+    m_wsp({"", "", "", {}, nullptr})
   {
 
   }
@@ -42,8 +43,25 @@ namespace tuum { namespace wsocs {
     //TODO
   }
 
+  json WSProtocol::getProtocols() {
+    json out = json::array();
+
+    for(auto it = mRouteMap.begin(); it != mRouteMap.end(); it++) {
+      out.push_back(it->second.wsp->getDescriptor()->toJSON());
+    }
+
+    return out;
+  }
+
   int WSProtocol::route(const Message& m) {
     std::string uri = m.dat["uri"];
+
+    if(uri == "*") {
+      json dat = json::object();
+      dat["protocols"] = getProtocols();
+      send(dat);
+      return 1;
+    }
 
     auto it = mRouteMap.find(uri);
     if(it == mRouteMap.end()) return -1;
@@ -76,10 +94,5 @@ namespace tuum { namespace wsocs {
   wsp_t* WSProtocol::getDescriptor() {
     return &m_wsp;
   }
-
-  json WSProtocol::getJSONDescriptor() {
-    return m_wsp.toJSON();
-  }
-
 
 }}
