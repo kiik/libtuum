@@ -12,12 +12,14 @@
 
 #include "platform.hpp"
 
+#include "wsocs/declarations.hpp"
+
 using json = nlohmann::json;
 
 namespace tuum {
 namespace wsocs {
 
-  class WebSocketServer;
+  class WSProtocol;
 
   enum WSType {
     WST_Integer,
@@ -28,6 +30,17 @@ namespace wsocs {
     std::string name;
     std::string key;
     WSType type;
+
+    wsp_arg_t()
+    {
+
+    }
+
+    wsp_arg_t(const char* n, const char* k, WSType t):
+      name(n), key(k), type(t)
+    {
+
+    }
 
     json toJSON() {
       json out = json::object();
@@ -43,6 +56,17 @@ namespace wsocs {
     std::string urn;
     std::string uri;
     std::vector<wsp_arg_t> args;
+
+    wsp_endpoint_t()
+    {
+
+    }
+
+    wsp_endpoint_t(const char* _urn, const char* _uri, std::vector<wsp_arg_t> _args):
+      urn(_urn), uri(_uri), args(_args)
+    {
+
+    }
 
     json toJSON() {
       json out = json::object();
@@ -63,7 +87,18 @@ namespace wsocs {
     std::string ver;
     std::vector<wsp_endpoint_t> rscs;
 
-    WSProtocol* wsp;
+    WSProtocol* handler;
+
+    wsp_t()
+    {
+
+    }
+
+    wsp_t(const char* _urn, const char* _uri, const char* _ver, std::vector<wsp_endpoint_t> _rscs, WSProtocol* _handler):
+      urn(_urn), uri(_uri), ver(_ver), rscs(_rscs), handler(_handler)
+    {
+
+    }
 
     json toJSON() {
       json out;
@@ -79,24 +114,6 @@ namespace wsocs {
     }
   };
 
-  /*
-  {
-    urn: "Drive protocol",
-    uri: "/drive",
-    ver: "0.0.1-al.0",
-    rscs: [
-      {
-        urn: "Omni Drive",
-        uri: "/omni",
-        args: [
-        {n: "Motor Power", k: "mp", t: INT},
-        {n: "Motor Valve", k: "mv", t: INT},
-        {n: "Joint Valve", k: "jv", t: INT},
-        ],
-      }
-    ]
-  }
-  */
 
 
   class WSProtocol {
@@ -153,6 +170,7 @@ namespace wsocs {
     // ****
 
     WSProtocol();
+    WSProtocol(const wsp_t);
 
     int recv(Packet);
 
@@ -161,11 +179,14 @@ namespace wsocs {
     //int route(Packet*);
     virtual int route(const Message&);
 
-    virtual route_t getDescriptor();
+    virtual wsp_t* getDescriptor();
+
+    virtual json getJSONDescriptor();
 
     void setWS(WebSocketServer* ptr);
 
-    size_t add(route_t);
+    size_t add(const wsp_t*);
+
     void remove(size_t);
 
     int send(json&);
@@ -223,6 +244,7 @@ namespace wsocs {
 
   protected:
     WebSocketServer* mWS;
+    wsp_t m_wsp;
 
   private:
     size_t route_id_seq;

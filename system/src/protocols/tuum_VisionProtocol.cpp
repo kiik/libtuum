@@ -16,16 +16,21 @@ using namespace tuum::wsocs;
 
 namespace tuum {
 
-  VisionProtocol::VisionProtocol() {
-
-  }
-
-  WSProtocol::route_t VisionProtocol::getDescriptor()
+  VisionProtocol::VisionProtocol():
+    WSProtocol({
+      "Vision Protocol",
+      "/vision",
+      "0.0.1-al.0",
+      {
+        {"Read Frame", "/frame", {
+            {"StreamName", "sn", WSType::WST_String},
+          }
+        },
+      },
+      this
+    })
   {
-    WSProtocol::route_t out;
-    out.uri = "/vis";
-    out.wsp = this;
-    return out;
+
   }
 
   const char* JS_METHOD = "m";

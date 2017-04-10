@@ -16,6 +16,14 @@ namespace tuum { namespace wsocs {
 
   }
 
+  WSProtocol::WSProtocol(const wsp_t wsp):
+    mWS(nullptr),
+    route_id_seq(1),
+    m_wsp(wsp)
+  {
+
+  }
+
   void WSProtocol::setWS(WebSocketServer* ws) {
     mWS = ws;
   }
@@ -34,11 +42,6 @@ namespace tuum { namespace wsocs {
     //TODO
   }
 
-  /*
-  int WSProtocol::route(Packet* p) {
-
-  }*/
-
   int WSProtocol::route(const Message& m) {
     std::string uri = m.dat["uri"];
 
@@ -48,11 +51,17 @@ namespace tuum { namespace wsocs {
     return it->second.wsp->route(m);
   }
 
-  size_t WSProtocol::add(route_t ro)
+  size_t WSProtocol::add(const wsp_t* wsp)
   {
-    if(ro.uri == "") return 0;
-
+    route_t ro;
     ro.id = route_id_seq++;
+    ro.uri = wsp->uri;
+    ro.wsp = wsp->handler;
+
+    if(mRouteMap.find(ro.uri) != mRouteMap.end()) {
+      RTXLOG(format("Overwriting uri '%s'...", ro.uri), LOG_WARN);
+    }
+
     mRouteMap[ro.uri] = ro;
 
     RTXLOG(format("Registered '%s', id=%lu.", ro.uri, ro.id));
@@ -64,9 +73,12 @@ namespace tuum { namespace wsocs {
     //TODO:
   }
 
-  WSProtocol::route_t WSProtocol::getDescriptor() {
-    route_t ro;
-    return ro;
+  wsp_t* WSProtocol::getDescriptor() {
+    return &m_wsp;
+  }
+
+  json WSProtocol::getJSONDescriptor() {
+    return m_wsp.toJSON();
   }
 
 
