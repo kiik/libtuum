@@ -39,23 +39,23 @@ namespace tuum {
   const char* JS_DATA = "data";
 
   int VisionProtocol::route(const WSProtocol::Message& m) {
-    std::string cmd = m.dat[WSProtocol::JS_CMD].get<std::string>();
+    std::string uri = m.dat[WSProtocol::JS_URI].get<std::string>();
 
-    if(cmd == "getFrame") {
+    if(uri == "getFrame") {
       return getFrame(m.dat);
-    } else if (cmd == "settings") {
+    } else if (uri == "settings") {
       return toggleThresholding(m.dat);
-    } else if (cmd == "filters") {
+    } else if (uri == "filters") {
       if(m.dat[JS_METHOD].get<std::string>() == JS_MTH_GET) {
 
       } else if(m.dat[JS_METHOD].get<std::string>() == JS_MTH_PUT) {
 
       }
-    } else if(cmd == "pplcnf") {
+    } else if(uri == "pplcnf") {
       return vConfig(m.dat);
-    } else if(boost::starts_with(cmd, "vf_")) {
+    } else if(boost::starts_with(uri, "/vfilter")) {
       return vFilter(m.dat);
-    } else if(cmd == "ent_get") {
+    } else if(uri == "ent_get") {
       return getEntities();
     }
 
@@ -108,14 +108,14 @@ namespace tuum {
   }
 
   int VisionProtocol::vFilter(const json& dat) {
-    std::string cmd = dat[WSProtocol::JS_CMD].get<std::string>();
+    std::string uri = dat[WSProtocol::JS_URI].get<std::string>();
 
-    if(boost::ends_with(cmd, "get")) {
+    if(uri == "/vfilter_get") {
       json res;
       tuum::gVision->getFilter()->toJSON(res);
       res["_r"] = "OK";
       send(res);
-    } else if(boost::ends_with(cmd, "set")) {
+    } else if(uri == "/vfilter_set") {
       auto r = dat["f"]["range"];
       VisionFilter::ColorClass cls = {r[0], r[1], r[2], r[3], r[4], r[5]};
       cls.id = dat["f"]["id"];

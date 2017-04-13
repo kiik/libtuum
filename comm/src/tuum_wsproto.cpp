@@ -5,9 +5,9 @@
 
 namespace tuum { namespace wsocs {
 
-  const char* WSProtocol::JS_URI = "uri";
-  const char* WSProtocol::JS_CMD = "c";
   const char* WSProtocol::JS_M_ID = "_";
+  const char* WSProtocol::JS_NSP = "nsp";
+  const char* WSProtocol::JS_URI = "uri";
 
   WSProtocol::WSProtocol():
     mWS(nullptr),
@@ -54,16 +54,16 @@ namespace tuum { namespace wsocs {
   }
 
   int WSProtocol::route(const Message& m) {
-    std::string uri = m.dat["uri"];
+    std::string nsp = m.dat["nsp"];
 
-    if(uri == "*") {
+    if(nsp == "*") {
       json dat = json::object();
       dat["protocols"] = getProtocols();
       send(dat);
       return 1;
     }
 
-    auto it = mRouteMap.find(uri);
+    auto it = mRouteMap.find(nsp);
     if(it == mRouteMap.end()) return -1;
 
     return it->second.wsp->route(m);

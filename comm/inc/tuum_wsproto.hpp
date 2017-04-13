@@ -248,7 +248,7 @@ namespace wsocs {
     }
 
   public:
-    static const char *JS_URI, *JS_CMD, *JS_M_ID;
+    static const char *JS_M_ID, *JS_NSP, *JS_URI;
 
   protected:
     WebSocketServer* mWS;
