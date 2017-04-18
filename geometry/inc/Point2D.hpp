@@ -112,7 +112,7 @@ namespace tuum {
 
     template<typename T2 = double>
     Point2D<T2> operator*(T2 v) {
-      return Point2D<T2>({x * v, y * v});
+      return Point2D<T2>({(T2)(x * v), (T2)(y * v)});
     }
 
   };
