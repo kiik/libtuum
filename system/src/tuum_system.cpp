@@ -12,16 +12,24 @@ namespace tuum {
 
   size_t Subsystem::id_seq = 1;
 
-  Subsystem::Subsystem(System* p):
-    mParent(p)
+  Subsystem::Subsystem():
+    mParent(nullptr)
   {
     mId = Subsystem::id_seq++;
+    mName = format("<Subsystem id=%lu>", mId);
+  }
 
-    {
-      char buf[100];
-      snprintf(buf, sizeof(buf), "<Subsystem #%lu>", mId);
-      mName = buf;
-    }
+  Subsystem::Subsystem(const char* name):
+    mParent(nullptr)
+  {
+    mId = Subsystem::id_seq++;
+    mName = format("<Subsystem/%s id=%lu>", name, mId);
+  }
+
+  void Subsystem::setParent(System* ptr) { mParent = ptr; }
+
+  Subsystem* Subsystem::findSubsystem(Subsystem::Type t) {
+    return mParent->findSubsystem(t);
   }
 
   int Subsystem::setProperty(const std::string& pname, const json& pval)
@@ -59,7 +67,8 @@ namespace tuum {
     tuum::lpx::init();
     tuum::lpx::setup();
 
-
+    for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++)
+      (*it)->setup();
 
     //mVision.init();
     //mMotion.init();
@@ -70,9 +79,27 @@ namespace tuum {
     RTXLOG("Setup done.");
   }
 
+  size_t System::insmod(Subsystem* ptr) {
+    ptr->setParent(this);
+    mSubsystems.push_back(ptr);
+
+    RTXLOG(format("registered '%s'", ptr->getName()));
+
+    return mSubsystems.size() - 1;
+  }
+
+  Subsystem* System::findSubsystem(Subsystem::Type t) {
+    for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++) {
+      if((*it)->getType() == t) return *it;
+    }
+    return nullptr;
+  }
 
   void System::process()
   {
+    for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++)
+      (*it)->process();
+
     return;
 
 #ifdef TUUM_SYS_BENCH

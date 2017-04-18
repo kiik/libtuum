@@ -27,6 +27,7 @@
       ],
       'sources': [
         'src/tuum_lpx.cpp',
+        'src/tuum_visualizer.cpp',
 
         'src/lpx_iformat.cpp',
 

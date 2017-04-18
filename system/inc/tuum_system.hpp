@@ -28,7 +28,18 @@ namespace tuum {
     static size_t id_seq;
 
   public:
-    Subsystem(System*);
+    typedef int TypeVar;
+    typedef TypeVar* Type;
+
+    virtual Type getType() { return nullptr; }
+
+  public:
+    Subsystem();
+    Subsystem(const char*);
+
+    void setParent(System*);
+
+    Subsystem* findSubsystem(Type t);
 
     int setProperty(const std::string&, const json&); // pname, val
     json getProperty();
@@ -37,6 +48,9 @@ namespace tuum {
 
     virtual json getStats();
     virtual json getProperties();
+
+    virtual void setup() {}
+    virtual void process() {}
 
   protected:
     System* mParent;
@@ -55,6 +69,10 @@ namespace tuum {
 
     void setup();
     void process();
+
+    size_t insmod(Subsystem*);
+
+    Subsystem* findSubsystem(Subsystem::Type);
 
     Visioning* getVisioning() { return &mVision; }
     Motion* getMotioning() { return &mMotion; }
@@ -75,7 +93,7 @@ namespace tuum {
 
     Motion mMotion;
 
-    SubsysPtrSet mModules;
+    SubsysPtrSet mSubsystems;
   };
 
 }

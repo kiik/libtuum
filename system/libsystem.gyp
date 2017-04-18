@@ -37,6 +37,7 @@
 
         'src/tuum_physics.cpp',
         'src/tuum_visioning.cpp',
+        'src/tuum_localizer.cpp',
         'src/tuum_system.cpp',
 
         'src/syscore/MotionData.cpp',

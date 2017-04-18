@@ -33,7 +33,7 @@ namespace tuum { namespace CMV {
     for(size_t i = cls.mn[1] * U8_32CLS_REDUCTION; i <= cls.mx[1] * U8_32CLS_REDUCTION; i++) clss_U[i] |= id;
     for(size_t i = cls.mn[2] * U8_32CLS_REDUCTION; i <= cls.mx[2] * U8_32CLS_REDUCTION; i++) clss_V[i] |= id;
 
-    printf(":cmv::Filter: New class id=%lu\n", id);
+    printf(":cmv::Filter: New class id=%u\n", id);
     return 0;
   }
 
