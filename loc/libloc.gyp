@@ -5,18 +5,21 @@
       'type': 'static_library',
 
       'dependencies': [
-        'librtxmath'
+        'librtxmath',
+        'libenv',
       ],
 
       'cflags': [
         '--std=c++11'
       ],
       'include_dirs': [
-	'inc'
+        'inc'
       ],
       'sources': [
         'src/loc_core.cpp',
         'src/particlef.cpp',
+
+        'src/loc_landmark_stream.cpp',
       ],
 
 
