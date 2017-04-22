@@ -13,7 +13,10 @@
 #include "tuum_comm.hpp"
 
 #include "tuum_ogl.hpp"
+
+#ifdef TUUM_ADDON_OCL
 #include "tuum_ocl.hpp"
+#endif
 
 #include "tuum_lpx.hpp"
 
@@ -30,10 +33,12 @@ namespace tuum {
         lpx::register_addon({"tuum::ogl", tuum::ogl_setup, tuum::ogl_process});
         tuum::ogl_init();
         break;
+#ifdef TUUM_ADDON_OCL
       case TuumAddon::TUUM_OCL:
         lpx::register_addon({"tuum::ocl", tuum::ocl_setup, tuum::ocl_process});
         tuum::ocl_init();
         break;
+#endif
       case TuumAddon::TUUM_COMM:
         lpx::register_addon({"tuum::comm", tuum::comm::setup, tuum::comm::process});
         tuum::comm::init();

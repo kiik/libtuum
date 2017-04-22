@@ -12,7 +12,7 @@
         'libcomm',
 
         'libogl-lab',
-        'libocl-lab',
+        #'libocl-lab',
       ],
 
       'cflags': [

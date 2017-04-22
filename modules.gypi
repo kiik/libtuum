@@ -5,7 +5,7 @@
     'tdb/libtdb.gyp',
 
     'ogl-lab/libogl-lab.gyp',
-    'ocl-lab/libocl-lab.gyp',
+    #'ocl-lab/libocl-lab.gyp',
 
     'comm/libcomm.gyp',
     'qtgui/libqtgui.gyp',

@@ -17,7 +17,7 @@
         'libloc',
 
         'libogl-lab',
-        'libocl-lab',
+        #'libocl-lab',
 
         'libvision',
       ],
