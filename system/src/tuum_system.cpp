@@ -97,6 +97,8 @@ namespace tuum {
 
   void System::process()
   {
+    hal::process();
+
     for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++)
       (*it)->process();
 
