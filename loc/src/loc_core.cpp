@@ -20,13 +20,9 @@ namespace loc {
   }
 
   Landmark::Landmark(int x, int y):
-    m_pos({x, y})
+    EuclideanEntity2D(x, y)
   {
 
-  }
-
-  double Landmark::distanceTo(int x, int y) {
-    return sqrt(pow(m_pos.x - x, 2) + pow(m_pos.y - y, 2));
   }
 
 };

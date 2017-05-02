@@ -11,6 +11,7 @@
 #include <string>
 
 #include "rtxmath.hpp"
+#include "Vec.hpp"
 
 #ifndef RTX_LOC_CORE_H
 #define RTX_LOC_CORE_H
@@ -35,20 +36,36 @@ namespace loc {
   double random_uniform(double mn, double mx);
   double random_uniform(int mn, int mx);
 
-  class Landmark {
-    private:
-      tuum::Vec2i m_pos;
-      double m_distanceEstimate;
-    public:
-      Landmark(int, int);
+  template<typename T>
+  class EuclideanEntity2D
+  {
+  public:
+    typedef tuum::Vec2D<T> transform_t;
 
-      int getX() { return m_pos.x; }
-      int getY() { return m_pos.y; }
+    EuclideanEntity2D() {}
+    EuclideanEntity2D(T x, T y) { m_transform.x = x; m_transform.y = y; }
 
-      double getDistance() { return m_distanceEstimate; }
-      void setDistanceEstimate(double v) { m_distanceEstimate = v; }
+    int getX() { return m_transform.x; }
+    int getY() { return m_transform.y; }
 
-      double distanceTo(int x, int y);
+    transform_t* getTransform() { return &m_transform; }
+
+    double getDistance() { return m_distanceEstimate; }
+    void setDistanceEstimate(double v) { m_distanceEstimate = v; }
+
+    double distanceTo(T x, T y) {
+      return sqrt(pow(m_transform.x - x, 2) + pow(m_transform.y - y, 2));
+    }
+
+  protected:
+    transform_t m_transform;
+    double m_distanceEstimate;
+  };
+
+  class Landmark : public EuclideanEntity2D<int>
+  {
+  public:
+    Landmark(int, int);
   };
 
   typedef std::vector<Landmark> LandmarkSet;
