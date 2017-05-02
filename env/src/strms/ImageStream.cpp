@@ -11,7 +11,7 @@
 namespace tuum {
 
   ImageStream::ImageStream():
-    m_iprop({0, 0, 0, 0})
+    m_iprop()
   {
 
   }

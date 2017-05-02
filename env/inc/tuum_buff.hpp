@@ -18,10 +18,36 @@ namespace tuum {
 
   struct img_prop_t {
     size_t width, height,
-           stride, bytesPerPixel;
+           bytesPerPixel, stride;
+
+    img_prop_t():
+      width(0), height(0),
+      bytesPerPixel(3), stride(0)
+    {
+
+    }
+
+    img_prop_t(size_t W, size_t H, size_t bpp = 3):
+      width(W), height(H),
+      bytesPerPixel(bpp), stride(W*bpp)
+    {
+
+    }
+
+    void operator=(const img_prop_t& obj)
+    {
+      width = obj.width;
+      height = obj.height;
+      bytesPerPixel = obj.bytesPerPixel;
+      stride = obj.stride;
+    }
 
     size_t getSize() {
       return width * height * bytesPerPixel;
+    }
+
+    inline unsigned int toPixelIndex(size_t x, size_t y) {
+      return stride * y + bytesPerPixel * x;
     }
 
   };
@@ -100,14 +126,14 @@ namespace tuum {
     size_t id;
 
     img_buf_t():
-      frm({0, 0, 0, 0}),
+      frm(),
       id(0)
     {
 
     }
 
     img_buf_t(size_t size):
-      frm({0, 0, 0, 0}),
+      frm(),
       id(0)
     {
       init(size);
