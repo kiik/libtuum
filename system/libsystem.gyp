@@ -42,7 +42,8 @@
 
         'src/syscore/MotionData.cpp',
 
-        'src/protocols/tuum_VisionProtocol.cpp'
+        'src/protocols/tuum_VisionProtocol.cpp',
+        'src/protocols/tuum_NaviProtocol.cpp'
       ],
 
 
