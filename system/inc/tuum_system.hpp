@@ -41,6 +41,14 @@ namespace tuum {
 
     Subsystem* findSubsystem(Type t);
 
+    template<typename T>
+    int getSubsystemHandle(Type t, T& out) {
+      out = (T)findSubsystem(t);
+
+      if(out == nullptr) return -1;
+      return 1;
+    }
+
     int setProperty(const std::string&, const json&); // pname, val
     json getProperty();
 
