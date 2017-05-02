@@ -27,10 +27,9 @@ namespace tuum {
     /** Coordinate translation methods **/
     Vec2i toAbsolute(Vec2i);
 
-    /** Landmark handling methods **/
-    LandmarkStream* getLandmarkStream() { return &mLandmarkStr; }
-
   protected:
+    //TODO: Implement mapping
+
     LandmarkStream mLandmarkStr;
   };
 
