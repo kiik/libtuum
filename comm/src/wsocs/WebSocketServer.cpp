@@ -79,10 +79,7 @@ namespace wsocs {
   }
 
   void WebSocketServer::process() {
-    bool running = true;
-    while(running) {
-      lws_service(m_ctx, 0);
-    }
+    lws_service(m_ctx, 0);
   }
 
   int WebSocketServer::cb_http(lws *wsi, lws_callback_reasons reason, void *user, void *in, size_t len)

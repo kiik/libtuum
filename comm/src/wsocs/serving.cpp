@@ -1,6 +1,8 @@
 
 #include <boost/thread.hpp>
 
+#include "platform.hpp"
+
 #include "wsocs/WebSocketServer.hpp"
 #include "wsocs/serving.hpp"
 
@@ -12,6 +14,8 @@ namespace wsocs {
   boost::thread* wsSrvThread = nullptr;
 
   WebSocketServer* wsock_srvs[WSOCS_SRV_N];
+
+  soft_clk_t clk_100Hz(10);
 
   bool running = true;
 
@@ -60,9 +64,13 @@ namespace wsocs {
 
   void service_process() {
     while(running) {
-      for(int i=0; i < WSOCS_SRV_N; i++) {
-        if(wsock_srvs[i] != nullptr) wsock_srvs[i]->process();
+      if(clk_100Hz.tick()) {
+        for(int i=0; i < WSOCS_SRV_N; i++) {
+          if(wsock_srvs[i] != nullptr) wsock_srvs[i]->process();
+        }
       }
+
+      clk_100Hz.wait();
     }
   }
 
