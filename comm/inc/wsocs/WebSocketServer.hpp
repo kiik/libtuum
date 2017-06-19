@@ -66,6 +66,11 @@ namespace wsocs {
 
     virtual int send(json&);
 
+    size_t registerProtocol(WSProtocol*);
+
+    template <class T>
+    size_t registerProtocol(T* ptr) { return registerProtocol((WSProtocol*)ptr); }
+
   private:
       WSProtocol mProtocol;
   };

@@ -72,6 +72,12 @@ namespace wsocs {
     return 0;
   }
 
+  size_t WebSocketServer::registerProtocol(WSProtocol* wsp)
+  {
+    wsp->setWS(this);
+    return proto()->add(wsp->getDescriptor());
+  }
+
   void WebSocketServer::process() {
     bool running = true;
     while(running) {
