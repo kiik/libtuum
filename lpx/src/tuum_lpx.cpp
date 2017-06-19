@@ -50,7 +50,8 @@ namespace tuum {
 
 }
 
-namespace tuum { namespace lpx {
+namespace tuum {
+namespace lpx {
 
   typedef std::vector<addon_t> AddonSet;
 

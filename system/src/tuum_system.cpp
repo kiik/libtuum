@@ -8,8 +8,6 @@
 
 namespace tuum {
 
-  boost::thread* gMotionThr = nullptr;
-
   size_t Subsystem::id_seq = 1;
 
   Subsystem::Subsystem():

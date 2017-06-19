@@ -22,7 +22,8 @@ namespace tuum {
 
 }
 
-namespace tuum { namespace lpx {
+namespace tuum {
+namespace lpx {
 
   static void nullfn() {};
 
