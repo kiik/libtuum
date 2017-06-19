@@ -14,8 +14,12 @@
 
 #include "platform.t.hpp"
 
-size_t millis();
-long long micros();
+typedef size_t time_ms_t;
+typedef long long time_us_t;
+
+time_ms_t millis();
+time_us_t micros();
+
 
 struct Timer {
   unsigned long int _start = 0;
@@ -42,6 +46,52 @@ struct Timer {
 
   void trigger() {
     _end = millis();
+  }
+
+};
+
+struct soft_clk_t {
+  time_ms_t T, _t;
+
+  soft_clk_t():
+    T(0), _t(0)
+  {
+
+  }
+
+  soft_clk_t(time_ms_t period)
+  {
+    init(period);
+  }
+
+  void init(time_ms_t period)
+  {
+    T = period;
+    _t = millis();
+  }
+
+  bool tick(time_ms_t t = 0)
+  {
+    if(t == 0) t = millis();
+
+    if(t >= _t) {
+      _t = t + T;
+      return true;
+    }
+
+    return false;
+  }
+
+  void wait(time_ms_t t = 0)
+  {
+    if(t == 0) t = millis();
+    if(_t <= t) return;
+
+    time_ms_t dt = _t - t;
+
+    if(dt > 1) {
+      usleep(dt * 1000);
+    }
   }
 
 };
