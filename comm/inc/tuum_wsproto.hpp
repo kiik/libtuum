@@ -24,6 +24,7 @@ namespace wsocs {
   enum WSType {
     WST_Integer,
     WST_String,
+    WST_JSON,
   };
 
   struct wsp_arg_t {
