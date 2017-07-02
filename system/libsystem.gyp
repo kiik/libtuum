@@ -40,6 +40,7 @@
         'src/tuum_localizer.cpp',
         'src/tuum_system.cpp',
         'src/tuum_perception.cpp',
+        'src/tuum_logmgr.cpp',
 
         'src/syscore/MotionData.cpp',
 
