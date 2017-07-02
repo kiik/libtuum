@@ -9,11 +9,6 @@ namespace tuum {
   class Motion;
   class Navigation;
 
-  extern Visioning* gVision;
-  extern Motion* gMotion;
-
-  extern Navigation* gNavi;
-
   extern System* gSystem;
 
   void setGlobalSystem(System*);
