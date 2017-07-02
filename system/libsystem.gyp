@@ -30,7 +30,7 @@
       ],
       'sources': [
         'src/tuum_localization.cpp',
-        'src/tuum_navigation.cpp',
+        'src/tuum_navigator.cpp',
         'src/tuum_motion.cpp',
         'src/tuum_context.cpp',
         'src/tuum_addons.cpp',
@@ -45,7 +45,8 @@
         'src/syscore/MotionData.cpp',
 
         'src/protocols/tuum_VisionProtocol.cpp',
-        'src/protocols/tuum_NaviProtocol.cpp'
+        'src/protocols/tuum_NaviProtocol.cpp',
+        'src/protocols/tuum_StdProtocol.cpp',
       ],
 
 
