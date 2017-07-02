@@ -19,6 +19,25 @@ namespace tuum {
   struct Vec2D {
     T x; T y;
 
+    Vec2D():
+      x((T)0), y((T)0)
+    {
+
+    }
+
+    Vec2D(T _x, T _y):
+      x(_x), y(_y)
+    {
+
+    }
+
+    template<typename T2>
+    Vec2D(Vec2D<T2> o):
+      x((T)o.x), y((T)o.y)
+    {
+
+    }
+
     void rotate(double alpha) {
       Vec2D v;
       v.x = x * cos(alpha) + y * -sin(alpha);
@@ -105,8 +124,11 @@ namespace tuum {
   typedef Vec2D<int> Vec2i;
   typedef Vec3D<int> Vec3i;
 
-  typedef Vec2D<double> Vec2f;
-  typedef Vec3D<double> Vec3f;
+  typedef Vec2D<float> Vec2f;
+  typedef Vec3D<float> Vec3f;
+
+  typedef Vec2D<double> Vec2d;
+  typedef Vec3D<double> Vec3d;
 }
 
 #endif // RTX_VEC_H
