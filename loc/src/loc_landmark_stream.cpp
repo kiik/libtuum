@@ -5,18 +5,6 @@
 
 namespace loc {
 
-  Landmark::Landmark()
-  {
-
-  }
-
-  int Landmark::consumeMeasurement(Vec2i p)
-  {
-    return -1;
-  }
-
-
-
   LandmarkStream::LandmarkStream()
   {
 

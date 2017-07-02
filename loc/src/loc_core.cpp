@@ -25,4 +25,9 @@ namespace loc {
 
   }
 
+  int Landmark::consumeMeasurement(Vec2i p)
+  {
+    return -1;
+  }
+
 };

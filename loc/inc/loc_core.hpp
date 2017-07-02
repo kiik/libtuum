@@ -6,6 +6,9 @@
  *  @date 24. October 2015
  */
 
+#ifndef LOC_CORE_H
+#define LOC_CORE_H
+
 #include <cstdlib>
 #include <vector>
 #include <string>
@@ -13,8 +16,7 @@
 #include "rtxmath.hpp"
 #include "Vec.hpp"
 
-#ifndef RTX_LOC_CORE_H
-#define RTX_LOC_CORE_H
+using namespace tuum;
 
 namespace loc {
 
@@ -66,6 +68,8 @@ namespace loc {
   {
   public:
     Landmark(int, int);
+
+    int consumeMeasurement(Vec2i);
   };
 
   typedef std::vector<Landmark> LandmarkSet;
