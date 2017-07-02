@@ -51,9 +51,7 @@ namespace tuum {
   }
 
 
-  System::System():
-    mPhysics(&mEntityFilter),
-    mNavi(&mEntityFilter)
+  System::System()
   {
 
   }
@@ -102,6 +100,7 @@ namespace tuum {
 
     return;
 
+    /*
 #ifdef TUUM_SYS_BENCH
     size_t t0, t1, t2, t3, t4, t5;
 #endif
@@ -145,12 +144,13 @@ namespace tuum {
 #ifdef TUUM_SYS_BENCH
     printf("[System - stat]ll %lums, mot %lums, vis %lums, ef-digest %lums, ef %lums\n", (t1 - t0), (t2 - t1), (t3 - t2), (t4 - t3), (t5 - t4));
 #endif
+    */
   }
 
 
   bool System::entityPassEnabled() {
-    if(!mVision.thresholdPassEnabled()) return false;
-    return true;
+    // if(!mVision.thresholdPassEnabled()) return false;
+    return false;
   }
 
 }

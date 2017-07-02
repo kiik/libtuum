@@ -11,12 +11,14 @@
 
 #include "tuum_EntityFilter.hpp"
 
-#include "tuum_motion.hpp"
-#include "tuum_physics.hpp"
-#include "tuum_visioning.hpp"
-#include "tuum_navigation.hpp"
-
 using json = nlohmann::json;
+
+#define TUUM_SUBSYS_DECL(cls) \
+  static Subsystem::TypeVar Type; \
+  static Subsystem::Type GetType() { return &cls::Type; }
+
+#define TUUM_SUBSYS_IMPL(cls) \
+  Subsystem::TypeVar cls::Type;
 
 namespace tuum {
 
@@ -70,6 +72,10 @@ namespace tuum {
 
   typedef std::vector<Subsystem*> SubsysPtrSet;
 
+}
+
+namespace tuum {
+
   class System
   {
   public:
@@ -82,25 +88,9 @@ namespace tuum {
 
     Subsystem* findSubsystem(Subsystem::Type);
 
-    Visioning* getVisioning() { return &mVision; }
-    Motion* getMotioning() { return &mMotion; }
-
-    EntityFilter* getEntityHandle() { return &mEntityFilter; }
-
-    Physics* getPhysics() { return &mPhysics; }
-    Navigation* getNavi() { return &mNavi; }
-
     bool entityPassEnabled();
 
   protected:
-    Visioning mVision;
-    EntityFilter mEntityFilter;
-
-    Physics mPhysics;
-    Navigation mNavi;
-
-    Motion mMotion;
-
     SubsysPtrSet mSubsystems;
   };
 
