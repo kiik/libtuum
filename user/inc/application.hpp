@@ -14,7 +14,7 @@
 #include "hal.hpp"
 
 #include "tuum_visioning.hpp"
-#include "tuum_navigation.hpp"
+#include "tuum_navigator.hpp"
 #include "tuum_localization.hpp"
 #include "tuum_motion.hpp"
 
