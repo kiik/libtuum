@@ -68,6 +68,7 @@ namespace tuum {
       //hal::hw.
       json res;
 
+      /*
       tuum::Visioning* vis = tuum::gVision;
       if(vis == nullptr) return -1;
 
@@ -79,7 +80,8 @@ namespace tuum {
       image_t out = lpx::rgb_to_png(img);
 
       std::string b64_img = b64::encode((const char*)out->data, out->size);
-      res["frame"] = b64_img;
+      */
+      res["frame"] = "";
 
       send(res);
       return 0;
@@ -89,19 +91,22 @@ namespace tuum {
   }
 
   int VisionProtocol::toggleThresholding(const json& dat) {
+    /*
     if(dat["threshold"].get<bool>() == true)
       tuum::gVision->setThresholding(true);
     else
       tuum::gVision->setThresholding(false);
+    */
     return 0;
   }
 
   int VisionProtocol::vConfig(const json& dat) {
+    /*
     if(dat.find("data") != dat.end())
       tuum::gVision->configure(dat["data"]);
-
+      */
     json out;
-    tuum::gVision->toJSON(out);
+    //tuum::gVision->toJSON(out);
     send(out);
 
     return 0;
@@ -112,7 +117,7 @@ namespace tuum {
 
     if(uri == "/vfilter_get") {
       json res;
-      tuum::gVision->getFilter()->toJSON(res);
+      //tuum::gVision->getFilter()->toJSON(res);
       res["_r"] = "OK";
       send(res);
     } else if(uri == "/vfilter_set") {
@@ -120,7 +125,7 @@ namespace tuum {
       VisionFilter::ColorClass cls = {r[0], r[1], r[2], r[3], r[4], r[5]};
       cls.id = dat["f"]["id"];
       printf("SET %s\n", dat.dump().c_str());
-      tuum::gVision->getFilter()->updateYUVClassifier(cls);
+      //tuum::gVision->getFilter()->updateYUVClassifier(cls);
 
       json res;
       res["_r"] = "OK";
@@ -132,7 +137,7 @@ namespace tuum {
 
   int VisionProtocol::getEntities() {
     json dat;
-    tuum::gSystem->getEntityHandle()->toJSON(dat);
+    //tuum::gSystem->getEntityHandle()->toJSON(dat);
     send(dat);
     return 0;
   }
