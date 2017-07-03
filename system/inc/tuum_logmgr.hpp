@@ -34,7 +34,7 @@ namespace tuum {
     virtual bool isInterrupted() { return false; }
     virtual bool isComplete() { return false; }
 
-    virtual int configure(const json&) { return 0; }
+    virtual int configure(const json&, json&) { return 0; }
 
     virtual json serialize() {};
     virtual int deserialize(json&) {};
@@ -47,6 +47,9 @@ namespace tuum {
     logic_impl_t getDescriptor() { return m_desc; }
 
     json getDescriptorJSON();
+
+    virtual json getOverviewJSON() = 0;
+    virtual json getConfJSON() = 0;
 
   protected:
     logic_impl_t m_desc;
