@@ -27,50 +27,52 @@ namespace tuum {
     virtual void setup() = 0;
     virtual void process() = 0;
 
-    virtual void pause() = 0;
-    virtual void terminate() = 0;
+    // State signals
+    virtual int pause() = 0;
+    virtual int resume() = 0;
+    virtual int terminate() = 0;
 
+    // Flag getters
     virtual bool isRunnable() { return false; }
     virtual bool isInterrupted() { return false; }
     virtual bool isComplete() { return false; }
 
+    // Init methods
     virtual int configure(const json&, json&) { return 0; }
+    virtual int finalize() { return -1; }
 
     virtual json serialize() {};
     virtual int deserialize(json&) {};
-
-    virtual json getStatusJSON() {
-      json out = json::object();
-      return out;
-    };
 
     logic_impl_t getDescriptor() { return m_desc; }
 
     json getDescriptorJSON();
 
-    virtual json getOverviewJSON() = 0;
-    virtual json getConfJSON() = 0;
+    // JSON API
+    virtual json getOverviewJSON() = 0; // State data
+    virtual json getConfJSON() = 0;     // Input data
+    virtual json getContextJSON() = 0;  // Runtime data
 
   protected:
     logic_impl_t m_desc;
   };
 
+  enum LogicMgrStateE {
+    LMS_IDLE,   // No job
+    LMS_INIT,   // New job
+    LMS_READY,  // Configured job
+    LMS_BEGIN,
+    LMS_RUN,    // Running job
+    LMS_PAUSE,  // Paused job
+    LMS_INT,    // Interrupted job
+    LMS_TERM,   // Terminated job
+    LMS_COMPL,  // Completed job
+  };
 
   class LogicMgr : public Subsystem
   {
   public:
     TUUM_SUBSYS_DECL(LogicMgr);
-
-    enum LogicMgrStateE {
-      LMS_IDLE,   // No job
-      LMS_INIT,   // New job
-      LMS_READY,  // Configured job
-      LMS_RUN,    // Running job
-      LMS_PAUSE,  // Paused job
-      LMS_INT,    // Interrupted job
-      LMS_TERM,   // Terminated job
-      LMS_COMPL,  // Completed job
-    };
 
     static std::string StateString(LogicMgrStateE);
 
@@ -92,12 +94,16 @@ namespace tuum {
 
     int prepareRun();
     int beginRun();
+
     int pauseRun();
+    int resumeRun();
     int stopRun();
 
     void onInterrupt();
     void onTerminate();
     void onComplete();
+
+    bool canEnter(LogicMgrStateE);
 
     json toJSON();
 

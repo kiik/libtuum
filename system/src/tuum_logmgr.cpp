@@ -29,12 +29,14 @@ namespace tuum {
       case LMS_IDLE: return "IDLE";
       case LMS_INIT: return "INIT";
       case LMS_READY: return "READY";
-      case LMS_RUN: return "RUNNING";
-      case LMS_PAUSE: return "PAUSED";
+      case LMS_RUN: return "RUN";
+      case LMS_PAUSE: return "PAUSE";
       case LMS_INT: return "INTERRUPT";
       case LMS_TERM: return "TERMINATED";
       case LMS_COMPL: return "COMPLETED";
     }
+
+    return "?";
   }
 
   LogicMgr::LogicMgr():
@@ -46,7 +48,7 @@ namespace tuum {
 
   void LogicMgr::transition(LogicMgrStateE next_state)
   {
-    RTXLOG(tuum::format("transition '%s' -> '%s'", LogicMgr::StateString(m_state), LogicMgr::StateString(next_state)));
+    //RTXLOG(tuum::format("transition '%s' -> '%s'", LogicMgr::StateString(m_state).c_str(), LogicMgr::StateString(next_state).c_str()));
     m_state = next_state;
   }
 
@@ -64,6 +66,12 @@ namespace tuum {
   {
     switch(m_state) {
       case LMS_INIT:
+        break;
+      case LMS_BEGIN:
+        if(mActiveLogic != nullptr) {
+          mActiveLogic->setup();
+          transition(LMS_PAUSE);
+        }
         break;
       case LMS_RUN:
         if(mActiveLogic != nullptr) {
@@ -89,7 +97,7 @@ namespace tuum {
   int LogicMgr::setLogicImpl(LogicImpl* ptr)
   {
     if(mActiveLogic != nullptr) {
-      RTXLOG("mActiveLogic != nullptr", LOG_ERR);
+      RTXLOG("mActiveLogic != nullptr", LOG_WARN);
       return -1;
     }
 
@@ -111,11 +119,13 @@ namespace tuum {
     if(m_state == LMS_PAUSE) {
       if(!mActiveLogic->isRunnable()) {
         transition(LMS_INT);
-        return -3;
+        return -4;
       }
     }
 
     if((m_state != LMS_INIT)) return -2;
+
+    if(mActiveLogic->finalize() < 0) return -3;
     transition(LMS_READY);
 
     return 1;
@@ -126,8 +136,7 @@ namespace tuum {
     if(mActiveLogic == nullptr) return -1;
     if(m_state != LMS_READY) return -2;
 
-    mActiveLogic->setup();
-    transition(LMS_RUN);
+    transition(LMS_BEGIN);
 
     return 1;
   }
@@ -142,6 +151,16 @@ namespace tuum {
     return 1;
   }
 
+  int LogicMgr::resumeRun()
+  {
+    if(m_state != LMS_PAUSE) return -1;
+
+    mActiveLogic->resume();
+    transition(LMS_RUN);
+
+    return 1;
+  }
+
   int LogicMgr::stopRun()
   {
     if((m_state != LMS_RUN) && (m_state != LMS_PAUSE))
@@ -151,6 +170,21 @@ namespace tuum {
     transition(LMS_TERM);
 
     return 1;
+  }
+
+  bool LogicMgr::canEnter(LogicMgrStateE st)
+  {
+    switch(st) {
+      case LMS_RUN:
+        if(m_state == LMS_READY) return true;
+        if(mActiveLogic != nullptr) return mActiveLogic->isRunnable();
+        break;
+      case LMS_PAUSE:
+        if(m_state == LMS_RUN) return true;
+        break;
+    }
+
+    return false;
   }
 
   void LogicMgr::onInterrupt() {
@@ -174,8 +208,8 @@ namespace tuum {
     out["st"] = LogicMgr::StateString(m_state);
 
     if(mActiveLogic != nullptr) {
-      out["job"] = mActiveLogic->getDescriptorJSON();
-      out["ctx"] = mActiveLogic->getStatusJSON();
+      out["job"] = mActiveLogic->getOverviewJSON();
+      out["ctx"] = mActiveLogic->getContextJSON();
     } else {
       out["job"] = json::object();
     }
