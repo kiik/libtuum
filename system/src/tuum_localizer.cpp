@@ -1,3 +1,10 @@
+/** @file tuum_localizer.cpp
+ *  @brief Calculates local pose & manages local-to-global transformations.
+ *
+ *  @author Meelik Kiik (kiik.meelik@gmail.com)
+ *  @version 0.1
+ *  @date 4. June 2017
+ */
 
 #include <cmath>
 
@@ -44,7 +51,8 @@ namespace tuum {
     return 1;
   }
 
-  void Localizer::setup() {
+  void Localizer::setup()
+  {
     int err_flag = 0;
 
     if(getSubsystemHandle<tuum::Navigator*>(Navigator::GetType(), gNavi) > 0) {
@@ -67,15 +75,23 @@ namespace tuum {
       if(!ptr->isAnchorFixed()) {
         printf("anchor: (%.12f, %.12f) -> (%.12f, %.12f)\n", m_gps.x, m_gps.y, anchor.x, anchor.y);
         ptr->updateAnchor(anchor);
+      } else {
+        //TODO: Map chunking
+        anchor = ptr->getAnchor();
       }
+
+      auto imu = hal::hw.getSensors()->getIMU();
 
       m_pose.map_id = gNavi->getMap()->getId();
       m_pose.coord = (Vec2i)gps_calc_diff_vec(anchor, m_gps);
+      m_pose.orient = imu.head;
+      m_pose._t = millis();
     }
   }
 
   int Localizer::getLocalPose(localized_pose_t& out)
   {
+    if(millis() - m_pose._t >= 4000) return -1;
     out = m_pose;
     return 0;
   }

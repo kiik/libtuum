@@ -1,3 +1,10 @@
+/** @file tuum_localizer.hpp
+ *  @brief Calculates local pose & manages local-to-global transformations.
+ *
+ *  @author Meelik Kiik (kiik.meelik@gmail.com)
+ *  @version 0.1
+ *  @date 4. June 2017
+ */
 
 #ifndef TUUM_LOCALIZER_H
 #define TUUM_LOCALIZER_H
@@ -18,6 +25,7 @@ namespace tuum {
     Vec2i coord;
     float orient;
     uint32_t map_id;
+    time_ms_t _t = 0;
   };
 
   class Localizer : public Subsystem
@@ -38,6 +46,8 @@ namespace tuum {
 
     /** Coordinate translation methods **/
     Vec2i toAbsolute(Vec2i);
+
+    Vec2d toGlobalPosition(Vec2i);
 
     int getLocalPose(localized_pose_t&);
     int getGlobalPosition(Vec2d&);

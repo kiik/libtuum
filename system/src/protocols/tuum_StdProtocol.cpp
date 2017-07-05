@@ -80,6 +80,44 @@ namespace tuum {
     return 0;
   }
 
+  int TuumStdProtocol::getPose(json& out)
+  {
+    if(gSystem == nullptr) return -1;
+
+    Localizer *ptr = (Localizer*)gSystem->findSubsystem(Localizer::GetType());
+    if(ptr == nullptr) return -2;
+
+    Navigator *ptr = (Navigator*)gSystem->findSubsystem(Navigator::GetType());
+    if(ptr == nullptr) return -2;
+
+    localized_pose_t pose;
+    int res = ptr->getLocalPose(pose);
+
+
+
+    json buf = json::object();
+
+    buf["pos"] = {pose.coord.x, pose.coord.y};
+    buf["ori"] = pose.orient;
+
+    buf["tPos"] =
+    buf["tOri"] =
+
+    buf["mapId"] = pose.map_id;
+    buf["_t"] = pose._t;
+
+    out["l"] = buf;
+
+    buf = json::object();
+
+    buf["pos"] =
+
+
+    out["res"] = res;
+
+    return 0;
+  }
+
   int TuumStdProtocol::route(const WSProtocol::Message& m) {
     std::string uri = m.dat[WSProtocol::JS_URI].get<std::string>();
 

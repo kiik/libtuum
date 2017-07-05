@@ -1,10 +1,10 @@
-/** @file tuum_navigator.cpp
- *  Navigator system interface. Inserts landmarks from perception subsystem
- *  into map & generates additional navmesh data for path calculation.
+/** @file tuum_navigator.hpp
+ *  @brief Navigator system processes perception data,
+ *  generates navmesh & pathing data, handles high-level motion commands.
  *
  *  @authors Meelik Kiik
  *  @version 0.2
- *  @date 2 July 2017
+ *  @date 2. June 2017
  */
 
 #include "syscore/MotionData.hpp"
@@ -81,7 +81,9 @@ namespace tuum {
   Subsystem::TypeVar Navigator::Type;
 
   Navigator::Navigator():
-    Subsystem("Navigator")
+    Subsystem("Navigator"),
+    gLoc(nullptr),
+    m_init(false)
   {
 
   }
@@ -93,13 +95,51 @@ namespace tuum {
 
   void Navigator::setup()
   {
+    int err_flag = 0;
 
+    if(getSubsystemHandle<tuum::Localizer*>(Localizer::GetType(), gLoc) > 0) {
+      RTXLOG("Localizer present.");
+    } else err_flag = -1;
+
+    if(err_flag < 0) {
+      RTXLOG(tuum::format("Error - Missing module. (code=%i)", err_flag), LOG_ERR);
+    } else {
+      m_init = true;
+    }
   }
 
   void Navigator::process()
   {
+    if(!m_init) return;
+
     // New landmarks? update navmesh
     // New Path request? calculate path
+
+    if(m_ctx.flags != 0) {
+      localized_pose_t pose;
+
+      if(gLoc->getLocalPose(pose) >= 0) {
+        Vec2i dP(0, 0);
+        float dO = 0.0;
+
+        if(m_ctx.flags & NAV_SET_POS) dP = m_ctx.tPos - pose.coord;
+        if(m_ctx.flags & NAV_SET_ORI) dO = m_ctx.tOri - pose.orient;
+      }
+
+    }
+  }
+
+  int Navigator::navTo(const Vec2i& pos)
+  {
+    m_ctx.tPos = pos;
+    m_ctx.flags = NAV_SET_POS;
+  }
+
+  int Navigator::navTo(const Vec2i& pos, const float& ori)
+  {
+    m_ctx.tPos = pos;
+    m_ctx.tOri = ori;
+    m_ctx.flags = NAV_SET_POS | NAV_SET_ORI;
   }
 
   int Navigator::feedLandmarks(LandmarkSet* lms)

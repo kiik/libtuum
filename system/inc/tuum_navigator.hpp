@@ -1,10 +1,10 @@
 /** @file tuum_navigator.hpp
- *  Navigator system interface. Inserts landmarks from perception subsystem
- *  into map & generates additional navmesh data for path calculation.
+ *  @brief Navigator system processes perception data,
+ *  generates navmesh & pathing data, handles high-level motion commands.
  *
  *  @authors Meelik Kiik
  *  @version 0.2
- *  @date 2 July 2017
+ *  @date 2. June 2017
  */
 
 #ifndef TUUM_NAVIGATION_H
@@ -17,6 +17,8 @@
 using namespace loc;
 
 namespace tuum {
+
+  class Localizer;
 
   struct map_octree_t {
     int x = 0, y = 0, w = 1000, h = 1000;
@@ -49,6 +51,8 @@ namespace tuum {
     bool isAnchorFixed();
     void updateAnchor(Vec2d);
 
+    Vec2d getAnchor() { return m_gps_anchor; }
+
     json toJSON();
 
   protected:
@@ -67,6 +71,15 @@ namespace tuum {
     static Subsystem::TypeVar Type;
     static Subsystem::Type GetType() { return &Navigator::Type; }
 
+    Subsystem::Type getType() { return Navigator::GetType(); }
+
+    struct ctx_t {
+      Vec2i tPos;
+      float tOri;
+
+      uint8_t flags = 0;
+    };
+
   public:
     Navigator();
 
@@ -77,13 +90,28 @@ namespace tuum {
     void setup();
     void process();
 
-    Subsystem::Type getType() { return Navigator::GetType(); }
+    int navTo(const Vec2i&);
+    int navTo(const Vec2i&, const float&);
+    // int navTo(const float&);
+
+    ctx_t getContext() { return m_ctx; }
 
     int feedLandmarks(LandmarkSet*);
 
     int getLocalMaps(EnvMapPtrSet&);
 
   protected:
+    enum NavigatorFlagsE {
+      NAV_SET_POS = 0x01,
+      NAV_SET_ORI = 0x02,
+    };
+
+    ctx_t m_ctx;
+
+    Localizer *gLoc;
+
+    bool m_init;
+
     OctreeLandmarkMap mMap;
   };
 
