@@ -7,7 +7,8 @@ namespace tuum {
 
   TUUM_SUBSYS_IMPL(LogicMgr);
 
-  LogicImpl::LogicImpl(const std::string& clsn, const std::string& objn):
+  LogicImpl::LogicImpl(const std::string& clsn, const std::string& objn, LogicMgr *p):
+    m_parent(p),
     m_desc({++LogicImpl::id_seq, clsn, objn})
   {
     RTXLOG(tuum::format("New job <%s id=%i, '%s'>", m_desc.clsName, m_desc.id, m_desc.objName));
@@ -107,6 +108,7 @@ namespace tuum {
     }
 
     mActiveLogic = ptr;
+    ptr->m_parent = this;
     transition(LMS_INIT);
 
     return 1;

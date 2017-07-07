@@ -13,14 +13,17 @@ namespace tuum {
     std::string clsName, objName;
   };
 
+  class LogicMgr;
 
   class LogicImpl
   {
   public:
+    friend class LogicMgr;
+
     static int id_seq;
 
   public:
-    LogicImpl(const std::string&, const std::string&);
+    LogicImpl(const std::string&, const std::string&, LogicMgr*);
 
     virtual int init() = 0;
 
@@ -54,6 +57,7 @@ namespace tuum {
     virtual json getContextJSON() = 0;  // Runtime data
 
   protected:
+    LogicMgr* m_parent;
     logic_impl_t m_desc;
   };
 
