@@ -17,7 +17,9 @@ namespace tuum {
       "0.0.1-al.0",
       {
         {"Get Global Position", "/gps", {}},
-        {"Get Local Pose", "/pose", {}},
+
+        {"Get Pose", "/pose", {}},
+        {"Get Local Pose", "/lpo", {}},
         {"Get Local Maps", "/maps", {}},
       },
       this
@@ -84,33 +86,37 @@ namespace tuum {
   {
     if(gSystem == nullptr) return -1;
 
-    Localizer *ptr = (Localizer*)gSystem->findSubsystem(Localizer::GetType());
-    if(ptr == nullptr) return -2;
+    Localizer *loc = (Localizer*)gSystem->findSubsystem(Localizer::GetType());
+    if(loc == nullptr) return -2;
 
-    Navigator *ptr = (Navigator*)gSystem->findSubsystem(Navigator::GetType());
-    if(ptr == nullptr) return -2;
+    Navigator *nav = (Navigator*)gSystem->findSubsystem(Navigator::GetType());
+    if(nav == nullptr) return -2;
 
     localized_pose_t pose;
-    int res = ptr->getLocalPose(pose);
 
+    int res = loc->getLocalPose(pose);
 
+    auto ctx = nav->getContext();
 
     json buf = json::object();
 
     buf["pos"] = {pose.coord.x, pose.coord.y};
     buf["ori"] = pose.orient;
 
-    buf["tPos"] =
-    buf["tOri"] =
+    if(ctx.hasTarget()) buf["tPos"] = {{"x", ctx.tPos.x}, {"y", ctx.tPos.y}};
+    else nullptr;
+
+    if(ctx.hasOrient()) buf["tOri"] = ctx.tOri;
+    else nullptr;
 
     buf["mapId"] = pose.map_id;
     buf["_t"] = pose._t;
 
-    out["l"] = buf;
+    out["pose"] = buf;
 
-    buf = json::object();
-
-    buf["pos"] =
+    Vec2d gpos = {0, 0};
+    loc->getGlobalPosition(gpos);
+    out["gpos"] = {{"lat", gpos.x}, {"lng", gpos.y}};
 
 
     out["res"] = res;
@@ -122,7 +128,8 @@ namespace tuum {
     std::string uri = m.dat[WSProtocol::JS_URI].get<std::string>();
 
     if(uri == "/gps") return reqGlobalPosition();
-    if(uri == "/pose") return reqLocalPose();
+    if(uri == "/pose") return reqPose();
+    if(uri == "/lpo") return reqLocalPose();
     if(uri == "/maps") return reqLocalMaps();
 
     return -1;
@@ -149,6 +156,13 @@ namespace tuum {
       out["res"] = res;
     }
 
+    return send(out);
+  }
+
+  int TuumStdProtocol::reqPose()
+  {
+    json out;
+    getPose(out);
     return send(out);
   }
 
