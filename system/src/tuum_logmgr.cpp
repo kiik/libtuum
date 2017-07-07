@@ -213,7 +213,7 @@ namespace tuum {
       out["job"] = mActiveLogic->getOverviewJSON();
       out["ctx"] = mActiveLogic->getContextJSON();
     } else {
-      out["job"] = json::object();
+      out["job"] = nullptr;
     }
 
     return out;

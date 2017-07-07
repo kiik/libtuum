@@ -73,11 +73,19 @@ namespace tuum {
 
     Subsystem::Type getType() { return Navigator::GetType(); }
 
+    enum NavigatorFlagsE {
+      NAV_SET_POS = 0x01,
+      NAV_SET_ORI = 0x02,
+    };
+
     struct ctx_t {
       Vec2i tPos;
       float tOri;
 
       uint8_t flags = 0;
+
+      bool hasTarget() { return (flags & NAV_SET_POS) == 1; }
+      bool hasOrient() { return (flags & NAV_SET_ORI) == 1; }
     };
 
   public:
@@ -101,11 +109,6 @@ namespace tuum {
     int getLocalMaps(EnvMapPtrSet&);
 
   protected:
-    enum NavigatorFlagsE {
-      NAV_SET_POS = 0x01,
-      NAV_SET_ORI = 0x02,
-    };
-
     ctx_t m_ctx;
 
     Localizer *gLoc;
