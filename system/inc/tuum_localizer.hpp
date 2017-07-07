@@ -11,6 +11,8 @@
 
 #include "Vec.hpp"
 
+#include "sensors/GPS.hpp"
+
 #include "tuum_system.hpp"
 
 #include "loc_landmark_stream.hpp"
@@ -46,8 +48,12 @@ namespace tuum {
 
     /** Coordinate translation methods **/
     Vec2i toAbsolute(Vec2i);
-
     Vec2d toGlobalPosition(Vec2i);
+
+    template<typename V>
+    float globalDistanceTo(V& o) {
+      return gps_calc_diff(m_gps, o);
+    }
 
     int getLocalPose(localized_pose_t&);
     int getGlobalPosition(Vec2d&);
