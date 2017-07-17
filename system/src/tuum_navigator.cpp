@@ -16,14 +16,16 @@
 #include "tuum_localizer.hpp"
 #include "tuum_navigator.hpp"
 
+using namespace tuum::hal;
+
 namespace tuum {
 
   int OctreeLandmarkMap::id_seq = 0;
 
   OctreeLandmarkMap::OctreeLandmarkMap():
+    EnvironmentMap(),
     m_id(++OctreeLandmarkMap::id_seq),
-    m_lm_n(0),
-    m_gps_anchor_fixed(false)
+    m_lm_n(0)
   {
 
   }
@@ -43,22 +45,12 @@ namespace tuum {
     return 0;
   }*/
 
-  bool OctreeLandmarkMap::isAnchorFixed() {
-    return m_gps_anchor_fixed;
-  }
-
-  void OctreeLandmarkMap::updateAnchor(Vec2d gps) {
-    m_gps_anchor = gps;
-    m_gps_anchor_fixed = true;
-    gps_get_rect(gps, {1000, 1000}, m_gps_rect);
-  }
-
   json OctreeLandmarkMap::toJSON()
   {
     json out;
 
     out["id"] = m_id;
-    out["anchor"] = {m_gps_anchor.x, m_gps_anchor.y};
+    out["anchor"] = {m_anchor.x, m_anchor.y};
     out["dim"] = {m_root.w, m_root.h};
     out["landmark_n"] = m_lm_n;
 
@@ -74,6 +66,62 @@ namespace tuum {
     return out;
   }
 
+
+  NavmeshComposer::NavmeshComposer(Navigator *ptr):
+    gNav(ptr)
+  {
+
+  }
+
+  // Composer local rect area
+  int NavmeshComposer::setStaticArea(rect_t rect)
+  {
+    m_rect = rect;
+  }
+
+  /*
+  int NavmeshComposer::addBounds(map_pos_t pos, EnvironmentMap *env)
+  {
+
+  }
+  */
+
+  int NavmeshComposer::addVirtualBounds(const std::vector<Vec2i> *poly)
+  {
+    // mapToLocal
+  }
+
+  void NavmeshComposer::clearBounds()
+  {
+
+  }
+
+  void NavmeshComposer::clearVirtBounds()
+  {
+
+  }
+
+
+  Pather::Pather():
+    m_valid_path(false)
+  {
+
+  }
+
+  void Pather::poseTick(Vec2i p, float o)
+  {
+    m_pos = p;
+    m_ori = o;
+  }
+
+  Vec2i Pather::pathTick(Vec2i tP, float tO)
+  {
+    //TODO:
+    Vec2i mvec(0, 0);
+
+    return mvec;
+  }
+
 }
 
 namespace tuum {
@@ -83,6 +131,7 @@ namespace tuum {
   Navigator::Navigator():
     Subsystem("Navigator"),
     gLoc(nullptr),
+    mComposer(this),
     m_init(false)
   {
 
@@ -119,11 +168,14 @@ namespace tuum {
       localized_pose_t pose;
 
       if(gLoc->getLocalPose(pose) >= 0) {
-        Vec2i dP(0, 0);
-        float dO = 0.0;
+        Vec2i tPos(0, 0);
+        float tOri = 0.0;
 
-        if(m_ctx.flags & NAV_SET_POS) dP = m_ctx.tPos - pose.coord;
-        if(m_ctx.flags & NAV_SET_ORI) dO = m_ctx.tOri - pose.orient;
+        if(m_ctx.flags & NAV_SET_POS) tPos = m_ctx.tPos;
+        if(m_ctx.flags & NAV_SET_ORI) tOri = m_ctx.tOri;
+
+        mPather.poseTick(pose.coord, pose.orient);
+        auto wp = mPather.pathTick(tPos, tOri);
       }
 
     }
@@ -140,6 +192,30 @@ namespace tuum {
     m_ctx.tPos = pos;
     m_ctx.tOri = ori;
     m_ctx.flags = NAV_SET_POS | NAV_SET_ORI;
+  }
+
+  int Navigator::globalToMap(const Vec2d& in, Vec2i out)
+  {
+    if(!mMap.isAnchorFixed()) return -1;
+
+    gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
+
+    out = (Vec2i)(gO.getMetricDelta(in));
+
+    return 1;
+  }
+
+  int Navigator::mapToGlobal(const Vec2i& in, Vec2d out)
+  {
+    if(!mMap.isAnchorFixed()) return -1;
+
+    return 1;
+  }
+
+  int Navigator::isReachable(Vec2i p)
+  {
+    //TODO
+    return 1;
   }
 
   int Navigator::feedLandmarks(LandmarkSet* lms)

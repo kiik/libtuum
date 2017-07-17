@@ -74,7 +74,7 @@ namespace tuum {
 
       if(!ptr->isAnchorFixed()) {
         printf("anchor: (%.12f, %.12f) -> (%.12f, %.12f)\n", m_gps.x, m_gps.y, anchor.x, anchor.y);
-        ptr->updateAnchor(anchor);
+        ptr->setAnchor(anchor);
       } else {
         //TODO: Map chunking
         anchor = ptr->getAnchor();
@@ -101,8 +101,5 @@ namespace tuum {
     out = m_gps;
     return res;
   }
-
-
-
 
 }
