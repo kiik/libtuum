@@ -40,6 +40,13 @@ namespace tuum {
       y1 = std::max(y1, o.y1);
     }
 
+    void merge(const Vec2i& p) {
+      x0 = std::min(x0, p.x);
+      y0 = std::min(x0, p.y);
+      x1 = std::max(x1, p.x);
+      y1 = std::max(y1, p.y);
+    }
+
     size_t getArea() {
       return (y1 - y0) * (x1 - x0);
     }
