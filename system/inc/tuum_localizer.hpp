@@ -51,7 +51,7 @@ namespace tuum {
     Vec2d toGlobalPosition(Vec2i);
 
     template<typename V>
-    float globalDistanceTo(V& o) {
+    double globalDistanceTo(V& o) {
       return gps_calc_diff(m_gps, o);
     }
 
