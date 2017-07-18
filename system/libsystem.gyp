@@ -31,7 +31,7 @@
       'sources': [
         'src/tuum_localization.cpp',
         'src/tuum_navigator.cpp',
-        'src/tuum_motion.cpp',
+        'src/tuum_agent.cpp',
         'src/tuum_context.cpp',
         'src/tuum_addons.cpp',
 
