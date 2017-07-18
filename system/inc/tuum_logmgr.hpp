@@ -8,6 +8,8 @@
 
 namespace tuum {
 
+  class Agent;
+
   struct logic_impl_t {
     int id;
     std::string clsName, objName;
@@ -113,9 +115,13 @@ namespace tuum {
 
   protected:
     void transition(LogicMgrStateE);
+    
+    bool m_init;
 
     LogicMgrStateE m_state;
     LogicImpl* mActiveLogic;
+
+    Agent *gAgent;
   };
 
 }

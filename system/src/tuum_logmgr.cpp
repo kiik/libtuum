@@ -1,4 +1,6 @@
 
+#include "tuum_agent.hpp"
+
 #include "tuum_logmgr.hpp"
 
 namespace tuum {
@@ -41,6 +43,7 @@ namespace tuum {
   }
 
   LogicMgr::LogicMgr():
+    m_init(false),
     m_state(LMS_IDLE),
     mActiveLogic(nullptr)
   {
@@ -50,6 +53,10 @@ namespace tuum {
   void LogicMgr::transition(LogicMgrStateE next_state)
   {
     //RTXLOG(tuum::format("transition '%s' -> '%s'", LogicMgr::StateString(m_state).c_str(), LogicMgr::StateString(next_state).c_str()));
+    if(next_state != LMS_RUN) {
+      gAgent->stop_ai();
+    } else gAgent->start_ai();
+    
     m_state = next_state;
   }
 
@@ -60,7 +67,17 @@ namespace tuum {
 
   void LogicMgr::setup()
   {
+    int err_flag = 0;
 
+    if(getSubsystemHandle<tuum::Agent*>(Agent::GetType(), gAgent) > 0) {
+      RTXLOG("Agent module present.");
+    } else err_flag = -1;
+
+    if(err_flag < 0) {
+      RTXLOG(tuum::format("Error - Missing module. (code=%i)", err_flag), LOG_ERR);
+    } else {
+      m_init = true;
+    }
   }
 
   void LogicMgr::process()
