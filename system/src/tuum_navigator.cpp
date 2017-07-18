@@ -103,7 +103,10 @@ namespace tuum {
 
 
   Pather::Pather():
-    m_valid_path(false)
+    m_valid_path(false),
+    m_path_t(0),
+    m_pos(0, 0), m_ori(0.0), m_pose_t(0),
+    m_tPos(0, 0), m_tOri(0.0), m_tPose_t(0)
   {
 
   }
@@ -112,12 +115,23 @@ namespace tuum {
   {
     m_pos = p;
     m_ori = o;
+    m_pose_t = millis();
   }
 
-  Vec2i Pather::pathTick(Vec2i tP, float tO)
+  Vec2d Pather::pathTick(Vec2i tP, float tO)
   {
-    //TODO:
+    time_ms_t t = millis();
     Vec2i mvec(0, 0);
+    
+    if(t - m_pose_t <= 250) // 4Hz minimum pose update frequency
+    {
+      //TODO: implement pathfinding with intermediate waypoints
+
+      mvec.x = tP.x - m_pos.x;
+      mvec.y = tP.y - m_pos.y;
+
+      m_path_t = millis();
+    }
 
     return mvec;
   }
@@ -128,8 +142,14 @@ namespace tuum {
 
   Subsystem::TypeVar Navigator::Type;
 
+  int motion_tick_nullfn(Vec2d mvec)
+  {
+    return -1;
+  }
+
   Navigator::Navigator():
     Subsystem("Navigator"),
+    m_motion_handler(motion_tick_nullfn),
     gLoc(nullptr),
     mComposer(this),
     m_init(false)
@@ -175,7 +195,9 @@ namespace tuum {
         if(m_ctx.flags & NAV_SET_ORI) tOri = m_ctx.tOri;
 
         mPather.poseTick(pose.coord, pose.orient);
-        auto wp = mPather.pathTick(tPos, tOri);
+        mvec_t mvec = (mvec_t)mPather.pathTick(tPos, tOri);
+
+        this->onMotionTick(mvec);
       }
 
     }
@@ -226,6 +248,21 @@ namespace tuum {
   int Navigator::getLocalMaps(EnvMapPtrSet& out)
   {
     out.push_back(&mMap);
+  }
+
+  void Navigator::setMotionHandler(Navigator::MotionHandlerFn_t ptr)
+  {
+    m_motion_handler = ptr;
+  }
+
+  void Navigator::onMotionTick(mvec_t mvec)
+  {
+    if(m_motion_handler == nullptr) return;
+    int res = m_motion_handler(mvec);
+
+    if(res < 0) {
+      RTXLOG(tuum::format("motion handler error %i", res), LOG_ERR);
+    }
   }
 
 }

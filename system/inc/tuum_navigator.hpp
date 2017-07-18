@@ -10,6 +10,8 @@
 #ifndef TUUM_NAVIGATION_H
 #define TUUM_NAVIGATION_H
 
+#include <boost/function.hpp>
+
 #include "loc_landmark_stream.hpp"
 
 #include "tuum_buff.hpp"
@@ -133,19 +135,22 @@ namespace tuum {
     int init(rect_t);
 
     void poseTick(Vec2i, float);
-    wp_t pathTick(Vec2i, float);
+    Vec2d pathTick(Vec2i, float);
 
   protected:
     bool m_valid_path;
     path_t m_path;
+    time_ms_t m_path_t;
 
     rect_t m_bounds;
 
     wp_t m_pos;
     float m_ori;
+    time_ms_t m_pose_t;
 
     wp_t m_tPos;
     float m_tOri;
+    time_ms_t m_tPose_t;
   };
 
   class Navigator : public Subsystem
@@ -170,6 +175,10 @@ namespace tuum {
       bool hasTarget() { return (flags & NAV_SET_POS) == 1; }
       bool hasOrient() { return (flags & NAV_SET_ORI) == 1; }
     };
+
+    typedef Vec2d mvec_t;
+
+    typedef boost::function<int(Vec2d)> MotionHandlerFn_t;
 
   public:
     Navigator();
@@ -202,9 +211,15 @@ namespace tuum {
     int globalToMap(const Vec2d&, Vec2i);
     int mapToGlobal(const Vec2i&, Vec2d);
 
+    void setMotionHandler(MotionHandlerFn_t);
+
   protected:
+    void onMotionTick(mvec_t);
+
     bool m_init;
     ctx_t m_ctx;
+
+    MotionHandlerFn_t m_motion_handler;
 
     Localizer *gLoc;
 
