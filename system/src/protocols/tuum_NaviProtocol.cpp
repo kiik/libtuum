@@ -15,12 +15,7 @@ namespace tuum {
       "/nav",
       "0.0.1-al.0",
       {
-        {"Get Perception", "/perc", {}},
-        {"Get Map", "/map", {}},
-        {"Get Navmesh", "/navmesh", {}},
-
-        {"Get Environment", "/env", {}},
-        {"Get Navmap", "/navmap", {}},
+        {"Get Nav Path", "/navpath", {}}
       },
       this
     })
@@ -36,51 +31,34 @@ namespace tuum {
   int NaviProtocol::route(const WSProtocol::Message& m) {
     std::string uri = m.dat[WSProtocol::JS_URI].get<std::string>();
 
-    if(uri == "/perc") {
-      return reqPerception(m.dat);
-    } else if (uri == "/map") {
-      return reqMap(m.dat);
-    } else if (uri == "/navmesh") {
-      return reqNavmesh(m.dat);
-    } else if(uri == "/env") {
-      return reqNavmap(m.dat);
-    }
+    if(uri == "/navpath") return reqPath(m.dat);
 
     return -1;
   }
 
-  int NaviProtocol::reqPerception(const json& dat)
+  int NaviProtocol::getPath(json& out)
   {
-    json out = json::object();
-    out["msg"] = "TODO";
-    return send(out);
+    out["path"] = json::array();
+
+    for(int i=0; i < 2; i++) {
+      json buf = json::object();
+
+      buf["mId"] = 0;
+      buf["wps"] = json::array({{10, 10}, {20, 20}, {30, 30}});
+
+      out["path"].push_back(buf);
+    }
+
+    return 0;
   }
 
-  int NaviProtocol::reqMap(const json& dat)
+  int NaviProtocol::reqPath(const json& dat)
   {
     json out = json::object();
-    out["msg"] = "TODO";
-    return send(out);
-  }
+    int res = getPath(out);
 
-  int NaviProtocol::reqNavmesh(const json& dat)
-  {
-    json out = json::object();
-    out["msg"] = "TODO";
-    return send(out);
-  }
+    out["res"] = res;
 
-  int NaviProtocol::reqEnv(const json& dat)
-  {
-    json out = json::object();
-    out["msg"] = "TODO";
-    return send(out);
-  }
-
-  int NaviProtocol::reqNavmap(const json& dat)
-  {
-    json out = json::object();
-    out["msg"] = "TODO";
     return send(out);
   }
 

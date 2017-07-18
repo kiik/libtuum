@@ -15,12 +15,15 @@ namespace tuum {
 
     int route(const WSProtocol::Message&);
 
+    int getPath(json&);
+
     int reqPerception(const json&);
     int reqMap(const json&);
     int reqNavmesh(const json&);
 
     int reqEnv(const json&);
     int reqNavmap(const json&);
+    int reqPath(const json&);
 
   private:
 
