@@ -64,6 +64,7 @@ namespace wsocs {
     virtual void onMessage(lws*, void*, size_t) {};
     virtual void onMessage(WSProtocol::Message) {};
 
+    virtual void pong();
     virtual int send(json&);
 
     size_t registerProtocol(WSProtocol*);

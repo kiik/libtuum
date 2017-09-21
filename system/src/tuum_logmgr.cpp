@@ -52,6 +52,11 @@ namespace tuum {
 
   void LogicMgr::transition(LogicMgrStateE next_state)
   {
+    if(gAgent == nullptr) {
+      RTXLOG(tuum::format("no agent loaded! ('%s' -> '%s')", LogicMgr::StateString(m_state).c_str(), LogicMgr::StateString(next_state).c_str()), LOG_ERR);
+      return;
+    }
+
     //RTXLOG(tuum::format("transition '%s' -> '%s'", LogicMgr::StateString(m_state).c_str(), LogicMgr::StateString(next_state).c_str()));
     if(next_state != LMS_RUN) {
       gAgent->stop_ai();

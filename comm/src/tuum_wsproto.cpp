@@ -54,6 +54,8 @@ namespace tuum { namespace wsocs {
   }
 
   int WSProtocol::route(const Message& m) {
+    if(m.dat.find("nsp") == m.dat.end()) return -1;
+
     std::string nsp = m.dat["nsp"];
 
     if(nsp == "*") {

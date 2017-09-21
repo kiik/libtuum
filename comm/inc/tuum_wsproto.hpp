@@ -143,6 +143,7 @@ namespace wsocs {
       lws* res; // Response write handle
 
       std::string getURI() {
+	if(dat.find(WSProtocol::JS_URI) == dat.end()) return "";
         return dat[WSProtocol::JS_URI];
       }
 

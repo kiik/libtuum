@@ -18,7 +18,7 @@ namespace wsocs {
 
   WebSocketServer::WebSocketServer():
     mCtx(nullptr),
-    m_port(8080), m_opts(0),
+    m_port(8079), m_opts(0),
     m_iface(nullptr), m_ctx(nullptr),
     m_cert_path(nullptr), m_key_path(nullptr),
     m_protocols(nullptr), m_exts(nullptr)
@@ -153,8 +153,16 @@ namespace wsocs {
             //TODO: 'onError' callback
           }
 
+	  size_t mId = 0;
+          if(data.find(WSProtocol::JS_M_ID) != data.end()) {
+            mId = data[WSProtocol::JS_M_ID].get<size_t>(); 
+	  } else err_flag = true;
+
           if(!err_flag) {
-            onMessage({data, wsi});
+            if(mId != 0) {
+              onMessage({data, wsi});
+	    } else pong();
+
             try {
             }
             catch (const std::domain_error& err) {
@@ -222,8 +230,19 @@ namespace wsocs {
 
   WSProtocol* WebSocketServer::proto() { return &mProtocol; }
 
+  void WebSocketServer::pong() {
+    json dat = json::object();
+    dat[WSProtocol::JS_M_ID] = 0;
+    send(dat);
+  }
+
   int WebSocketServer::send(json& dat) {
     if(mCtx == nullptr) return -1;
+    //FIXME: Queue up passed messages
+    if(lws_send_pipe_choked(mCtx->wsi)) {
+      //printf("[WS::send<CHOKE>]Passing '%s'\n", dat.dump().c_str());    
+      return -2;
+    }
 
     WSProtocol::Response res;
 
@@ -235,7 +254,9 @@ namespace wsocs {
     data_t dst = &buf[LWS_SEND_BUFFER_PRE_PADDING];
     memcpy(dst, s.c_str(), len);
 
+    // printf("1 %i (%i)\n", len, lws_send_pipe_choked(mCtx->wsi));
     lws_write(mCtx->wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], len, LWS_WRITE_TEXT);
+    // printf("2 %i (%i)\n", len, lws_send_pipe_choked(mCtx->wsi));
 
     free(buf);
 

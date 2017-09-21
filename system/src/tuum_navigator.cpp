@@ -220,9 +220,9 @@ namespace tuum {
   {
     if(!mMap.isAnchorFixed()) return -1;
 
-    gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
+    //gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
 
-    out = (Vec2i)(gO.getMetricDelta(in));
+    //out = (Vec2i)(gO.getMetricDelta(in));
 
     return 1;
   }
