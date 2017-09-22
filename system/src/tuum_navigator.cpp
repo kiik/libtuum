@@ -283,9 +283,9 @@ namespace tuum {
     }
   }
 
-  void Navigator::setstaticNavmeshRect(const rect_t& in)
+  void Navigator::setStaticNavmeshRect(const rect_t& in)
   {
-    mMap.setStaticArea(in);
+    // mMap.setStaticArea(in);
   }
 
 }
