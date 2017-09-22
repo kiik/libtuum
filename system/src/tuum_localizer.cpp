@@ -42,8 +42,8 @@ namespace tuum {
     auto ptr = hal::hw.getSensors();
     hal::GPSData dat = ptr->getGPS();
 
-    m_gps.x = dat.lat;
-    m_gps.y = dat.lng;
+    m_gps.lat = dat.lat;
+    m_gps.lon = dat.lon;
     m_gps_t = dat._t;
 
     if(millis() - m_gps_t > 5000) return 0;
@@ -70,10 +70,10 @@ namespace tuum {
   {
     if(updateGlobalPosition() > 0) {
       auto ptr = gNavi->getMap();
-      Vec2d anchor = gps_round_to_km(m_gps);
+      gps_t anchor = m_gps.roundToNearest_km();
 
       if(!ptr->isAnchorFixed()) {
-        printf("anchor: (%.12f, %.12f) -> (%.12f, %.12f)\n", m_gps.x, m_gps.y, anchor.x, anchor.y);
+        printf("anchor: (%.12f, %.12f) -> (%.12f, %.12f)\n", m_gps.lat, m_gps.lon, anchor.lat, anchor.lon);
         ptr->setAnchor(anchor);
       } else {
         //TODO: Map chunking
@@ -82,9 +82,14 @@ namespace tuum {
 
       auto imu = hal::hw.getSensors()->getIMU();
 
+      //Vec2i pos = anchor.metricVectorTo(m_gps);
+
+      //RTXLOG(tuum::format("dist=%.4f, bearing=%.4f", anchor.distanceTo(m_gps), anchor.bearingTo(m_gps)));
+      //RTXLOG(tuum::format("anchor=(%.12f, %.12f) - new pos (%.12f, %.12f) => (%i, %i)", anchor.lat, anchor.lon, m_gps.lat, m_gps.lon, pos.x, pos.y));
+
       m_pose.map_id = gNavi->getMap()->getId();
-      m_pose.coord = (Vec2i)gps_calc_diff_vec(anchor, m_gps);
-      m_pose.orient = imu.head;
+      m_pose.coord = anchor.metricVectorTo(m_gps);
+      m_pose.orient = (imu.head + 90) * (PI / 180); //FIXME: convert to local orientation
       m_pose._t = millis();
     }
   }
@@ -96,7 +101,7 @@ namespace tuum {
     return 0;
   }
 
-  int Localizer::getGlobalPosition(Vec2d& out) {
+  int Localizer::getGlobalPosition(tuum::gps_t& out) {
     int res = updateGlobalPosition();
     out = m_gps;
     return res;

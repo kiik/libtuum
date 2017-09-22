@@ -8,6 +8,8 @@
 
 #include <boost/bind.hpp>
 
+#include "tuum_hal.hpp"
+
 #include "tuum_agent.hpp"
 
 namespace tuum {
@@ -16,7 +18,8 @@ namespace tuum {
 
   Agent::Agent():
     gNav(nullptr),
-    m_ai_en(false)
+    m_ai_en(false),
+    m_ai_log_clk(1000)
   {
 
   }
@@ -57,7 +60,7 @@ namespace tuum {
       return 0;
     }
 
-    RTXLOG(tuum::format("mvec (%.2f, %.2f)", mvec.x, mvec.y));
+    hal::hw.getMotorControl()->move(mvec);
     
     return 1;
   }

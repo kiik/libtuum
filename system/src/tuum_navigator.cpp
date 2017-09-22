@@ -50,7 +50,7 @@ namespace tuum {
     json out;
 
     out["id"] = m_id;
-    out["anchor"] = {m_anchor.x, m_anchor.y};
+    out["anchor"] = {m_anchor.lat, m_anchor.lon};
     out["dim"] = {m_root.w, m_root.h};
     out["landmark_n"] = m_lm_n;
 
@@ -105,6 +105,7 @@ namespace tuum {
   Pather::Pather():
     m_valid_path(false),
     m_path_t(0),
+    m_pathLogClk(1000),
     m_pos(0, 0), m_ori(0.0), m_pose_t(0),
     m_tPos(0, 0), m_tOri(0.0), m_tPose_t(0)
   {
@@ -121,16 +122,33 @@ namespace tuum {
   Vec2d Pather::pathTick(Vec2i tP, float tO)
   {
     time_ms_t t = millis();
-    Vec2i mvec(0, 0);
+    Vec2d mvec(0.0, 0.0);
     
     if(t - m_pose_t <= 250) // 4Hz minimum pose update frequency
     {
       //TODO: implement pathfinding with intermediate waypoints
+      // Generate abstract path (A*)
+      // Generate kinematic visibility graph (V*)
 
-      mvec.x = tP.x - m_pos.x;
-      mvec.y = tP.y - m_pos.y;
+      // Simulate path
+      m_path.clear();
+      m_path.push_back(tP);
+
+      // Get motion vector to next point on path
+      Vec2i p = m_path.front();
+      mvec.x = p.x - m_pos.x;
+      mvec.y = p.y - m_pos.y;
+
+      double d = mvec.getMagnitude(), o = mvec.getOrientation(), dO = (o - m_ori);
+
+      if(m_pathLogClk.tick()) {
+        RTXLOG(tuum::format("pathing (%i, %i, %.3f) -> +(%i, %i, %.3f) => (%i, %i, %.3f)", m_pos.x, m_pos.y, m_ori, mvec.x, mvec.y, dO, p.x, p.y, o));
+      }
 
       m_path_t = millis();
+
+      mvec.x = d;
+      mvec.y = o - m_ori;
     }
 
     return mvec;
@@ -216,18 +234,18 @@ namespace tuum {
     m_ctx.flags = NAV_SET_POS | NAV_SET_ORI;
   }
 
-  int Navigator::globalToMap(const Vec2d& in, Vec2i out)
+  int Navigator::globalToMap(const gps_t& in, Vec2i& out)
   {
     if(!mMap.isAnchorFixed()) return -1;
 
-    //gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
-
-    //out = (Vec2i)(gO.getMetricDelta(in));
+    gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
+    
+    out = gO.metricVectorTo(in);
 
     return 1;
   }
 
-  int Navigator::mapToGlobal(const Vec2i& in, Vec2d out)
+  int Navigator::mapToGlobal(const Vec2i& in, gps_t& out)
   {
     if(!mMap.isAnchorFixed()) return -1;
 
@@ -263,6 +281,11 @@ namespace tuum {
     if(res < 0) {
       RTXLOG(tuum::format("motion handler error %i", res), LOG_ERR);
     }
+  }
+
+  void Navigator::setstaticNavmeshRect(const rect_t& in)
+  {
+    mMap.setStaticArea(in);
   }
 
 }

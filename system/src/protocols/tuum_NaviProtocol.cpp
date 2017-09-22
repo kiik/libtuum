@@ -1,7 +1,9 @@
 
 #include "hal.hpp"
 
+#include "tuum_context.hpp"
 #include "tuum_system.hpp"
+#include "tuum_navigator.hpp"
 
 #include "protocols/tuum_NaviProtocol.hpp"
 
@@ -40,11 +42,21 @@ namespace tuum {
   {
     out["path"] = json::array();
 
-    for(int i=0; i < 2; i++) {
+    Navigator *mgr = (Navigator*)tuum::gSystem->findSubsystem(Navigator::GetType());
+    if(mgr == nullptr) return -1;
+
+    auto pather = mgr->getPather();
+    auto path = pather->getPath();
+
+    //TODO: Iterate over path map chunks
+    for(int i=0; i < 1; i++) {
       json buf = json::object();
 
-      buf["mId"] = 0;
-      buf["wps"] = json::array({{10, 10}, {20, 20}, {30, 30}});
+      buf["mId"] = 1;
+
+      buf["wps"] = json::array();
+      for(auto it = path.begin(); it != path.end(); ++it)
+        buf["wps"].push_back({it->x, it->y});
 
       out["path"].push_back(buf);
     }

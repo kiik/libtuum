@@ -13,6 +13,7 @@
 #include <boost/function.hpp>
 
 #include "loc_landmark_stream.hpp"
+#include "loc.hpp"
 
 #include "tuum_buff.hpp"
 #include "tuum_system.hpp"
@@ -34,14 +35,13 @@ namespace tuum {
   {
   public:
     EnvironmentMap():
-      m_anchor_fixed(false),
-      m_anchor({0, 0})
+      m_anchor_fixed(false)
     {
 
     }
 
-    void  setAnchor(Vec2d v) { m_anchor = v; m_anchor_fixed = true; }
-    Vec2d getAnchor() { return m_anchor; }
+    void  setAnchor(gps_t v) { m_anchor = v; m_anchor_fixed = true; }
+    gps_t getAnchor() { return m_anchor; }
     bool isAnchorFixed() { return m_anchor_fixed; }
 
     Vec2i globalToMap(const Vec2d&);
@@ -51,7 +51,7 @@ namespace tuum {
 
   protected:
     bool m_anchor_fixed;
-    Vec2d m_anchor;
+    tuum::gps_t m_anchor;
   };
 
   class EnvElem
@@ -137,10 +137,14 @@ namespace tuum {
     void poseTick(Vec2i, float);
     Vec2d pathTick(Vec2i, float);
 
+    path_t getPath() { return m_path; }
+
   protected:
     bool m_valid_path;
     path_t m_path;
     time_ms_t m_path_t;
+
+    soft_clk_t m_pathLogClk;
 
     rect_t m_bounds;
 
@@ -208,10 +212,12 @@ namespace tuum {
 
     int getLocalMaps(EnvMapPtrSet&);
 
-    int globalToMap(const Vec2d&, Vec2i);
-    int mapToGlobal(const Vec2i&, Vec2d);
+    int globalToMap(const gps_t&, Vec2i&);
+    int mapToGlobal(const Vec2i&, gps_t&);
 
     void setMotionHandler(MotionHandlerFn_t);
+
+    void setStaticNavmeshRect(const rect_t&);
 
   protected:
     void onMotionTick(mvec_t);

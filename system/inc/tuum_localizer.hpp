@@ -15,6 +15,7 @@
 
 #include "tuum_system.hpp"
 
+#include "loc.hpp"
 #include "loc_landmark_stream.hpp"
 
 using namespace loc;
@@ -56,13 +57,13 @@ namespace tuum {
     }
 
     int getLocalPose(localized_pose_t&);
-    int getGlobalPosition(Vec2d&);
+    int getGlobalPosition(tuum::gps_t&);
 
   protected:
     bool m_init;
     Navigator* gNavi;
 
-    Vec2d m_gps;
+    tuum::gps_t m_gps;
     time_ms_t m_gps_t;
 
     localized_pose_t m_pose;

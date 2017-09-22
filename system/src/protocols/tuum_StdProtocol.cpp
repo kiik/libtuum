@@ -35,11 +35,11 @@ namespace tuum {
     Localizer *ptr = (Localizer*)gSystem->findSubsystem(Localizer::GetType());
     if(ptr == nullptr) return -2;
 
-    Vec2d pos;
+    tuum::gps_t pos;
     int res = ptr->getGlobalPosition(pos);
 
-    out["lat"] = pos.x;
-    out["lng"] = pos.y;
+    out["lat"] = pos.lat;
+    out["lng"] = pos.lon;
     out["res"] = res;
 
     return 0;
@@ -114,9 +114,9 @@ namespace tuum {
 
     out["pose"] = buf;
 
-    Vec2d gpos = {0, 0};
+    gps_t gpos;
     loc->getGlobalPosition(gpos);
-    out["gpos"] = {{"lat", gpos.x}, {"lng", gpos.y}};
+    out["gpos"] = {{"lat", gpos.lat}, {"lng", gpos.lon}};
 
 
     out["res"] = res;

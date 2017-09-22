@@ -40,6 +40,7 @@ namespace tuum {
 
   protected:
     bool m_init, m_ai_en;
+    soft_clk_t m_ai_log_clk;
 
     Navigator *gNav;
   };
