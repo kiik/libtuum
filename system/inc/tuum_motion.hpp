@@ -65,7 +65,7 @@ namespace tuum {
     MotionData mMotionData;
     Timer mMotorTmr;
 
-    hal::MotorControl* gMotorControl;
+    hal::MotionControl* gMotionControl;
   public:
     static int MinDist;
     static int MinOrient;

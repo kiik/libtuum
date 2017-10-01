@@ -28,7 +28,7 @@ namespace tuum {
   }
 
   void Motion::init() {
-    gMotorControl = hal::hw.getMotorControl();
+    gMotionControl = hal::hw.getMotionControl();
   }
 
   void Motion::run() {
@@ -43,7 +43,7 @@ namespace tuum {
         float sp = mMotionData.getSpeed();
         float he = mMotionData.getHeading();
         float rsp = mMotionData.getRotationSpeed();
-        gMotorControl->omniDrive(sp, he, rsp);
+        gMotionControl->omniDrive(sp, he, rsp);
         mMotorTmr.start();
       }
     } else {
@@ -95,7 +95,7 @@ namespace tuum {
   void Motion::stop() {
     m_running = false;
     setTarget({0, 0}, 0.0);
-    gMotorControl->omniDrive(0, 0, 0);
+    gMotionControl->omniDrive(0, 0, 0);
   }
 
   bool Motion::isRunning() { return m_running; }

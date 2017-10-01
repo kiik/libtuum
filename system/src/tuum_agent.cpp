@@ -60,8 +60,8 @@ namespace tuum {
       return 0;
     }
 
-    hal::hw.getMotorControl()->move(mvec);
-    
+    hal::hw.getMotionControl()->aiMove(mvec);
+
     return 1;
   }
 

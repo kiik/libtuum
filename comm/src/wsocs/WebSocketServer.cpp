@@ -153,15 +153,15 @@ namespace wsocs {
             //TODO: 'onError' callback
           }
 
-	  size_t mId = 0;
+          size_t mId = 0;
           if(data.find(WSProtocol::JS_M_ID) != data.end()) {
-            mId = data[WSProtocol::JS_M_ID].get<size_t>(); 
-	  } else err_flag = true;
+            mId = data[WSProtocol::JS_M_ID].get<size_t>();
+          } else err_flag = true;
 
           if(!err_flag) {
             if(mId != 0) {
               onMessage({data, wsi});
-	    } else pong();
+          } else pong();
 
             try {
             }
@@ -240,7 +240,7 @@ namespace wsocs {
     if(mCtx == nullptr) return -1;
     //FIXME: Queue up passed messages
     if(lws_send_pipe_choked(mCtx->wsi)) {
-      //printf("[WS::send<CHOKE>]Passing '%s'\n", dat.dump().c_str());    
+      //printf("[WS::send<CHOKE>]Passing '%s'\n", dat.dump().c_str());
       return -2;
     }
 
