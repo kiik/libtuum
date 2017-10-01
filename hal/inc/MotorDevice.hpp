@@ -18,7 +18,7 @@ namespace tuum { namespace hal {
     virtual int init() {};
     virtual void process() {};
 
-    virtual void stop() {};
+    virtual int stop() {};
 
   };
 
