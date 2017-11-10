@@ -13,10 +13,8 @@
 
 #include "__future__.hpp"
 
-#include "Vec.hpp"
-#include "Transform.hpp"
-
 #include "tuum_vector.hpp"
+#include "Transform.hpp"
 
 namespace tuum {
 
@@ -51,7 +49,7 @@ namespace tuum {
       return (y1 - y0) * (x1 - x0);
     }
 
-    vec2i getCentroid() {
+    Vec2i getCentroid() {
       return {(x1 - x0) / 2 + x0, (y1 - y0) / 2 + y0};
     }
 
@@ -74,7 +72,7 @@ namespace tuum {
       return (double)realArea / getArea();
     }
 
-    vec2i getCentroid() {
+    Vec2i getCentroid() {
       return rect.getCentroid();
     }
 
@@ -82,4 +80,4 @@ namespace tuum {
 
 }
 
-#endif // RTX_MATH_H
+#endif

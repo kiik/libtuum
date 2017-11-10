@@ -28,7 +28,7 @@ namespace tuum {
     Entity()
   {
     mBlob = blob;
-    vec2i r = mBlob.getCentroid();
+    Vec2i r = mBlob.getCentroid();
     mTransform.setX(r.x); mTransform.setY(r.y);
   }
 

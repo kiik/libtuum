@@ -16,21 +16,21 @@ namespace tuum {
   {
   public:
     Line2D(const Line2D&);
-    Line2D(const vec2*, const vec2*);
+    Line2D(Vec2f*, Vec2f*);
     Line2D(const double&, const double&, const double&, const double&);
 
-    void setPointA(const vec2*);
+    void setPointA(const Vec2f*);
     void setPointA(const double&, const double&);
-    void setPointB(const vec2*);
+    void setPointB(const Vec2f*);
     void setPointB(const double&, const double&);
 
-    double getLength() const;
-    vec2* getPointA() const;
-    vec2* getPointB() const;
+    double getLength();
+    Vec2f* getPointA();
+    Vec2f* getPointB();
 
   private:
-    vec2 *pointA;
-    vec2 *pointB;
+    Vec2f *pointA;
+    Vec2f *pointB;
   };
 
 };

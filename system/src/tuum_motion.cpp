@@ -58,7 +58,7 @@ namespace tuum {
     }
   }
 
-  void Motion::setTarget(vec2i pos) {
+  void Motion::setTarget(Vec2i pos) {
     setTarget(pos, 0.0);
   }
 
@@ -66,14 +66,14 @@ namespace tuum {
     setTarget({0, 0}, angle);
   }
 
-  void Motion::setTarget(vec2i pos, double angle) {
+  void Motion::setTarget(Vec2i pos, double angle) {
     mMotionData.clear();
     mMotionData.setTargetPosition(pos);
     mMotionData.setTargetOrientation(angle);
     start();
   }
 
-  void Motion::setTarget(vec2i pos, vec2i view_target) {
+  void Motion::setTarget(Vec2i pos, Vec2i view_target) {
     mMotionData.clear();
     mMotionData.setTargetPosition(pos);
 
@@ -84,7 +84,7 @@ namespace tuum {
     start();
   }
 
-  void Motion::setAimTarget(vec2i trg) {
+  void Motion::setAimTarget(Vec2i trg) {
     setTarget(trg.getOrientation());
   }
 
@@ -126,7 +126,7 @@ namespace tuum {
     dat["distanceError"] = getDistanceError();
     dat["orientError"] = getOrientError();
 
-    vec2i t = mMotionData.getTarget();
+    Vec2i t = mMotionData.getTarget();
     dat["target"] = {t.x, t.y};
 
     out["motion"] = dat;
@@ -134,7 +134,7 @@ namespace tuum {
 
   void Motion::debug() {
     printf("[Motion]: s=%.2f, dO=%.2f\n", getDistanceError(), getOrientError());
-    vec2 t = mMotionData.getTarget();
+    Vec2i t = mMotionData.getTarget();
     float sp = mMotionData.getSpeed();
     float he = mMotionData.getHeading();
     float rsp = mMotionData.getRotationSpeed();

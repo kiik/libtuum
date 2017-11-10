@@ -6,6 +6,7 @@
 
       'dependencies': [
         'libenv',
+        'librtxmath',
         'libhal',
 
         'libtdb',

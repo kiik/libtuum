@@ -12,52 +12,52 @@
 namespace tuum {
 
   Line2D::Line2D(const Line2D &other):
-    pointA{new vec2(other.getPointA()->getX(), other.getPointB()->getY())},
-    pointB{new vec2(other.getPointB()->getX(), other.getPointB()->getY())}
+    pointA{new Vec2f(other.getPointA()->x, other.getPointB()->y)},
+    pointB{new Vec2f(other.getPointB()->x, other.getPointB()->y)}
   {
 
   }
 
-  Line2D::Line2D(const vec2 *pointA, const vec2 *pointB):
-    pointA{new vec2(pointA->getX(), pointA->getY())},
-    pointB{new vec2(pointB->getX(), pointB->getY())}
+  Line2D::Line2D(Vec2f *pointA, Vec2f *pointB):
+    pointA{new Vec2f(pointA->x, pointA->y)},
+    pointB{new Vec2f(pointB->x, pointB->y)}
   {
 
   }
 
   Line2D::Line2D(const double &pointAx, const double &pointAy,
              const double &pointBx, const double &pointBy):
-    pointA{new vec2(pointAx, pointAy)},
-    pointB{new vec2(pointBx, pointBy)}
+    pointA{new Vec2f(pointAx, pointAy)},
+    pointB{new Vec2f(pointBx, pointBy)}
   {
 
   }
 
-  void Line2D::setPointA(const vec2 *pointA) {
-    this->pointA = new vec2(pointA->getX(), pointA->getY());
+  void Line2D::setPointA(const Vec2f *pointA) {
+    this->pointA = new Vec2f(pointA->x, pointA->y);
   }
 
   void Line2D::setPointA(const double &x, const double &y) {
-    pointA = new vec2(x, y);
+    pointA = new Vec2f(x, y);
   }
 
-  void Line2D::setPointB(const vec2 *pointB) {
-    this->pointB = new vec2(pointB->getX(), pointB->getY());
+  void Line2D::setPointB(const Vec2f *pointB) {
+    this->pointB = new Vec2f(pointB->x, pointB->y);
   }
 
   void Line2D::setPointB(const double &x, const double &y) {
-    pointB = new vec2(x, y);
+    pointB = new Vec2f(x, y);
   }
 
-  double Line2D::getLength() const {
-    return pointA->distanceFrom(pointB);
+  double Line2D::getLength() {
+    return pointA->distanceTo(pointB);
   }
 
-  vec2* Line2D::getPointA() const {
+  Vec2f* Line2D::getPointA() {
     return pointA;
   }
 
-  vec2* Line2D::getPointB() const {
+  Vec2f* Line2D::getPointB() {
     return pointB;
   }
 

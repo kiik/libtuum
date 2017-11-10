@@ -22,7 +22,7 @@ namespace tuum {
     pos.x = x; pos.y = y;
   }
 
-  Transform::Transform(const vec2i vec) {
+  Transform::Transform(const Vec2i vec) {
     pos = vec;
   }
 
@@ -31,7 +31,7 @@ namespace tuum {
     o = orient;
   }
 
-  Transform::Transform(const vec2i vec, const double orient) {
+  Transform::Transform(const Vec2i vec, const double orient) {
     pos = vec;
     o = orient;
   }
@@ -40,7 +40,7 @@ namespace tuum {
     pos.x = x; pos.y = y;
   }
 
-  void Transform::setPosition(const vec2i nPos) {
+  void Transform::setPosition(const Vec2i nPos) {
     pos = nPos;
   }
 
@@ -48,7 +48,7 @@ namespace tuum {
     o = orient;
   }
 
-  vec2i Transform::getPosition() {
+  Vec2i Transform::getPosition() {
     return pos;
   }
 
@@ -72,7 +72,7 @@ namespace tuum {
     pos.y = v;
   }
 
-  double Transform::distanceTo(vec2i target) {
+  double Transform::distanceTo(Vec2i target) {
     return sqrt(pow(target.x - pos.x, 2) + pow(target.y - pos.y, 2));
   }
 

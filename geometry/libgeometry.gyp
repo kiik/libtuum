@@ -5,7 +5,7 @@
       'type': 'static_library',
 
       'dependencies': [
-
+        'librtxmath',
       ],
 
       'cflags': [
@@ -16,7 +16,6 @@
       ],
       'sources': [
         'src/Circle.cpp',
-        'src/Line2D.cpp',
         'src/Rectangle.cpp',
       ],
 

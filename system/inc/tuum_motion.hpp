@@ -16,9 +16,14 @@
 #include "tuum_json.hpp"
 #include "tuum_math.hpp"
 
-#include "hal.hpp"
+#include "MotionControl.hpp"
 
 #include "syscore/MotionData.hpp"
+
+namespace tuum {
+namespace hal {
+    class MotionControl;
+}}
 
 namespace tuum {
 
@@ -32,14 +37,14 @@ namespace tuum {
 
     void loop();
 
-    void setPositionTarget(vec2i&);
+    void setPositionTarget(Vec2i&);
 
-    void setTarget(vec2i);
+    void setTarget(Vec2i);
     void setTarget(double);
-    void setTarget(vec2i, double);
-    void setTarget(vec2i, vec2i);
+    void setTarget(Vec2i, double);
+    void setTarget(Vec2i, Vec2i);
 
-    void setAimTarget(vec2i);
+    void setAimTarget(Vec2i);
 
     void start();
     void stop();
