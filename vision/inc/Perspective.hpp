@@ -28,14 +28,14 @@ namespace tuum { namespace Vision {
 
   void setup();
 
-  vec2 virtualToReal(const unsigned int&, const unsigned int&, const unsigned int&);
-  vec2 virtualToReal(const vec2u&, const unsigned int&);
-  vec2 virtualToReal(const vec2*, const unsigned int&);
+  Vec2i virtualToReal(const unsigned int&, const unsigned int&, const unsigned int&);
+  Vec2i virtualToReal(const Vec2i&, const unsigned int&);
+  Vec2i virtualToReal(const Vec2i*, const unsigned int&);
 
-  vec2u realToVirtual(const double&, const double&, const unsigned int&);
-  vec2u realToVirtual(const vec2&, const unsigned int&);
+  Vec2i realToVirtual(const double&, const double&, const unsigned int&);
+  Vec2i realToVirtual(const Vec2i&, const unsigned int&);
 
-  vec2i imageToWorld(vec2i);
+  Vec2i imageToWorld(Vec2i);
 
   }
 

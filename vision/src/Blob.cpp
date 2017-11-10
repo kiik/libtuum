@@ -34,17 +34,17 @@ namespace tuum {
 
   rect_t Blob::getRect() const { return mRect; }
 
-  vec2i Blob::getCentroid() {
+  Vec2i Blob::getCentroid() {
     return mRect.getCentroid();
   }
 
-  vec2i Blob::getPosition() {
-    vec2i c = mRect.getCentroid();
-    return vec2i(c.x, c.y);
+  Vec2i Blob::getPosition() {
+    Vec2i c = mRect.getCentroid();
+    return Vec2i(c.x, c.y);
   }
 
-  vec2i Blob::getWorldPosition() {
-    vec2i p = getPosition();
+  Vec2i Blob::getWorldPosition() {
+    Vec2i p = getPosition();
     return Vision::Perspective::imageToWorld(p);
   }
 
@@ -53,12 +53,12 @@ namespace tuum {
   }
 
   double Blob::getDistance() {
-    vec2i p = getWorldPosition();
+    Vec2i p = getWorldPosition();
     return sqrt(p.x * p.x + p.y * p.y);
   }
 
   double Blob::getAngle() {
-    vec2i p = getWorldPosition(); //TODO: Take into account our position
+    Vec2i p = getWorldPosition(); //TODO: Take into account our position
     return atan2(p.y, p.x);
   }
 

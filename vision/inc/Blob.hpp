@@ -31,11 +31,11 @@ namespace tuum {
 
     rect_t getRect() const;
 
-    vec2i getCentroid();
-    vec2i getPosition();
+    Vec2i getCentroid();
+    Vec2i getPosition();
 
-    vec2i getWorldPosition();
-    vec2i getWorldSize();
+    Vec2i getWorldPosition();
+    Vec2i getWorldSize();
 
     //double getWorldDistance()
     //double getWorldAngle()

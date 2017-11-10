@@ -48,10 +48,10 @@ namespace tuum {
     void fromJSON(json);
 
   protected:
-    ColorClsSet mClss;   // Color classes
+    ColorClsSet mClss;
     BlobSet mBlobs;
 
-    CMV::YUVFilter mFilter;           // Color filtering machine
+    CMV::YUVFilter mFilter;
     CMV::BlobSet mBlobBuffer;
 
     Timer mDebugTmr;
