@@ -8,7 +8,7 @@
     #'ocl-lab/libocl-lab.gyp',
 
     'comm/libcomm.gyp',
-    'qtgui/libqtgui.gyp',
+    #'qtgui/libqtgui.gyp',
 
     'loc/libloc.gyp',
     'user/libuser.gyp',
