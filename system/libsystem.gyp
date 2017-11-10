@@ -42,6 +42,8 @@
         'src/tuum_perception.cpp',
         'src/tuum_logmgr.cpp',
 
+        'src/tuum_motion.cpp', # Deprecated
+
         'src/syscore/MotionData.cpp',
 
         'src/protocols/tuum_VisionProtocol.cpp',
