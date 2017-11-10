@@ -168,16 +168,20 @@ namespace tuum {
     enum NavigatorFlagsE {
       NAV_SET_POS = 0x01,
       NAV_SET_ORI = 0x02,
+      NAV_SET_AIM = 0x03,
     };
 
     struct ctx_t {
       Vec2i tPos;
       float tOri;
 
+      Vec2i aPos;
+
       uint8_t flags = 0;
 
       bool hasTarget() { return (flags & NAV_SET_POS) == 1; }
       bool hasOrient() { return (flags & NAV_SET_ORI) == 1; }
+      bool hasAimTrg() { return (flags & NAV_SET_AIM) == 1; }
     };
 
     typedef Vec2d mvec_t;
@@ -198,9 +202,19 @@ namespace tuum {
     void setup();
     void process();
 
+    int navTo();
     int navTo(const Vec2i&);
     int navTo(const Vec2i&, const float&);
     // int navTo(const float&);
+
+    int aim();
+    int aim(const Vec2i&);
+
+    void clearGoal();
+    void stop();
+
+    bool isTargetAchieved();
+    bool isRunning() { return m_running; }
 
     int isReachable(Vec2i);
 
@@ -219,10 +233,13 @@ namespace tuum {
 
     void setStaticNavmeshRect(const rect_t&);
 
+    // Deprecated
+    Entity* getAlly() { return nullptr; }
+
   protected:
     void onMotionTick(mvec_t);
 
-    bool m_init;
+    bool m_init, m_running;
     ctx_t m_ctx;
 
     MotionHandlerFn_t m_motion_handler;

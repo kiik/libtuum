@@ -9,14 +9,14 @@
 
 #include "syscore/MotionData.hpp"
 
+#ifdef TUUM_HAL_GPS
 #include "sensors/GPS.hpp"
+#endif
 
 #include "tuum_platform.hpp"
 
 #include "tuum_localizer.hpp"
 #include "tuum_navigator.hpp"
-
-using namespace tuum::hal;
 
 namespace tuum {
 
@@ -123,7 +123,7 @@ namespace tuum {
   {
     time_ms_t t = millis();
     Vec2d mvec(0.0, 0.0);
-    
+
     if(t - m_pose_t <= 250) // 4Hz minimum pose update frequency
     {
       //TODO: implement pathfinding with intermediate waypoints
@@ -170,7 +170,8 @@ namespace tuum {
     m_motion_handler(motion_tick_nullfn),
     gLoc(nullptr),
     mComposer(this),
-    m_init(false)
+    m_init(false),
+    m_running(false)
   {
 
   }
@@ -215,23 +216,58 @@ namespace tuum {
         mPather.poseTick(pose.coord, pose.orient);
         mvec_t mvec = (mvec_t)mPather.pathTick(tPos, tOri);
 
-        this->onMotionTick(mvec);
+        if(m_running)
+          this->onMotionTick(mvec);
       }
 
     }
   }
 
+  int Navigator::navTo()
+  {
+    m_ctx.flags &= ~(NAV_SET_POS | NAV_SET_ORI);
+  }
+
   int Navigator::navTo(const Vec2i& pos)
   {
     m_ctx.tPos = pos;
-    m_ctx.flags = NAV_SET_POS;
+    m_ctx.flags |= NAV_SET_POS;
+    m_running = true;
   }
 
   int Navigator::navTo(const Vec2i& pos, const float& ori)
   {
     m_ctx.tPos = pos;
     m_ctx.tOri = ori;
-    m_ctx.flags = NAV_SET_POS | NAV_SET_ORI;
+    m_ctx.flags |= NAV_SET_POS | NAV_SET_ORI;
+    m_running = true;
+  }
+
+  int Navigator::aim()
+  {
+    m_ctx.flags &= ~NAV_SET_AIM;
+  }
+
+  int Navigator::aim(const Vec2i& pos)
+  {
+    m_ctx.aPos = pos;
+    m_ctx.flags |= NAV_SET_AIM;
+    m_running = true;
+  }
+
+  void Navigator::clearGoal()
+  {
+    m_ctx.flags = 0;
+  }
+
+  void Navigator::stop()
+  {
+    m_running = false;
+  }
+
+  bool Navigator::isTargetAchieved()
+  {
+    return false; // TODO
   }
 
   int Navigator::globalToMap(const gps_t& in, Vec2i& out)
@@ -239,7 +275,7 @@ namespace tuum {
     if(!mMap.isAnchorFixed()) return -1;
 
     gps_t gO = gps_t(mMap.getAnchor());  // Global map origin
-    
+
     out = gO.metricVectorTo(in);
 
     return 1;
