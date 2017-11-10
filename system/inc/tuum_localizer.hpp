@@ -11,7 +11,9 @@
 
 #include "Vec.hpp"
 
+#ifdef TUUM_HAL_GPS
 #include "sensors/GPS.hpp"
+#endif
 
 #include "tuum_system.hpp"
 

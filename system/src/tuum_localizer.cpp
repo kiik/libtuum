@@ -10,7 +10,9 @@
 
 #include "tuum_hal.hpp"
 
+#ifdef TUUM_HAL_GPS
 #include "sensors/GPS.hpp"
+#endif
 
 #include "tuum_navigator.hpp"
 #include "tuum_localizer.hpp"
@@ -39,12 +41,19 @@ namespace tuum {
   {
     if(millis() - m_gps_t < 1000) return 0; // Is limiting neccesary?
 
+
+#ifdef TUUM_HAL_GPS
     auto ptr = hal::hw.getSensors();
     hal::GPSData dat = ptr->getGPS();
 
     m_gps.lat = dat.lat;
     m_gps.lon = dat.lon;
     m_gps_t = dat._t;
+#else
+    m_gps.lat = 0.0;
+    m_gps.lon = 0.0;
+    m_gps_t = 0;
+#endif
 
     if(millis() - m_gps_t > 5000) return 0;
 
@@ -80,7 +89,12 @@ namespace tuum {
         anchor = ptr->getAnchor();
       }
 
+#ifdef TUUM_HAL_IMU
       auto imu = hal::hw.getSensors()->getIMU();
+      m_pose.orient = (imu.head + 90) * (PI / 180); //FIXME: convert to local orientation
+#else
+      m_pose.orient = 0;
+#endif
 
       //Vec2i pos = anchor.metricVectorTo(m_gps);
 
@@ -89,7 +103,6 @@ namespace tuum {
 
       m_pose.map_id = gNavi->getMap()->getId();
       m_pose.coord = anchor.metricVectorTo(m_gps);
-      m_pose.orient = (imu.head + 90) * (PI / 180); //FIXME: convert to local orientation
       m_pose._t = millis();
     }
   }
