@@ -22,16 +22,16 @@ namespace tuum {
   public:
     MotionData();
 
-    void setTargetPosition(vec2i);
+    void setTargetPosition(Vec2i);
     void setTargetOrientation(double);
 
     double getDistanceDelta();
     double getOrientationDelta();
 
-    vec2i getTarget() { return tPos; }
+    Vec2i getTarget() { return tPos; }
 
   protected:
-    vec2i tPos;
+    Vec2i tPos;
     double tOrient;
 
     size_t t;

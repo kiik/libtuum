@@ -27,15 +27,15 @@ namespace tuum {
 
     mRotCtl.setPID(0.8, 0.05, 0.10);
     mRotCtl.setILimit(0.5);
-    
+
     //mRotCtl.setPID(0.1, 0.0, 0.0);
 
-    
+
     mSpdCtl.setPID(0.0, 0.0, 0.0);
     mSpdCtl.setILimit(100);
   }
 
-  void MotionData::setTargetPosition(vec2i in) {
+  void MotionData::setTargetPosition(Vec2i in) {
     tPos = in;
   }
 
@@ -89,7 +89,7 @@ namespace tuum {
     //m_speed = 0;
    // m_heading = 0;
     //m_r_speed = 0;
-    //mRotCtl.debug(); 
+    //mRotCtl.debug();
   }
 
   void MotionData::clear() {
