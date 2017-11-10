@@ -6,7 +6,6 @@
 
       'dependencies': [
         'libenv',
-        'libgeometry',
       ],
 
       'cflags': [
