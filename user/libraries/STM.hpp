@@ -16,12 +16,16 @@
 #include <iostream>
 #include <stdint.h>
 
+#include <boost/function.hpp>
+
 //TODO: Implement separate dedicated event emitter base class
 namespace tuum {
 
   typedef uint32_t EventID;
   typedef std::string EventName;
-  typedef void (*EventHandler)();
+
+  // typedef void (*EventHandler)();
+  typedef boost::function<void()> EventHandler;
 
   class EventEmitter {
   protected:
