@@ -9,8 +9,8 @@
 
 #include <memory>
 
-#include <glib.h>
-#include <gdkmm/pixbuf.h>
+//#include <glib.h>
+//#include <gdkmm/pixbuf.h>
 
 #include "Camera.hpp"
 

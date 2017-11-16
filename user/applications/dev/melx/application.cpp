@@ -3,7 +3,7 @@
 #include <boost/date_time.hpp>
 #include <boost/asio.hpp>
 
-#include <gdk/gdk.h>
+//#include <gdk/gdk.h>
 
 #include "tuum_lpx.hpp"
 #include "tuum_visioning.hpp"

@@ -4,7 +4,7 @@
  *  @author Meelik Kiik ( kiik.meelik@gmail.com )
  */
 
-#include <gtkmm.h>
+// #include <gtkmm.h>
 
 #include "tuum_logger.hpp"
 
