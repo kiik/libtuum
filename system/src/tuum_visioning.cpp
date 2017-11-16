@@ -12,6 +12,7 @@
 #include "tuum_fs.hpp"
 #include "tuum_ogl.hpp"
 #include "tuum_ogl_core.hpp"
+#include "tuum_lpx.hpp"
 
 #include "Perspective.hpp"
 
@@ -30,6 +31,8 @@ namespace tuum {
 
   const char* DEF_PPL_RTEX_FOOTBALL = "./assets/rtex_football.ppl";
   const char* DEF_PPL_RTEX_FOOTBALL_IM = "./assets/rtex_football_image.ppl";
+
+  const char* DEF_PPL_RTEX_BASKETBALL = "./assets/rtex_basketball.ppl";
 
   const char* DEF_PPL_IMFORM = "./assets/imformat.ppl";
 
@@ -57,15 +60,25 @@ namespace tuum {
   }
 
   void Visioning::init() {
+    tuum::init_addon(tuum::TUUM_OGL);
+
     // Initialize image buffers
     Env::spawnBuffer(m_iFrame);
     Env::spawnBuffer(m_oFrame);
 
-    // Configure stream settings
+    // Preallocate memory
+    cv::Mat frame;
+    int res = hal::hw.readFrame(frame);
+
+    /*
     m_inpStreams[0] = hal::hw.getCamera()->getStream();
     m_inpStreams[0]->initBuf(m_iFrame);
     m_inpStreams[0]->initBuf(m_oFrame);
-    auto iprop = hal::hw.getCamera()->getFormat();
+    */
+
+    //auto iprop = hal::hw.getCamera()->getFormat();
+    cv::Size iprop = frame.size();
+    RTXLOG(tuum::format("format = {.width = %i, .height = %i}", iprop.width, iprop.height), LOG_DEBUG);
 
     // Configure GLiP (OpenGL) texture objects
     m_format[0] = new TxFormat(iprop.width, iprop.height, GL_RGB, GL_UNSIGNED_BYTE);
@@ -77,7 +90,7 @@ namespace tuum {
 
     // Load graphics pipeline
     m_plRtexFootball.use(gLdr);
-    m_plRtexFootball.load(DEF_PPL_RTEX_FOOTBALL, "RobotexFootballPipe");
+    m_plRtexFootball.load(DEF_PPL_RTEX_BASKETBALL, "RobotexBasketballPipe");
     //m_plRtexFootball_im.use(gLdr);
     //m_plRtexFootball_im.load(DEF_PPL_RTEX_FOOTBALL_IM, "RobotexFootballPipe");
 
@@ -102,6 +115,7 @@ namespace tuum {
       txDiscYUV = new Texture(*txDiscYUVFormat);
       txDiscYUV->write(discrete_yuv->data, GL_RGB, GL_UNSIGNED_BYTE);
 
+      RTXLOG(format("Discrete YUV space loaded."));
     } else {
       RTXLOG(format("Discrete YUV space load failed ( '%s' )", DEF_DISC_YUV), LOG_ERR);
       return -1;
@@ -201,6 +215,21 @@ namespace tuum {
 
   }
 
+  int Visioning::doPass(cv::Mat& input, cv::Mat& output)
+  {
+    cv::Size sz = input.size();
+
+    Pipeline *ppl = m_plRtexFootball.get();
+
+    m_tex->write(input.data, GL_RGB, GL_UNSIGNED_BYTE);
+
+    (*ppl) << (*m_tex) << Pipeline::Process; // (*txDiscYUV) <<
+
+    //Note: Output should be pre allocated
+    ppl->out(0).read(output.data);
+
+    return 1;
+  }
 
   int Visioning::doFramePass()
   {

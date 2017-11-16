@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include <opencv/cv.h>
 #include <boost/thread/mutex.hpp>
 
 #include "json.hpp"
@@ -50,6 +51,8 @@ namespace tuum {
 
     int nextFrame();
     int readFrame(image_t&);
+
+    int doPass(cv::Mat&, cv::Mat&);
 
     int doFramePass();
     int doEntityPass();
