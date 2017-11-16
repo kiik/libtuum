@@ -111,10 +111,10 @@ namespace tuum {
         f.open(m_file.path);
 
         f.seekg(0, f.end);
-        printf("dbg: %i\n", f.tellp());
+        //printf("dbg: %i\n", f.tellp());
 
         f.seekp(cursor, std::ios_base::beg);
-        printf("dbg: %i\n", f.tellp());
+        //printf("dbg: %i\n", f.tellp());
 
         f << in;
 
