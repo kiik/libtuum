@@ -15,7 +15,7 @@ namespace wsocs {
 
   WebSocketServer* wsock_srvs[WSOCS_SRV_N];
 
-  soft_clk_t clk_100Hz(10);
+  soft_clk_t clk_50Hz(20);
 
   bool running = true;
 
@@ -64,13 +64,13 @@ namespace wsocs {
 
   void service_process() {
     while(running) {
-      if(clk_100Hz.tick()) {
+      if(clk_50Hz.tick()) {
         for(int i=0; i < WSOCS_SRV_N; i++) {
           if(wsock_srvs[i] != nullptr) wsock_srvs[i]->process();
         }
       }
 
-      clk_100Hz.wait();
+      clk_50Hz.wait();
     }
   }
 
