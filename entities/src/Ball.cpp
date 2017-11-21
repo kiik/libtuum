@@ -10,8 +10,8 @@
 
 namespace tuum {
 
-  Ball::Ball(Ball &o):
-    Entity(*o.getTransform(), *o.getBlob()),
+  Ball::Ball(const Blob& blob):
+    Entity(blob),
     m_kicked(false), m_in_goal(false), m_in_bounds(true)
   {
 

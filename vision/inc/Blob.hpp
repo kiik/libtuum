@@ -26,8 +26,7 @@ namespace tuum {
     };
 
     Blob();
-    Blob(blob_t, Blob::TypeId);
-    Blob(blob_t);
+    Blob(std::string, blob_t);
 
     rect_t getRect() const;
 
@@ -47,13 +46,13 @@ namespace tuum {
 
     void merge(Blob&);
 
-    Blob::TypeId getType() { return mEntType; }
+    // Blob::TypeId getType() { return mEntType; }
 
   protected:
-    rect_t mRect;
-    size_t m_real_area;
+    std::string m_name;
 
-    Blob::TypeId mEntType;
+    rect_t mRect;
+    size_t m_area;
   };
 
   typedef std::vector<Blob> BlobSet;

@@ -57,14 +57,9 @@ namespace tuum {
 
   struct blob_t {
     rect_t rect;
-    size_t realArea;
+    int realArea;
 
-    blob_t():
-      realArea(0)
-    {
-    }
-
-    size_t getArea() {
+    int getArea() {
       return rect.getArea();
     }
 

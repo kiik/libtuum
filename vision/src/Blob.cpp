@@ -19,17 +19,11 @@ namespace tuum {
 
   }
 
-  Blob::Blob(blob_t blob):
-    mRect(blob.rect)
+  Blob::Blob(std::string name, blob_t blob):
+    m_name(name), mRect(blob.rect),
+    m_area(blob.realArea)
   {
     // Nothing to do here
-  }
-
-  Blob::Blob(blob_t blob, Blob::TypeId type):
-    Blob(blob)
-  {
-    m_real_area = blob.realArea;
-    mEntType = type;
   }
 
   rect_t Blob::getRect() const { return mRect; }
@@ -49,7 +43,7 @@ namespace tuum {
   }
 
   double Blob::getDensity() {
-    return (double)m_real_area / mRect.getArea();
+    return (double)m_area / mRect.getArea();
   }
 
   double Blob::getDistance() {

@@ -16,7 +16,7 @@ namespace tuum {
   class Ball: public Entity
   {
   public:
-    Ball(Ball&);
+    Ball(const Blob&);
     Ball(const Transform&, const Blob&);
 
     bool isValid() const;

@@ -17,23 +17,6 @@
 
 namespace tuum {
 
-  /**
-   *  class KalmanFilterObject
-   *    KalmanState m_kfState[2]; // Last, current states
-   *    ...?
-   *
-   *    void kPredict() // Velocity projection
-   *    void kSense(Transform newMeasurement) // Velocity change from measurements
-   *    void kEvaluate() // Updates m_kfState
-   *    Transform kalmanProcess() // runs filter methods and returns probable new Transform
-   *
-   *  class Entity : KalmanFilterObject
-   *    update(Transform transform):
-   *      transform = this->kalmanProcess(Transform)
-   *      ...
-   *
-   */
-
   class Entity
   {
   public:
@@ -43,27 +26,38 @@ namespace tuum {
     Entity(const Blob&);
     Entity(const Transform&, const Blob&);
 
+    void  match(Blob);
+    float matchPercent(Blob);
+
+    bool matched();
+
+    void tick();
+
     size_t getId();
-    int getHealth();
+    int    getHealth();
 
     Blob* getBlob();
-    void setBlob(const Blob&);
+    void  setBlob(const Blob&);
 
     Transform* getTransform();
 
+    std::string toString();
+
+    int deadFrameCount();
+
+    // Legacy:
     void beliefUpdate(Transform);
     void decayTick();
 
-    std::string toString();
-
   protected:
+    Blob mBlob, mBlob_;
+    Transform mTransform;
+
     static size_t id_seq;
 
     size_t mId;
-    int m_health = 0;
-
-    Blob mBlob;
-    Transform mTransform;
+    int m_health = 0, m_dead_frames;
+    bool m_matched;
   };
 
 }

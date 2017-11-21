@@ -92,7 +92,7 @@ namespace tuum {
 
       Blob::TypeId t = getType(cls);
       if(t == Blob::TypeId::None) continue;
-      mBlobs.push_back(Blob(blob, t));
+      //FIXME: mBlobs.push_back(Blob(blob, t));
     }
 
     /*
@@ -126,7 +126,7 @@ namespace tuum {
 
       Blob::TypeId t = getType(cls);
       if(t == Blob::TypeId::None) continue;
-      mBlobs.push_back(Blob(blob, t));
+      //FIXME: mBlobs.push_back(Blob(blob, t));
     }
 
     return 0;

@@ -58,11 +58,6 @@ namespace tuum {
 
   void System::setup()
   {
-    hal::setup();
-
-    tuum::lpx::init();
-    tuum::lpx::setup();
-
     for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++)
       (*it)->setup();
 
@@ -93,8 +88,6 @@ namespace tuum {
 
   void System::process()
   {
-    hal::process();
-
     for(auto it = mSubsystems.begin(); it != mSubsystems.end(); it++)
       (*it)->process();
 

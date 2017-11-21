@@ -30,6 +30,8 @@ namespace tuum {
   void EntityFilter::digest(BlobSet* blobs)
   {
     for(auto it = blobs->begin(); it != blobs->end(); it++) {
+
+      /*
       switch(it->getType()) {
         case Blob::TypeId::Ball:
           digestBall(*it);
@@ -38,7 +40,7 @@ namespace tuum {
         case Blob::TypeId::Goal_Yellow:
           digestGoal(*it);
           break;
-      }
+      }*/
     }
   }
 

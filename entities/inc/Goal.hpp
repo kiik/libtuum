@@ -22,7 +22,6 @@ namespace tuum {
     bool isAlly();
     bool isOpponent();
 
-    Blob::TypeId getType();
   };
 
 }
