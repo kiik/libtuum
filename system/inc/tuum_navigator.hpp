@@ -168,7 +168,7 @@ namespace tuum {
     enum NavigatorFlagsE {
       NAV_SET_POS = 0x01,
       NAV_SET_ORI = 0x02,
-      NAV_SET_AIM = 0x03,
+      NAV_SET_AIM = 0x04,
     };
 
     struct ctx_t {
@@ -179,9 +179,11 @@ namespace tuum {
 
       uint8_t flags = 0;
 
-      bool hasTarget() { return (flags & NAV_SET_POS) == 1; }
-      bool hasOrient() { return (flags & NAV_SET_ORI) == 1; }
-      bool hasAimTrg() { return (flags & NAV_SET_AIM) == 1; }
+      bool hasTarget() { return (flags & NAV_SET_POS); }
+      bool hasOrient() { return (flags & NAV_SET_ORI); }
+
+      bool hasAim() { return (flags & NAV_SET_AIM); }
+      bool hasAimTrg() { return (flags & NAV_SET_AIM); }
     };
 
     typedef Vec2d mvec_t;
@@ -209,6 +211,8 @@ namespace tuum {
 
     int aim();
     int aim(const Vec2i&);
+
+    int nav(Transform);
 
     void clearGoal();
     void stop();

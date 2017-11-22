@@ -173,7 +173,7 @@ namespace tuum {
     m_init(false),
     m_running(false)
   {
-
+    clearGoal();
   }
 
   int Navigator::init()
@@ -239,7 +239,7 @@ namespace tuum {
   {
     m_ctx.tPos = pos;
     m_ctx.tOri = ori;
-    m_ctx.flags |= NAV_SET_POS | NAV_SET_ORI;
+    m_ctx.flags = NAV_SET_POS | NAV_SET_ORI;
     m_running = true;
   }
 
@@ -251,8 +251,14 @@ namespace tuum {
   int Navigator::aim(const Vec2i& pos)
   {
     m_ctx.aPos = pos;
+    m_ctx.flags &= ~(NAV_SET_ORI);
     m_ctx.flags |= NAV_SET_AIM;
     m_running = true;
+  }
+
+  int Navigator::nav(Transform t)
+  {
+    return navTo(t.getPosition(), t.getOrientation());
   }
 
   void Navigator::clearGoal()
