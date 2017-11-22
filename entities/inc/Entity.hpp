@@ -10,12 +10,17 @@
 #define TUUM_ENTITY_H
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "tuum_math.hpp"
 
 #include "Blob.hpp"
 
 namespace tuum {
+
+  class Entity;
+
+  typedef boost::shared_ptr<Entity> EntityPtr;
 
   class Entity
   {
@@ -25,6 +30,8 @@ namespace tuum {
     Entity();
     Entity(const Blob&);
     Entity(const Transform&, const Blob&);
+
+    ~Entity();
 
     void  match(Blob);
     float matchPercent(Blob);
@@ -41,7 +48,7 @@ namespace tuum {
 
     Transform* getTransform();
 
-    std::string toString();
+    virtual std::string toString();
 
     int deadFrameCount();
 

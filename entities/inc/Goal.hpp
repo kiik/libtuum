@@ -17,10 +17,13 @@ namespace tuum {
   {
   public:
     Goal();
+    Goal(const Blob&);
     Goal(const Transform&, const Blob&);
 
     bool isAlly();
     bool isOpponent();
+
+    std::string toString();
 
   };
 

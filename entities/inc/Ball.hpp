@@ -29,6 +29,8 @@ namespace tuum {
     void setInGoal(const bool& v = true) { m_in_goal = v; }
     void setInBounds(const bool& v = true) { m_in_bounds = v; }
 
+    std::string toString();
+
   protected:
     bool m_kicked, m_in_goal, m_in_bounds;
   };

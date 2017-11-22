@@ -20,6 +20,12 @@ namespace tuum {
     // Nothing to do here
   }
 
+  Goal::Goal(const Blob& blob):
+    Entity(blob)
+  {
+
+  }
+
   Goal::Goal(const Transform& transform, const Blob& blob):
     Entity(transform, blob)
   {
@@ -44,6 +50,11 @@ namespace tuum {
     else
       return getType() == Blob::TypeId::Goal_Blue;
     */
+  }
+
+  std::string Goal::toString()
+  {
+    return tuum::format("<G#%lu(%i, %i)>", mId, mBlob.getCentroid().x, mBlob.getRect().y1);
   }
 
 }

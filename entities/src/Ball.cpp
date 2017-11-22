@@ -6,6 +6,8 @@
  *  @date 2. December 2015
  */
 
+#include "tuum_logger.hpp"
+
 #include "Ball.hpp"
 
 namespace tuum {
@@ -26,6 +28,11 @@ namespace tuum {
 
   bool Ball::isValid() const {
     return isInBounds() && !isInGoal() && !isKicked();
+  }
+
+  std::string Ball::toString()
+  {
+    return tuum::format("<B#%lu(%i, %i)>", mId, mBlob.getCentroid().x, mBlob.getCentroid().y);
   }
 
 }

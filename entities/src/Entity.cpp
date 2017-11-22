@@ -42,6 +42,11 @@ namespace tuum {
     mBlob = blob;
   }
 
+  Entity::~Entity()
+  {
+    printf("~Entity#%lu\n", mId);
+  }
+
   void Entity::match(Blob bl)
   {
     // printf("[Entity::match]#TODO: Match\n");
@@ -53,14 +58,18 @@ namespace tuum {
   {
     auto c1 = mBlob.getCentroid(), c2 = bl.getCentroid();
 
+    // Projection transformation is applied at this point, so distance should be close to real value.
     float d = c1.distanceTo(c2);
-    // printf("c1=%s, c2=%s, d=%.2f\n", c1.toString().c_str(), c2.toString().c_str(), d);
 
-    if(d < 1.0) return 1;
+    // printf("Entity#%lu c1=%s, c2=%s, d=%.2f\n", mId, c1.toString().c_str(), c2.toString().c_str(), d);
+
+    if(d < 30.0) {
+      return 1.0;
+    }
 
     // printf("#TODO: MATCH PERCENT d=%.2f\n", d);
 
-    return 0;
+    return 0.0;
   }
 
   bool Entity::matched()
