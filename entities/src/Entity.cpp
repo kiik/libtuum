@@ -32,8 +32,15 @@ namespace tuum {
   {
     mBlob = blob;
     Vec2i r = mBlob.getCentroid();
-    mTransform.setX(r.x); mTransform.setY(r.y);
+
+    //TODO: Camera to world projection logic
+    int H = 800;
+    int P0_x = 1280 / 2, P0_y = 100;
+    mTransform.setX(r.x - P0_x);
+    mTransform.setY((H - r.y - P0_y));
   }
+
+  // (H - r.y - P0_y) * 10 = Y -> y = H - C + Y / 10
 
   Entity::Entity(const Transform& transform, const Blob& blob):
     Entity()
