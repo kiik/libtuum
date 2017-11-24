@@ -36,6 +36,9 @@ namespace tuum {
     void  match(Blob);
     float matchPercent(Blob);
 
+    void  match(Transform, Blob);
+    float matchPercent(Transform, Blob);
+
     bool matched();
 
     void tick();
