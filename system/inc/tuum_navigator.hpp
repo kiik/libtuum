@@ -186,9 +186,9 @@ namespace tuum {
       bool hasAimTrg() { return (flags & NAV_SET_AIM); }
     };
 
-    typedef Vec2d mvec_t;
+    typedef Transform MotionDelta_t;
 
-    typedef boost::function<int(Vec2d)> MotionHandlerFn_t;
+    typedef boost::function<int(const Transform&)> MotionHandlerFn_t;
 
   public:
     Navigator();
@@ -241,7 +241,7 @@ namespace tuum {
     Entity* getAlly() { return nullptr; }
 
   protected:
-    void onMotionTick(mvec_t);
+    void onMotionTick(Transform);
 
     bool m_init, m_running;
     ctx_t m_ctx;

@@ -33,7 +33,7 @@ namespace tuum {
 
     // Motion vector relative to robot, unit is meters.
     int move(Vec2d);     // Manual call target
-    int move_ai(Vec2d);  // Autonomous call target
+    int move_ai(Navigator::MotionDelta_t);  // Autonomous call target
 
     int start_ai();
     void stop_ai();

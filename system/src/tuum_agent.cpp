@@ -31,7 +31,8 @@ namespace tuum {
     if(getSubsystemHandle<tuum::Navigator*>(Navigator::GetType(), gNav) > 0) {
       RTXLOG("Navigator present.");
 
-      gNav->setMotionHandler(boost::bind(&Agent::move_ai, this, _1));
+      #warning
+      //FIXME: gNav->setMotionHandler(boost::bind(&Agent::move_ai, this, _1));
     } else err_flag = -1;
 
     if(err_flag < 0) {
@@ -53,14 +54,15 @@ namespace tuum {
     return -1;
   }
 
-  int Agent::move_ai(Navigator::mvec_t mvec)
+  int Agent::move_ai(Navigator::MotionDelta_t mvec)
   {
     if(!m_ai_en) {
       stop_ai();
       return 0;
     }
 
-    hal::hw.getMotionControl()->aiMove(mvec);
+    #warning
+    //FIXME: hal::hw.getMotionControl()->aiMove(mvec);
 
     return 1;
   }

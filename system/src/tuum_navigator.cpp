@@ -160,7 +160,7 @@ namespace tuum {
 
   Subsystem::TypeVar Navigator::Type;
 
-  int motion_tick_nullfn(Vec2d mvec)
+  int motion_tick_nullfn(Navigator::MotionDelta_t dP)
   {
     return -1;
   }
@@ -192,8 +192,10 @@ namespace tuum {
     if(err_flag < 0) {
       RTXLOG(tuum::format("Error - Missing module. (code=%i)", err_flag), LOG_ERR);
     } else {
-      m_init = true;
+
     }
+
+    m_init = true;
   }
 
   void Navigator::process()
@@ -203,23 +205,35 @@ namespace tuum {
     // New landmarks? update navmesh
     // New Path request? calculate path
 
-    if(m_ctx.flags != 0) {
-      localized_pose_t pose;
+    if(m_ctx.flags != 0)
+    {
+      Vec2i tPos(0, 0);
+      float tOri = 0.0;
 
-      if(gLoc->getLocalPose(pose) >= 0) {
-        Vec2i tPos(0, 0);
-        float tOri = 0.0;
+      if(m_ctx.flags & NAV_SET_POS) tPos = m_ctx.tPos;
+      if(m_ctx.flags & NAV_SET_ORI) tOri = m_ctx.tOri;
 
-        if(m_ctx.flags & NAV_SET_POS) tPos = m_ctx.tPos;
-        if(m_ctx.flags & NAV_SET_ORI) tOri = m_ctx.tOri;
+      if(gLoc != nullptr)
+      {
+        localized_pose_t pose;
+        if(gLoc->getLocalPose(pose) >= 0)
+          mPather.poseTick(pose.coord, pose.orient);
 
-        mPather.poseTick(pose.coord, pose.orient);
-        mvec_t mvec = (mvec_t)mPather.pathTick(tPos, tOri);
+        // mvec_t mvec = (mvec_t)mPather.pathTick(tPos, tOri);
+
+        // if(m_running)
+        //   this->onMotionTick(mvec);
+      }
+      else
+      {
+        Transform motionDelta;
+        // motionDelta = (mvec_t)mPather.pathTick(tPos, tOri);
+        motionDelta.setPosition(tPos);
+        motionDelta.setOrientation(tOri);
 
         if(m_running)
-          this->onMotionTick(mvec);
+          this->onMotionTick(motionDelta);
       }
-
     }
   }
 
@@ -315,7 +329,7 @@ namespace tuum {
     m_motion_handler = ptr;
   }
 
-  void Navigator::onMotionTick(mvec_t mvec)
+  void Navigator::onMotionTick(Transform mvec)
   {
     if(m_motion_handler == nullptr) return;
     int res = m_motion_handler(mvec);
