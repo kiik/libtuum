@@ -17,6 +17,7 @@
       'sources': [
         'src/__future__.cpp',
         'src/Transform.cpp',
+        'src/pid.cpp',
         'src/PID.cpp',
       ],
 
