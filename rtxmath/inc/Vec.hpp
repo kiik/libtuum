@@ -67,6 +67,13 @@ namespace tuum {
       return o;
     }
 
+    template<typename T2>
+    void operator+=(Vec2D<T2> in)
+    {
+      x += in.x;
+      y += in.y;
+    }
+
     Vec2D<double> getNormalized() {
       double s = abs(x) + abs(y);
       if(s == 0) return Vec2D<double>({0, 0});
