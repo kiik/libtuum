@@ -22,6 +22,7 @@ namespace tuum {
 
   Entity::Entity():
     m_dead_frames(0),
+    m_alive_frames(0),
     m_matched(false)
   {
     mId = Entity::newId();
@@ -103,7 +104,7 @@ namespace tuum {
 
     // printf("Entity#%lu c1=%s, c2=%s, d=%.2f\n", mId, c1.toString().c_str(), c2.toString().c_str(), d);
 
-    if(d < 30.0) {
+    if(d < 100.0) {
       return 1.0;
     }
 
@@ -125,18 +126,31 @@ namespace tuum {
       mBlob = mBlob_;
 
       m_dead_frames = 0;
+      m_alive_frames = m_alive_frames >= 30 ? 30 : m_alive_frames + 1;
+
       m_matched = false;
     }
     else
     {
       // increase death timer
       m_dead_frames++;
+      m_alive_frames = m_alive_frames <= 0 ? 0 : m_alive_frames - 1;
     }
   }
 
   int Entity::deadFrameCount()
   {
     return m_dead_frames;
+  }
+
+  int Entity::aliveFrameCount()
+  {
+    return m_alive_frames;
+  }
+
+  bool Entity::isAlive()
+  {
+    return m_alive_frames > 20;
   }
 
   size_t Entity::getId() { return mId; }

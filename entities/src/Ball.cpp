@@ -33,7 +33,7 @@ namespace tuum {
   std::string Ball::toString()
   {
     auto wpos = mTransform.getPosition(), lpos = mBlob.getCentroid();
-    return tuum::format("<B#%lu F(%i, %i)/W(%i, %i)>", mId, lpos.x, lpos.y, wpos.x, wpos.y);
+    return tuum::format("<B#%lu F(%i, %i)/W(%i, %i) f_n=%i>", mId, lpos.x, lpos.y, wpos.x, wpos.y, m_alive_frames);
   }
 
 }

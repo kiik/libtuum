@@ -54,6 +54,9 @@ namespace tuum {
     virtual std::string toString();
 
     int deadFrameCount();
+    int aliveFrameCount();
+
+    virtual bool isAlive();
 
     // Legacy:
     void beliefUpdate(Transform);
@@ -66,7 +69,7 @@ namespace tuum {
     static size_t id_seq;
 
     size_t mId;
-    int m_health = 0, m_dead_frames;
+    int m_health = 0, m_dead_frames, m_alive_frames;
     bool m_matched;
   };
 
