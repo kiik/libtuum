@@ -46,6 +46,8 @@ namespace tuum {
 
     void merge(Blob&);
 
+    size_t area() { return m_area; }
+
     // Blob::TypeId getType() { return mEntType; }
 
   protected:
