@@ -31,13 +31,18 @@ namespace tuum {
     Entity()
   {
     mBlob = blob;
-    Vec2i r = mBlob.getCentroid();
+    mBlob_ = blob;
+
+    // Vec2i r = mBlob.getCentroid();
 
     //TODO: Camera to world projection logic
+    /*
     int H = 800;
     int P0_x = 1280 / 2, P0_y = 100;
+
     mTransform.setX(r.x - P0_x);
     mTransform.setY((H - r.y - P0_y));
+    */
   }
 
   // (H - r.y - P0_y) * 10 = Y -> y = H - C + Y / 10
@@ -47,11 +52,12 @@ namespace tuum {
   {
     mTransform = transform;
     mBlob = blob;
+    mBlob_ = blob;
   }
 
   Entity::~Entity()
   {
-    printf("~Entity#%lu\n", mId);
+
   }
 
   void Entity::match(Blob bl)
@@ -117,7 +123,6 @@ namespace tuum {
     {
       // Update blob
       mBlob = mBlob_;
-      mTransform.setPosition(mBlob.getCentroid());
 
       m_dead_frames = 0;
       m_matched = false;
