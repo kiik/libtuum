@@ -55,7 +55,7 @@ namespace tuum {
   std::string Goal::toString()
   {
     auto wpos = mTransform.getPosition(), lpos = mBlob.getCentroid();
-    return tuum::format("<G#%lu Frame(%i, %i)/Robot(%i, %i)/Blob(%i, %i) f_n=%i>", mId, lpos.x, lpos.y, wpos.x, wpos.y, m_alive_frames, mBlob.c_x, mBlob.getRect().y1);
+    return tuum::format("<G#%lu Frame(%i, %i)/Robot(%i, %i) f_n=%i>", mId, lpos.x, lpos.y, wpos.x, wpos.y, m_alive_frames);
   }
 
 }
