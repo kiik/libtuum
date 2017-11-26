@@ -105,7 +105,7 @@ namespace tuum {
       mBlob = mBlob_;
 
       m_dead_frames = 0;
-      m_alive_frames = m_alive_frames >= 30 ? 30 : m_alive_frames + 1;
+      m_alive_frames = m_alive_frames >= 5 ? 5 : m_alive_frames + 1;
 
       m_matched = false;
     }
@@ -129,7 +129,7 @@ namespace tuum {
 
   bool Entity::isAlive()
   {
-    return m_alive_frames > 20;
+    return m_alive_frames > 2;
   }
 
   size_t Entity::getId() { return mId; }
