@@ -50,8 +50,10 @@ namespace tuum {
 
     // Blob::TypeId getType() { return mEntType; }
 
+    int c_x, c_y;
   protected:
     std::string m_name;
+
 
     rect_t mRect;
     size_t m_area;
